@@ -3,1708 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meteor Shower Alerts & Rocket Launches | SkyQuest Tracker</title>
-    <meta name="description" content="SkyQuest Tracker: never miss a space event—get meteor shower alerts, ISS pass times, and rocket launch reminders for your sky.">
-    <!-- Open Graph Meta -->
-    <meta property="og:title" content="Meteor Shower Alerts & Rocket Launches | SkyQuest Tracker">
-    <meta property="og:description" content="SkyQuest Tracker: never miss a space event—get meteor shower alerts, ISS pass times, and rocket launch reminders for your sky.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=40">
+    <title>SkyQuest Tracker</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
+    <meta name="keywords" content="space events, rocket launches, meteor showers, astronomy, skyquest tracker, cosmic events, alerts">
+    <meta property="og:title" content="SkyQuest Tracker">
+    <meta property="og:description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://skyquest.example.com/">
-    <!-- Twitter Card Meta -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Meteor Shower Alerts & Rocket Launches | SkyQuest Tracker">
-    <meta name="twitter:description" content="SkyQuest Tracker: never miss a space event—get meteor shower alerts, ISS pass times, and rocket launch reminders for your sky.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=40">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
         :root {
-            --space-black: #0b0c10;
-            --midnight-blue: #181f2a;
-            --starfield: repeating-radial-gradient(circle at 20% 30%, #fff2 1px, transparent 2px, transparent 100px), repeating-radial-gradient(circle at 80% 70%, #fff3 1px, transparent 2px, transparent 120px);
-            --thruster-blue: #3ecfff;
-            --solar-orange: #ffb347;
-            --headline-white: #fff;
-            --starlight-gray: #e0e6ef;
-            --glass-bg: rgba(24, 31, 42, 0.65);
-            --glass-border: rgba(255,255,255,0.13);
-            --gallery-card: rgba(62,207,255,0.10);
-            --gallery-border: rgba(62,207,255,0.18);
-            --modal-bg: rgba(24,31,42,0.95);
-            --focus-outline: 2px solid #3ecfff;
-            --btn-glow: 0 0 8px 2px #3ecfff88;
+            --deep-navy: #0b0c10;
+            --space-black: #1f2833;
+            --cosmic-blue: #232931;
+            --nebula-teal: #45a29e;
+            --stellar-cyan: #66fcf1;
+            --white: #ffffff;
+            --glass-purple: #7f7fd5;
         }
-        html, body {
+        body {
             margin: 0;
-            padding: 0;
-            font-family: 'Barlow', 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(to bottom, var(--space-black), var(--midnight-blue) 100vh);
-            background-blend-mode: overlay;
-            color: var(--starlight-gray);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--deep-navy) 70%, var(--cosmic-blue) 100%);
+            color: var(--white);
             min-height: 100vh;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background: var(--starfield);
-            opacity: 0.5;
-            animation: starDrift 60s linear infinite;
+            overflow-x: hidden;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 2.5rem 1.2rem 2rem;
-            background: var(--glass-bg);
-            border-bottom: 1px solid var(--glass-border);
+            padding: 1.5rem 3rem;
+            background: rgba(31, 40, 51, 0.7);
+            box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
             position: sticky;
             top: 0;
-            z-index: 10;
-            backdrop-filter: blur(12px);
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(102,252,241,0.08);
+            animation: fadeInDown 1s;
         }
         .logo {
-            display: flex;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: bold;
             letter-spacing: 2px;
-            color: var(--thruster-blue);
-            text-transform: uppercase;
-            gap: 0.7rem;
-        }
-        .logo svg {
-            height: 2.2rem;
-            width: 2.2rem;
-            display: inline-block;
-        }
-        nav {
-            display: flex;
-            gap: 1.5rem;
+            color: var(--stellar-cyan);
+            text-shadow: 0 2px 8px var(--glass-purple);
         }
         nav a {
-            color: var(--starlight-gray);
+            color: var(--white);
             text-decoration: none;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 1rem;
-            text-transform: uppercase;
-            transition: color 0.2s;
+            margin: 0 1.2rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s, text-shadow 0.2s;
         }
-        nav a:hover, nav a.active {
-            color: var(--solar-orange);
+        nav a:hover {
+            color: var(--stellar-cyan);
+            text-shadow: 0 0 8px var(--stellar-cyan);
         }
-        main {
-            position: relative;
-            z-index: 1;
+        section {
+            padding: 6rem 2.5rem;
+            max-width: 1200px;
+            margin: 3rem auto 0 auto;
+            border-radius: 2rem;
+            background: rgba(35, 41, 49, 0.35);
+            box-shadow: 0 12px 48px 0 rgba(31,40,51,0.25);
+            backdrop-filter: blur(18px) saturate(120%);
+            border: 1px solid rgba(102,252,241,0.12);
+            animation: fadeInUp 1.2s;
         }
-        /* Hero Section */
-        .hero {
-            position: relative;
-            min-height: 60vh;
+        .section-img {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 48px 0 rgba(127,127,213,0.18);
+            display: block;
+        }
+        .section-flex {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             align-items: center;
+            gap: 3.5rem;
+        }
+        .section-content {
+            flex: 1 1 400px;
+        }
+        .section-img-wrap {
+            flex: 1 1 350px;
+            display: flex;
             justify-content: center;
+        }
+        .hero {
             text-align: center;
-            padding: 0 2rem 3rem 2rem;
-            background: none;
+            background: linear-gradient(135deg, rgba(31,40,51,0.7) 60%, rgba(102,252,241,0.12) 100%);
+            box-shadow: 0 12px 48px 0 rgba(127,127,213,0.18);
+            border: 2px solid rgba(127,127,213,0.15);
+            animation: fadeIn 1.2s;
         }
         .hero-img {
-            width: 100vw;
-            max-width: 100vw;
-            height: 340px;
-            object-fit: cover;
-            border: none;
-            border-radius: 0 0 2rem 2rem;
-            box-shadow: 0 8px 32px 0 #0008;
-            margin-bottom: -60px;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            margin-top: -180px;
-            background: var(--glass-bg);
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 32px 0 #0006;
-            padding: 2.5rem 2rem 2rem 2rem;
-            max-width: 540px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-        }
-        .hero h1 {
-            color: var(--headline-white);
-            font-size: 2.3rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 0 0 1rem 0;
-        }
-        .hero p {
-            color: var(--starlight-gray);
-            font-size: 1.1rem;
-            margin-bottom: 2.2rem;
-        }
-        .notify-btn {
-            background: var(--thruster-blue);
-            color: var(--space-black);
-            font-size: 1.3rem;
-            font-weight: 700;
-            border: none;
+            width: 100%;
+            max-width: 700px;
             border-radius: 2rem;
-            padding: 1.1rem 2.8rem;
-            cursor: pointer;
-            box-shadow: 0 0 16px 2px #3ecfff55, 0 2px 16px 0 #3ecfff22;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: pulse 1.5s infinite;
-            transition: background 0.2s, color 0.2s, transform 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .notify-btn:hover {
-            background: var(--solar-orange);
-            color: #fff;
-            transform: scale(1.05);
-            filter: brightness(1.08);
-            box-shadow: 0 0 16px 2px #ffb34755;
-        }
-        .notify-btn:active {
-            transform: scale(0.97);
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 #3ecfff55; }
-            70% { box-shadow: 0 0 0 16px #3ecfff00; }
-            100% { box-shadow: 0 0 0 0 #3ecfff00; }
-        }
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.5s linear;
-            background: rgba(62,207,255,0.4);
-            pointer-events: none;
-        }
-        @keyframes ripple {
-            to {
-                transform: scale(2.5);
-                opacity: 0;
-            }
-        }
-        /* Animate alert add/remove */
-        .alert-fade-in {
-            animation: alertFadeIn 0.6s;
-        }
-        @keyframes alertFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .alert-fade-out {
-            animation: alertFadeOut 0.5s forwards;
-        }
-        @keyframes alertFadeOut {
-            to { opacity: 0; transform: translateY(-20px); height: 0; margin: 0; padding: 0; }
-        }
-        /* Animate section headings */
-        .section-title {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.7s, transform 0.7s;
-        }
-        .section-title.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Focus outlines for all interactive elements */
-        a, button, input, textarea, .event-card, .carousel-photo {
-            outline: none;
-        }
-        a:focus, .event-card:focus, .carousel-photo:focus {
-            outline: var(--focus-outline);
-            box-shadow: 0 0 8px 2px #3ecfff88;
-        }
-        /* Skip to content link */
-        .skip-link {
-            position: absolute;
-            left: -999px;
-            top: 0;
-            background: #3ecfff;
-            color: #181f2a;
-            padding: 0.7rem 1.5rem;
-            z-index: 10001;
-            border-radius: 0 0 1.2rem 1.2rem;
-            font-weight: 700;
-            transition: left 0.2s;
-        }
-        .skip-link:focus {
-            left: 1rem;
-        }
-        /* Mobile nav toggle */
-        .mobile-nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 2rem;
-            color: #3ecfff;
-            cursor: pointer;
-            margin-left: 1rem;
-        }
-        @media (max-width: 700px) {
-            nav {
-                display: none;
-                flex-direction: column;
-                background: var(--glass-bg);
-                position: absolute;
-                top: 100%;
-                right: 0;
-                left: 0;
-                z-index: 1000;
-                border-bottom: 1px solid var(--glass-border);
-            }
-            nav.open {
-                display: flex;
-            }
-            .mobile-nav-toggle {
-                display: block;
-            }
-            header {
-                flex-direction: row;
-                gap: 0;
-                position: sticky;
-                top: 0;
-            }
-        }
-        /* Loading spinner */
-        .spinner {
-            border: 3px solid #e0e6ef;
-            border-top: 3px solid #3ecfff;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 0.7s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 0.7rem;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        /* Copied tooltip */
-        .copied-tooltip {
-            position: absolute;
-            top: -2.2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #3ecfff;
-            color: #181f2a;
-            padding: 0.3rem 1rem;
-            border-radius: 1rem;
-            font-size: 0.95rem;
-            font-weight: 700;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 1000;
-        }
-        .copied-tooltip.visible {
-            opacity: 1;
-        }
-        /* Starfield animation */
-        @keyframes starDrift {
-            0% { background-position: 0 0, 0 0; }
-            100% { background-position: 200px 400px, 400px 200px; }
-        }
-        /* Countdown Strip */
-        .countdown-strip {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2.5rem;
             margin: 0 auto 2.5rem auto;
-            background: var(--glass-bg);
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 24px 0 #3ecfff22;
-            border: 1px solid var(--glass-border);
-            padding: 1.2rem 2.5rem;
-            max-width: 540px;
-            position: relative;
-            z-index: 2;
+            box-shadow: 0 8px 48px 0 rgba(127,127,213,0.22);
+            display: block;
         }
-        .countdown-ring {
-            width: 70px;
-            height: 70px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .countdown-ring svg {
-            position: absolute;
-            top: 0; left: 0;
-        }
-        .countdown-time {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--thruster-blue);
+        .hero-title {
+            font-size: 3.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--stellar-cyan);
+            text-shadow: 0 2px 16px var(--glass-purple);
             letter-spacing: 1px;
+            animation: fadeIn 1.5s;
         }
-        .countdown-label {
-            font-size: 0.8rem;
-            color: var(--starlight-gray);
-            text-align: center;
+        .hero-desc {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            color: var(--white);
+            opacity: 0.9;
+            animation: fadeIn 1.7s;
         }
-        .change-location {
-            font-size: 0.9rem;
-            color: var(--solar-orange);
-            text-decoration: underline;
+        .cta-btn {
+            background: rgba(102,252,241,0.85);
+            color: var(--deep-navy);
+            border: none;
+            padding: 1.2rem 2.8rem;
+            font-size: 1.3rem;
+            border-radius: 2.5rem;
             cursor: pointer;
-            margin-left: 1.5rem;
-            transition: color 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 24px 0 rgba(102,252,241,0.18);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            animation: popIn 1.8s;
         }
-        .change-location:hover {
-            color: var(--thruster-blue);
+        .cta-btn:hover {
+            background: var(--nebula-teal);
+            color: var(--white);
+            transform: scale(1.07);
+            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
         }
-        /* Event Gallery */
-        .event-gallery {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin: 3rem auto 2rem auto;
-            max-width: 900px;
+        .section-title {
+            font-size: 2.4rem;
+            color: var(--stellar-cyan);
+            margin-bottom: 1.2rem;
+            text-shadow: 0 2px 8px var(--glass-purple);
+            animation: fadeInLeft 1.2s;
         }
-        .event-card {
-            background: var(--gallery-card);
-            border: 1.5px solid var(--gallery-border);
-            border-radius: 1.2rem;
-            box-shadow: 0 2px 16px 0 #3ecfff22;
-            padding: 2rem 1.2rem 1.5rem 1.2rem;
-            min-width: 220px;
-            max-width: 260px;
-            flex: 1 1 220px;
-            text-align: center;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            backdrop-filter: blur(8px);
+        .section-desc {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            opacity: 0.92;
+            animation: fadeIn 1.4s;
         }
-        .event-card:hover {
-            transform: translateY(-6px) scale(1.04);
-            box-shadow: 0 8px 32px 0 var(--solar-orange);
-        }
-        .event-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.7rem;
-        }
-        .event-title {
-            color: var(--headline-white);
+        .section-btn {
+            background: rgba(69,162,158,0.85);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2.2rem;
             font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            text-transform: uppercase;
-        }
-        .event-datetime {
-            font-size: 0.98rem;
-            color: var(--starlight-gray);
-            margin-bottom: 0.5rem;
-        }
-        .event-visibility {
-            display: inline-block;
-            padding: 0.2rem 0.7rem;
-            border-radius: 1rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 0.7rem;
-            color: #fff;
-        }
-        .vis-high { background: var(--thruster-blue); }
-        .vis-med { background: var(--solar-orange); }
-        .vis-low { background: #888; }
-        /* Modal */
-        .modal-bg {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-bg.active { display: flex; }
-        .modal {
-            background: var(--modal-bg);
-            border-radius: 1.2rem;
-            padding: 2rem 2.5rem;
-            box-shadow: 0 8px 32px 0 #000a;
-            max-width: 350px;
-            width: 90vw;
-            text-align: center;
-            color: var(--headline-white);
-            position: relative;
-        }
-        .modal img {
-            width: 100%;
-            border-radius: 0.7rem;
-            margin-bottom: 1rem;
-        }
-        .modal .add-alert-btn {
-            background: var(--thruster-blue);
-            color: var(--space-black);
-            border: none;
             border-radius: 2rem;
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-top: 1rem;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            font-weight: 500;
+            box-shadow: 0 4px 24px 0 rgba(69,162,158,0.18);
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            animation: popIn 1.6s;
         }
-        .modal .add-alert-btn:hover {
-            background: var(--solar-orange);
-            color: #fff;
+        .section-btn:hover {
+            background: var(--stellar-cyan);
+            color: var(--deep-navy);
+            transform: scale(1.07);
+            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
         }
-        .modal .close-modal {
-            position: absolute;
-            top: 1rem; right: 1rem;
-            background: none;
-            border: none;
-            color: var(--solar-orange);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        /* How It Works */
-        .how-it-works {
+        .features-list {
             display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-            max-width: 900px;
-            margin: 3rem auto 2rem auto;
-        }
-        .hiw-step {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            background: var(--glass-bg);
-            border-radius: 1.2rem;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 2px 16px 0 #3ecfff22;
-            padding: 1.5rem 2rem;
-            backdrop-filter: blur(8px);
-        }
-        .hiw-step:nth-child(even) { flex-direction: row-reverse; }
-        .hiw-icon {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gallery-card);
-            border-radius: 50%;
-            font-size: 2rem;
-            color: var(--solar-orange);
-            margin-right: 0;
-        }
-        .hiw-title {
-            color: var(--headline-white);
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            text-transform: uppercase;
-        }
-        .hiw-desc {
-            color: var(--starlight-gray);
-            font-size: 1rem;
-        }
-        /* Social Proof */
-        .social-proof {
-            max-width: 900px;
-            margin: 3rem auto 2rem auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-        .carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-        }
-        .carousel-photo {
-            min-width: 160px;
-            max-width: 180px;
-            border-radius: 1rem;
-            background: var(--gallery-card);
-            box-shadow: 0 2px 12px 0 #3ecfff22;
-            border: 1px solid var(--gallery-border);
-            text-align: center;
-            padding: 0.7rem 0.5rem 0.5rem 0.5rem;
-        }
-        .carousel-photo img {
-            width: 100%;
-            border-radius: 0.7rem;
-            margin-bottom: 0.5rem;
-        }
-        .carousel-caption {
-            font-size: 0.95rem;
-            color: var(--starlight-gray);
-        }
-        .club-logos {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
             flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-        .club-logo {
-            width: 80px;
-            height: 40px;
-            background: var(--gallery-card);
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
+            gap: 2.5rem;
             justify-content: center;
-            color: var(--solar-orange);
-            font-weight: 700;
-            font-size: 1rem;
+            margin-bottom: 2rem;
         }
-        /* Roadmap */
-        .roadmap {
-            max-width: 900px;
-            margin: 3rem auto 2rem auto;
-            background: var(--glass-bg);
+        .feature {
+            background: rgba(31,40,51,0.45);
             border-radius: 1.2rem;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 2px 16px 0 #3ecfff22;
-            padding: 2rem 2rem 1.5rem 2rem;
-            backdrop-filter: blur(8px);
-        }
-        .timeline {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-        }
-        .timeline-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1 1 0;
-        }
-        .timeline-dot {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--thruster-blue);
-            border: 3px solid var(--solar-orange);
-            margin-bottom: 0.5rem;
-        }
-        .timeline-label {
-            color: var(--headline-white);
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.2rem;
-        }
-        .timeline-desc {
-            color: var(--starlight-gray);
-            font-size: 0.95rem;
+            padding: 2.5rem;
+            flex: 1 1 260px;
+            min-width: 260px;
+            max-width: 320px;
             text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(127,127,213,0.13);
+            border: 1px solid rgba(102,252,241,0.10);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeInUp 1.5s;
         }
-        .roadmap-note {
-            color: var(--solar-orange);
-            font-size: 1rem;
-            margin-top: 0.7rem;
-            text-align: center;
+        .feature:hover {
+            transform: translateY(-10px) scale(1.06);
+            box-shadow: 0 12px 48px 0 var(--glass-purple);
         }
-        /* Final CTA & Contact Form */
-        .final-cta {
-            max-width: 900px;
-            margin: 3rem auto 2rem auto;
-            background: var(--glass-bg);
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--stellar-cyan);
+            text-shadow: 0 2px 8px var(--glass-purple);
+            animation: popIn 1.7s;
+        }
+        .pricing-table {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .pricing-plan {
+            background: rgba(31,40,51,0.45);
             border-radius: 1.2rem;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 2px 16px 0 #3ecfff22;
-            padding: 2rem 2rem 1.5rem 2rem;
-            backdrop-filter: blur(8px);
+            padding: 2.5rem;
+            flex: 1 1 260px;
+            min-width: 260px;
+            max-width: 320px;
             text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(127,127,213,0.13);
+            border: 1px solid rgba(102,252,241,0.10);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeInUp 1.5s;
         }
-        .privacy-note {
-            color: var(--starlight-gray);
-            font-size: 0.95rem;
-            margin-top: 0.7rem;
+        .pricing-plan:hover {
+            transform: translateY(-10px) scale(1.06);
+            box-shadow: 0 12px 48px 0 var(--glass-purple);
+        }
+        .plan-title {
+            font-size: 1.5rem;
+            color: var(--stellar-cyan);
+            margin-bottom: 0.7rem;
+            text-shadow: 0 2px 8px var(--glass-purple);
+        }
+        .plan-price {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--nebula-teal);
         }
         .contact-form {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            max-width: 400px;
-            margin: 2rem auto 0 auto;
-            background: rgba(255,255,255,0.10);
-            border-radius: 1rem;
-            box-shadow: 0 2px 12px 0 #3ecfff22;
-            border: 1px solid var(--gallery-border);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            animation: fadeIn 1.2s ease;
+            gap: 1.2rem;
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fadeIn 1.7s;
         }
         .contact-form input, .contact-form textarea {
-            padding: 0.7rem;
-            border-radius: 0.5rem;
+            padding: 1rem;
+            border-radius: 0.7rem;
             border: none;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.18);
-            color: #fff;
-            box-shadow: 0 1px 4px 0 #3ecfff22;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.12);
+            color: var(--white);
+            box-shadow: 0 4px 16px 0 rgba(127,127,213,0.10);
+            border: 1px solid rgba(102,252,241,0.10);
+            transition: background 0.2s, box-shadow 0.2s;
         }
         .contact-form input:focus, .contact-form textarea:focus {
-            outline: 2px solid var(--thruster-blue);
-            background: rgba(62,207,255,0.10);
+            background: rgba(255,255,255,0.18);
+            outline: none;
+            box-shadow: 0 8px 32px 0 var(--glass-purple);
         }
         .contact-form button {
-            background: var(--thruster-blue);
-            color: var(--space-black);
+            background: var(--stellar-cyan);
+            color: var(--deep-navy);
             border: none;
-            padding: 0.7rem 1.5rem;
-            font-size: 1rem;
+            padding: 1rem 2.2rem;
+            font-size: 1.1rem;
             border-radius: 2rem;
             cursor: pointer;
-            font-weight: 700;
-            box-shadow: 0 2px 8px 0 #3ecfff22;
+            font-weight: 500;
+            box-shadow: 0 4px 24px 0 rgba(102,252,241,0.18);
             transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
         }
         .contact-form button:hover {
-            background: var(--solar-orange);
-            color: #fff;
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 4px 16px 0 var(--solar-orange);
+            background: var(--nebula-teal);
+            color: var(--white);
+            transform: scale(1.07);
+            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
         }
-        /* Footer */
         footer {
-            background: var(--glass-bg);
-            color: var(--starlight-gray);
-            padding: 2rem 2rem 1rem 2rem;
+            background: rgba(31,40,51,0.7);
+            color: var(--white);
+            padding: 2.5rem 2.5rem 1.5rem 2.5rem;
             text-align: center;
-            border-top: 2px solid var(--glass-border);
-            box-shadow: 0 -4px 24px 0 #3ecfff11;
-            backdrop-filter: blur(10px);
-            font-size: 1rem;
+            border-top: 2px solid var(--nebula-teal);
+            box-shadow: 0 -8px 48px 0 rgba(31,40,51,0.15);
+            backdrop-filter: blur(8px);
+            animation: fadeInUp 1.2s;
         }
-        .footer-links {
-            margin: 1rem 0 0.5rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+        .footer-nav {
+            margin: 1.2rem 0;
         }
-        .footer-links a {
-            color: var(--thruster-blue);
+        .footer-nav a {
+            color: var(--white);
+            margin: 0 1rem;
             text-decoration: none;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+        .footer-nav a:hover {
+            color: var(--stellar-cyan);
+            text-shadow: 0 0 8px var(--stellar-cyan);
+        }
+        .footer-social {
+            margin: 1.2rem 0;
+        }
+        .footer-social a {
+            color: var(--stellar-cyan);
+            margin: 0 0.7rem;
+            font-size: 1.7rem;
+            text-decoration: none;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+        .footer-social a:hover {
+            color: var(--glass-purple);
+            text-shadow: 0 0 8px var(--glass-purple);
+        }
+        .copyright {
             font-size: 1rem;
-            transition: color 0.2s;
-        }
-        .footer-links a:hover {
-            color: var(--solar-orange);
-        }
-        .footer-credits {
             color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+        }
+        @media (max-width: 1200px) {
+            .section-flex {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .section-img {
+                max-width: 100%;
+            }
         }
         @media (max-width: 900px) {
-            .event-gallery, .how-it-works, .social-proof, .roadmap, .final-cta { max-width: 98vw; }
+            section {
+                padding: 3rem 0.5rem;
+                max-width: 100vw;
+            }
         }
         @media (max-width: 700px) {
-            .event-gallery { flex-direction: column; align-items: center; }
-            .how-it-works { gap: 1.2rem; }
-            .hiw-step { flex-direction: column !important; gap: 1rem; text-align: center; }
-            .timeline { flex-direction: column; gap: 1.2rem; }
+            .features-list, .pricing-table {
+                flex-direction: column;
+                align-items: center;
+            }
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0.5rem;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            section {
+                padding: 1.5rem 0.2rem;
+            }
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            80% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="SkyQuest meteor logo"><path d="M8 40 Q24 8 44 8 Q32 20 20 44" stroke="#3ecfff" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="8" cy="40" r="3.5" fill="#ffb347"/><circle cx="20" cy="44" r="2.5" fill="#fff"/><circle cx="44" cy="8" r="2.5" fill="#3ecfff"/></svg>
-            SkyQuest Tracker
-        </div>
+        <div class="logo">🪐 SkyQuest Tracker</div>
         <nav>
-            <a href="#hero" class="active">Home</a>
-            <a href="#gallery">Events</a>
-            <a href="#how">How it works</a>
-            <a href="#proof">Community</a>
+            <a href="#hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
             <a href="#contact">Contact</a>
+            <a href="#" title="Live Events (coming soon)">Live Events</a>
+            <a href="#" title="Event Archive (coming soon)">Event Archive</a>
+            <a href="#" title="Resources (coming soon)">Resources</a>
+            <a href="#" title="Blog (coming soon)">Blog</a>
         </nav>
     </header>
-    <main>
-        <!-- Hero Section -->
-        <section class="hero" id="hero">
-            <img class="hero-img" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=40" alt="Milky Way time-lapse over mountains" loading="lazy">
-            <div class="hero-content">
-                <h1>Meteor Shower Alerts, Instantly</h1>
-                <p>Never miss a space event—get rocket launch reminders, ISS pass times, and meteor shower alerts for your sky.</p>
-                <button class="notify-btn" onclick="document.getElementById('countdown').scrollIntoView({behavior: 'smooth'})">Notify Me</button>
+    <section class="hero" id="hero">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80" alt="Rocket launch in space" loading="lazy">
+        <div class="hero-title">Track Space Events Before They Happen</div>
+        <div class="hero-desc">Never miss a rocket launch, meteor shower, or cosmic event again. Get timely alerts and stay connected to the wonders of the universe!</div>
+        <button class="cta-btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Learn More</button>
+    </section>
+    <section id="about">
+        <div class="section-flex">
+            <div class="section-img-wrap">
+                <img class="section-img" src="https://images.unsplash.com/photo-1447433819943-74a20887a81e?auto=format&fit=crop&w=600&q=80" alt="Astronaut floating in space" loading="lazy">
             </div>
-        </section>
-        <!-- Countdown Strip -->
-        <section class="countdown-strip" id="countdown">
-            <div class="countdown-ring">
-                <svg width="70" height="70">
-                    <circle cx="35" cy="35" r="30" stroke="#222" stroke-width="7" fill="none"/>
-                    <circle id="countdownArc" cx="35" cy="35" r="30" stroke="#3ecfff" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="0"/>
-                </svg>
-                <div class="countdown-time" id="countdownTime">00:00:00</div>
-            </div>
-            <div>
-                <div class="countdown-label">Next Event: Perseid Meteor Shower</div>
-                <div class="countdown-label"><span id="eventDate">Aug 12, 2024, 02:00 UTC</span></div>
-            </div>
-            <div class="change-location" onclick="changeLocation()">Change location</div>
-        </section>
-        <!-- UNIVERSAL SEARCH BAR -->
-        <div id="searchBarContainer" style="max-width:900px;margin:2rem auto 0 auto;display:flex;align-items:center;gap:1rem;">
-            <input id="universalSearch" type="text" placeholder="Search events (e.g. 'Show me the next partial solar eclipse visible from Paris')" style="flex:1;padding:0.8rem 1.2rem;border-radius:2rem;border:1.5px solid #3ecfff;background:rgba(24,31,42,0.65);color:#fff;font-size:1.1rem;outline:none;" aria-label="Search events">
-            <button id="searchBtn" class="section-btn" style="padding:0.8rem 1.5rem;">Search</button>
-        </div>
-        <!-- FILTER CHIPS -->
-        <div id="filterChips" style="max-width:900px;margin:1rem auto 0 auto;display:flex;flex-wrap:wrap;gap:0.7rem;"></div>
-        <!-- SEASONAL HIGHLIGHTS CALENDAR -->
-        <section id="seasonalHighlights" style="max-width:900px;margin:2.5rem auto 0 auto;background:rgba(24,31,42,0.65);border-radius:1.2rem;box-shadow:0 2px 16px 0 #3ecfff22;padding:2rem 2rem 1.5rem 2rem;backdrop-filter:blur(8px);">
-            <div class="section-title" style="font-size:1.5rem;color:#ffb347;">Top 5 Sky Events This Month</div>
-            <div id="highlightsList" style="display:flex;flex-wrap:wrap;gap:1.2rem;"></div>
-        </section>
-        <!-- WATCHLIST SECTION -->
-        <section id="watchlistSection" style="max-width:900px;margin:2.5rem auto 0 auto;background:rgba(24,31,42,0.65);border-radius:1.2rem;box-shadow:0 2px 16px 0 #3ecfff22;padding:2rem 2rem 1.5rem 2rem;backdrop-filter:blur(8px);">
-            <div class="section-title" style="font-size:1.5rem;color:#3ecfff;">Your Watchlist</div>
-            <div id="watchlist" style="display:flex;flex-wrap:wrap;gap:1.2rem;"></div>
-        </section>
-        <!-- Event Gallery -->
-        <section class="event-gallery" id="gallery" aria-label="Upcoming Space Events">
-            <!-- Event cards will be injected here by JS -->
-        </section>
-        <!-- Modal for Event Details -->
-        <div class="modal-bg" id="eventModal" aria-modal="true" role="dialog">
-            <div class="modal" tabindex="-1">
-                <button class="close-modal" onclick="closeModal()" aria-label="Close">&times;</button>
-                <img id="modalImg" src="" alt="Sky map thumbnail" loading="lazy">
-                <div id="modalTitle" class="event-title"></div>
-                <div id="modalDate" class="event-datetime"></div>
-                <div id="modalVisibility" class="event-visibility"></div>
-                <button class="add-alert-btn" id="addAlertBtn">Add alert</button>
+            <div class="section-content">
+                <div class="section-title">About SkyQuest Tracker</div>
+                <div class="section-desc">SkyQuest Tracker is your go-to platform for tracking upcoming space events. Whether you're an enthusiast or a casual stargazer, our service ensures you stay informed and ready for every cosmic spectacle.</div>
+                <button class="section-btn" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">See Features</button>
             </div>
         </div>
-        <!-- How It Works -->
-        <section class="how-it-works" id="how">
-            <div class="hiw-step">
-                <div class="hiw-icon" aria-label="Location detection">📍</div>
-                <div>
-                    <div class="hiw-title">Choose your sky</div>
-                    <div class="hiw-desc">We detect your location for the most accurate meteor shower alerts and ISS pass times.</div>
+    </section>
+    <section id="features">
+        <div class="section-flex">
+            <div class="section-content">
+                <div class="section-title">Features</div>
+                <div class="section-desc">Discover what makes SkyQuest Tracker the best way to stay updated on all things space.</div>
+                <div class="features-list">
+                    <div class="feature">
+                        <div class="feature-icon">🛰️</div>
+                        <div>Real-time Event Tracking</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔔</div>
+                        <div>Custom Alerts & Notifications</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📅</div>
+                        <div>Personalized Event Calendar</div>
+                    </div>
                 </div>
+                <button class="section-btn" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">View Pricing</button>
             </div>
-            <div class="hiw-step">
-                <div class="hiw-icon" aria-label="Event types">🔔</div>
-                <div>
-                    <div class="hiw-title">Pick your alerts</div>
-                    <div class="hiw-desc">Select which space event reminders you want: rocket launch schedule, meteor showers, or ISS fly-overs.</div>
-                </div>
+            <div class="section-img-wrap">
+                <img class="section-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" alt="Space telescope and stars" loading="lazy">
             </div>
-            <div class="hiw-step">
-                <div class="hiw-icon" aria-label="Reminder delivery">🌌</div>
-                <div>
-                    <div class="hiw-title">Look up & enjoy</div>
-                    <div class="hiw-desc">Get notified, step outside, and catch the next celestial show in your sky.</div>
-                </div>
-            </div>
-        </section>
-        <!-- Social Proof -->
-        <section class="social-proof" id="proof" aria-label="Community Photos">
-            <div class="carousel" id="carousel" tabindex="0" aria-label="User photos">
-                <!-- Carousel photos will be injected here by JS -->
-            </div>
-            <button id="addPhotoBtn" aria-label="Add your photo">Add Your Photo</button>
-            <div class="club-logos" aria-label="Astronomy clubs and schools">
-                <div class="club-logo">Astro Club</div>
-                <div class="club-logo">Stargazers HS</div>
-                <div class="club-logo">Night Sky U</div>
-                <div class="club-logo">Cosmos Society</div>
-            </div>
-        </section>
-        <!-- Roadmap Teaser -->
-        <section class="roadmap" id="roadmap">
-            <div class="timeline">
-                <div class="timeline-step">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-label">Today</div>
-                    <div class="timeline-desc">Get alerts for meteor showers, ISS pass times, and rocket launches.</div>
-                </div>
-                <div class="timeline-step">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-label">30 days</div>
-                    <div class="timeline-desc">Cloud cover confidence for your location.</div>
-                </div>
-                <div class="timeline-step">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-label">60 days</div>
-                    <div class="timeline-desc">Augmented-reality sky pointer.</div>
-                </div>
-            </div>
-            <div class="roadmap-note">Early supporters shape what launches next.</div>
-        </section>
-        <!-- Final CTA & Contact Form -->
-        <section class="final-cta" id="contact">
-            <button class="notify-btn">Notify Me</button>
-            <div class="privacy-note">No spam. Cancel anytime.</div>
-            <form class="contact-form" action="/api/join-waitlist" method="POST" novalidate aria-label="Join Waitlist">
-                <input type="text" name="name" placeholder="Your Name" required autocomplete="name" aria-required="true">
-                <input type="email" name="email" placeholder="Your Email" required autocomplete="email" aria-required="true">
-                <textarea name="message" rows="4" placeholder="Your Message" required aria-required="true"></textarea>
-                <button type="submit">Join Waitlist</button>
-                <div id="formFeedback" role="alert" aria-live="polite"></div>
-            </form>
-        </section>
-        <!-- COUNTDOWN BADGE FLOATING ON PAGE -->
-        <div id="countdownBadge" style="position:fixed;bottom:2rem;right:2rem;z-index:10001;background:#3ecfff;color:#181f2a;padding:1rem 2rem;border-radius:2rem;box-shadow:0 4px 24px 0 #3ecfff55;font-weight:700;font-size:1.1rem;display:none;align-items:center;gap:1rem;transition:opacity 0.3s;"></div>
-        <!-- DAILY/WEEKLY DIGEST SECTION -->
-        <section id="digestSection" style="max-width:900px;margin:2.5rem auto 0 auto;background:rgba(24,31,42,0.65);border-radius:1.2rem;box-shadow:0 2px 16px 0 #3ecfff22;padding:2rem 2rem 1.5rem 2rem;backdrop-filter:blur(8px);">
-            <div class="section-title" style="font-size:1.5rem;color:#ffb347;">Your Sky Digest</div>
-            <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem;">
-                <button class="section-btn" id="digestDailyBtn">Daily</button>
-                <button class="section-btn" id="digestWeeklyBtn">Weekly</button>
-            </div>
-            <div id="digestList"></div>
-        </section>
-        <!-- AR SKY POINTER (SIMULATED) -->
-        <div id="arPointer" style="position:fixed;top:1rem;left:1rem;z-index:10002;display:none;background:rgba(24,31,42,0.85);border-radius:1.2rem;padding:1.2rem;box-shadow:0 2px 16px 0 #3ecfff55;">
-          <div style="font-weight:700;color:#3ecfff;margin-bottom:0.5rem;">AR Sky Pointer</div>
-          <div id="arPointerSVG"></div>
-          <button class="section-btn" onclick="document.getElementById('arPointer').style.display='none'">Close</button>
         </div>
-        <!-- PAST EVENT REPLAY CAROUSEL -->
-        <section id="replayCarouselSection" style="max-width:900px;margin:2.5rem auto 0 auto;background:rgba(24,31,42,0.65);border-radius:1.2rem;box-shadow:0 2px 16px 0 #3ecfff22;padding:2rem 2rem 1.5rem 2rem;backdrop-filter:blur(8px);">
-          <div class="section-title" style="font-size:1.5rem;color:#ffb347;">Past Event Replay</div>
-          <div id="replayCarousel" style="display:flex;gap:1.2rem;overflow-x:auto;"></div>
-        </section>
-        <!-- MULTIPLE SAVED LOCATIONS -->
-        <div id="locationManager" style="max-width:900px;margin:2rem auto 0 auto;background:rgba(24,31,42,0.65);border-radius:1.2rem;box-shadow:0 2px 16px 0 #3ecfff22;padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem;">
-        <div class="footer-credits">&copy; 2024 SkyQuest Tracker. Meteor shower alerts, ISS pass times, and rocket launch reminders for your sky.</div>
+    </section>
+    <section id="pricing">
+        <div class="section-flex">
+            <div class="section-img-wrap">
+                <img class="section-img" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Earth from space with stars" loading="lazy">
+            </div>
+            <div class="section-content">
+                <div class="section-title">Pricing</div>
+                <div class="section-desc">Choose the plan that fits your needs. Start tracking for free!</div>
+                <div class="pricing-table">
+                    <div class="pricing-plan">
+                        <div class="plan-title">Free</div>
+                        <div class="plan-price">$0</div>
+                        <div>Basic event tracking<br>Standard alerts</div>
+                    </div>
+                    <div class="pricing-plan">
+                        <div class="plan-title">Pro</div>
+                        <div class="plan-price">$4.99/mo</div>
+                        <div>All Free features<br>Custom notifications<br>Priority support</div>
+                    </div>
+                </div>
+                <button class="section-btn" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Contact Us</button>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <div class="section-flex">
+            <div class="section-content">
+                <div class="section-title">Contact Us</div>
+                <div class="section-desc">Have questions or want to partner with us? Fill out the form below and we'll get back to you soon!</div>
+                <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you for contacting us!'); this.reset();">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea rows="4" placeholder="Your Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+            <div class="section-img-wrap">
+                <img class="section-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Person looking at the night sky" loading="lazy">
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="logo">🪐 SkyQuest Tracker</div>
+        <div class="footer-nav">
+            <a href="#hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+            <a href="#" title="Live Events (coming soon)">Live Events</a>
+            <a href="#" title="Event Archive (coming soon)">Event Archive</a>
+            <a href="#" title="Resources (coming soon)">Resources</a>
+            <a href="#" title="Blog (coming soon)">Blog</a>
+        </div>
+        <div class="footer-social">
+            <a href="#" title="Twitter">🐦</a>
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+        </div>
+        <div class="copyright">&copy; 2024 SkyQuest Tracker. All rights reserved.</div>
     </footer>
-    <a href="#hero" class="skip-link">Skip to main content</a>
     <script>
-    // =====================
-    // SIMULATED EVENT DATA
-    // =====================
-    const simulatedEvents = [
-        {
-            type: 'Meteor Shower',
-            icon: '☄️',
-            date: 'Aug 12, 2024, 02:00 UTC',
-            timestamp: Date.UTC(2024, 7, 12, 2, 0, 0),
-            visibility: 'High',
-            visClass: 'vis-high',
-            skyMap: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=40',
-            alt: 'Perseid meteor streaking over desert sky',
-        },
-        {
-            type: 'ISS Fly-Over',
-            icon: '🛰️',
-            date: 'Aug 15, 2024, 19:45 UTC',
-            timestamp: Date.UTC(2024, 7, 15, 19, 45, 0),
-            visibility: 'Medium',
-            visClass: 'vis-med',
-            skyMap: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=40',
-            alt: 'ISS pass over city skyline',
-        },
-        {
-            type: 'Rocket Launch',
-            icon: '🚀',
-            date: 'Aug 20, 2024, 13:30 UTC',
-            timestamp: Date.UTC(2024, 7, 20, 13, 30, 0),
-            visibility: 'Low',
-            visClass: 'vis-low',
-            skyMap: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=300&q=40',
-            alt: 'Rocket launch lighting up night sky',
-        }
-    ];
-    // =====================
-    // USER LOCATION & PERSONALIZATION
-    // =====================
-    const defaultLocation = { city: 'New York', country: 'USA', lat: 40.7128, lon: -74.0060 };
-    let userLocation = JSON.parse(localStorage.getItem('skyquest_location')) || defaultLocation;
-    let userName = localStorage.getItem('skyquest_name') || '';
-
-    // Geolocation detection
-    function detectLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                pos => {
-                    // Simulate reverse geocoding
-                    userLocation = {
-                        city: 'San Francisco',
-                        country: 'USA',
-                        lat: pos.coords.latitude,
-                        lon: pos.coords.longitude
-                    };
-                    localStorage.setItem('skyquest_location', JSON.stringify(userLocation));
-                    updateGreeting();
-                    updateEventGallery();
-                },
-                err => {
-                    // Use default
-                    updateGreeting();
-                    updateEventGallery();
-                },
-                { timeout: 5000 }
-            );
-        } else {
-            updateGreeting();
-            updateEventGallery();
-        }
-    }
-
-    // Manual location override (simulated geocoding)
-    function manualLocationSearch() {
-        const loc = prompt('Enter your city or country:');
-        if (loc && loc.trim().length > 0) {
-            // Simulate geocoding
-            userLocation = {
-                city: loc.split(',')[0].trim(),
-                country: loc.split(',')[1] ? loc.split(',')[1].trim() : 'Unknown',
-                lat: 0,
-                lon: 0
-            };
-            localStorage.setItem('skyquest_location', JSON.stringify(userLocation));
-            updateGreeting();
-            updateEventGallery();
-        }
-    }
-    window.changeLocation = manualLocationSearch;
-
-    // Greet returning users
-    function updateGreeting() {
-        let greeting = '';
-        if (userName) {
-            greeting = `Welcome back, ${userName}!`;
-        } else {
-            greeting = `Welcome to SkyQuest Tracker!`;
-        }
-        // Place greeting in hero section
-        let heroContent = document.querySelector('.hero-content');
-        if (heroContent && !document.getElementById('userGreeting')) {
-            const greetDiv = document.createElement('div');
-            greetDiv.id = 'userGreeting';
-            greetDiv.setAttribute('aria-live', 'polite');
-            greetDiv.style.fontSize = '1.1rem';
-            greetDiv.style.marginBottom = '0.7rem';
-            greetDiv.style.color = '#3ecfff';
-            heroContent.insertBefore(greetDiv, heroContent.firstChild);
-        }
-        if (document.getElementById('userGreeting')) {
-            document.getElementById('userGreeting').textContent = greeting + (userLocation.city ? `  |  Location: ${userLocation.city}` : '');
-        }
-    }
-
-    // =====================
-    // DYNAMIC EVENT GALLERY (FILTER BY LOCATION)
-    // =====================
-    function updateEventGallery() {
-        // Simulate: Only show events if city is not 'Nowhere'
-        let visibleEvents = simulatedEvents.filter(e => userLocation.city.toLowerCase() !== 'nowhere');
-        renderEventGallery(visibleEvents);
-        // If none, show friendly message
-        const gallery = document.getElementById('gallery');
-        if (visibleEvents.length === 0) {
-            gallery.innerHTML = `<div style="color:#ffb347;font-size:1.2rem;text-align:center;padding:2rem;">No visible events for your location.<br><button onclick="changeLocation()" style="margin-top:1rem;background:#3ecfff;color:#181f2a;padding:0.7rem 1.5rem;border-radius:2rem;border:none;cursor:pointer;">Change Location</button></div>`;
-        }
-    }
-
-    // =====================
-    // COUNTDOWN LOGIC (DYNAMIC)
-    // =====================
-    function getNextEvent() {
-        // Simulate: next event for location
-        let events = simulatedEvents.filter(e => userLocation.city.toLowerCase() !== 'nowhere');
-        if (events.length === 0) return null;
-        events.sort((a, b) => a.timestamp - b.timestamp);
-        return events[0];
-    }
-    function updateCountdown() {
-        const nextEvent = getNextEvent();
-        if (!nextEvent) {
-            document.getElementById('countdownTime').textContent = '--:--:--';
-            document.getElementById('eventDate').textContent = 'No upcoming events';
-            return;
-        }
-        const eventDate = new Date(nextEvent.timestamp);
-        const now = new Date();
-        let diff = Math.max(0, eventDate - now);
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        diff -= days * (1000 * 60 * 60 * 24);
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        diff -= hours * (1000 * 60 * 60);
-        const mins = Math.floor(diff / (1000 * 60));
-        diff -= mins * (1000 * 60);
-        document.getElementById('countdownTime').textContent = `${String(days).padStart(2,'0')}:${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}`;
-        document.getElementById('eventDate').textContent = nextEvent.date;
-        // Animate ring
-        const total = 30*24*60*60; // 30 days in seconds
-        const left = Math.max(0, Math.floor((eventDate - now)/1000));
-        const percent = Math.max(0, Math.min(1, left/total));
-        document.getElementById('countdownArc').setAttribute('stroke-dashoffset', 188.4 * (1-percent));
-    }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // =====================
-    // WAITLIST FORM: STORE NAME FOR GREETING
-    // =====================
-    const form = document.querySelector('.contact-form');
-    const feedback = document.getElementById('formFeedback');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        feedback.textContent = 'Submitting... <span class="spinner"></span>';
-        feedback.style.color = '#3ecfff';
-        setTimeout(() => {
-            if (form.name.value && form.email.value && form.message.value) {
-                feedback.textContent = 'Thank you for joining the waitlist!';
-                feedback.style.color = '#3ecfff';
-                userName = form.name.value;
-                localStorage.setItem('skyquest_name', userName);
-                updateGreeting();
-                form.reset();
-            } else {
-                feedback.textContent = 'Please fill out all fields.';
-                feedback.style.color = '#ffb347';
-            }
-        }, 1200);
-    });
-
-    // =====================
-    // SOCIAL PROOF CAROUSEL (SWIPE, ADD PHOTO, KEYBOARD)
-    // =====================
-    let carouselPhotos = JSON.parse(localStorage.getItem('skyquest_photos')) || [
-        {img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=40',caption:'"Captured with help from SkyQuest."'},
-        {img:'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=40',caption:'"ISS pass—right on time!"'},
-        {img:'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=300&q=40',caption:'"Never missed a launch since joining."'}
-    ];
-    function renderCarousel() {
-        const carousel = document.getElementById('carousel');
-        carousel.innerHTML = '';
-        carouselPhotos.forEach((p, i) => {
-            const div = document.createElement('div');
-            div.className = 'carousel-photo';
-            div.tabIndex = 0;
-            div.setAttribute('role', 'group');
-            div.setAttribute('aria-label', p.caption);
-            div.innerHTML = `<img src="${p.img}" alt="${p.caption}" loading="lazy"><div class="carousel-caption">${p.caption}</div>`;
-            carousel.appendChild(div);
-        });
-    }
-    renderCarousel();
-    // Swipe/keyboard navigation
-    let carouselIndex = 0;
-    function scrollCarousel(idx) {
-        const carousel = document.getElementById('carousel');
-        const photos = carousel.querySelectorAll('.carousel-photo');
-        if (photos[idx]) photos[idx].scrollIntoView({behavior:'smooth',inline:'center'});
-    }
-    document.getElementById('carousel').addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowRight') { carouselIndex = Math.min(carouselIndex+1, carouselPhotos.length-1); scrollCarousel(carouselIndex); }
-        if (e.key === 'ArrowLeft') { carouselIndex = Math.max(carouselIndex-1, 0); scrollCarousel(carouselIndex); }
-    });
-    // Touch swipe
-    let startX = 0;
-    document.getElementById('carousel').addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-    document.getElementById('carousel').addEventListener('touchend', e => {
-        let dx = e.changedTouches[0].clientX - startX;
-        if (dx < -30) { carouselIndex = Math.min(carouselIndex+1, carouselPhotos.length-1); scrollCarousel(carouselIndex); }
-        if (dx > 30) { carouselIndex = Math.max(carouselIndex-1, 0); scrollCarousel(carouselIndex); }
-    });
-    // Add photo
-    const addPhotoBtn = document.getElementById('addPhotoBtn');
-    addPhotoBtn.addEventListener('click', function() {
-        const url = prompt('Paste a link to your sky photo (jpg/png):');
-        const caption = prompt('Add a caption:');
-        if (url && caption) {
-            carouselPhotos.push({img:url,caption:caption});
-            localStorage.setItem('skyquest_photos', JSON.stringify(carouselPhotos));
-            renderCarousel();
-            carouselIndex = carouselPhotos.length-1;
-            scrollCarousel(carouselIndex);
-        }
-    });
-
-    // =====================
-    // PARALLAX & MICROINTERACTIONS
-    // =====================
-    window.addEventListener('scroll', function() {
-        const heroImg = document.querySelector('.hero-img');
-        if (heroImg) {
-            let y = window.scrollY;
-            heroImg.style.transform = `translateY(${y*0.2}px) scale(${1+Math.min(y/2000,0.05)})`;
-        }
-    });
-    // =====================
-    // INITIALIZE
-    // =====================
-    detectLocation();
-    updateGreeting();
-    updateEventGallery();
-    renderCarousel();
-
-    // =====================
-    // EVENT FILTERING & PREFERENCES
-    // =====================
-    const eventTypes = ['Meteor Shower', 'ISS Fly-Over', 'Rocket Launch'];
-    let userEventPrefs = JSON.parse(localStorage.getItem('skyquest_event_prefs')) || eventTypes.slice();
-    function renderEventFilters() {
-        const filterDiv = document.createElement('div');
-        filterDiv.className = 'event-filters';
-        filterDiv.style.display = 'flex';
-        filterDiv.style.justifyContent = 'center';
-        filterDiv.style.gap = '1.2rem';
-        filterDiv.style.margin = '1.5rem 0 0.5rem 0';
-        filterDiv.setAttribute('role', 'group');
-        filterDiv.setAttribute('aria-label', 'Filter events');
-        eventTypes.forEach(type => {
-            const label = document.createElement('label');
-            label.style.cursor = 'pointer';
-            label.style.fontWeight = '700';
-            label.style.color = userEventPrefs.includes(type) ? '#3ecfff' : '#e0e6ef';
-            label.innerHTML = `<input type="checkbox" value="${type}" ${userEventPrefs.includes(type) ? 'checked' : ''} style="margin-right:0.4rem;">${type}`;
-            label.querySelector('input').addEventListener('change', function() {
-                if (this.checked) {
-                    if (!userEventPrefs.includes(type)) userEventPrefs.push(type);
-                } else {
-                    userEventPrefs = userEventPrefs.filter(t => t !== type);
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a, .footer-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({behavior: 'smooth'});
                 }
-                localStorage.setItem('skyquest_event_prefs', JSON.stringify(userEventPrefs));
-                updateEventGallery();
-                updateCountdown();
             });
-            filterDiv.appendChild(label);
         });
-        // Insert or replace
-        let gallery = document.getElementById('gallery');
-        if (!document.getElementById('eventFilters')) {
-            filterDiv.id = 'eventFilters';
-            gallery.parentNode.insertBefore(filterDiv, gallery);
-        } else {
-            document.getElementById('eventFilters').replaceWith(filterDiv);
-            filterDiv.id = 'eventFilters';
-        }
-    }
-    renderEventFilters();
-
-    // =====================
-    // ALERT MANAGEMENT
-    // =====================
-    let userAlerts = JSON.parse(localStorage.getItem('skyquest_alerts')) || [];
-    function addAlert(eventIdx) {
-        const event = simulatedEvents[eventIdx];
-        if (!userAlerts.some(a => a.type === event.type && a.date === event.date)) {
-            userAlerts.push({ ...event });
-            localStorage.setItem('skyquest_alerts', JSON.stringify(userAlerts));
-            renderAlerts();
-            // Animate feedback
-            const btn = document.getElementById('addAlertBtn');
-            btn.textContent = 'Added!';
-            btn.style.background = '#ffb347';
-            setTimeout(() => {
-                btn.textContent = 'Add alert';
-                btn.style.background = '';
-            }, 1200);
-        }
-    }
-    function removeAlert(idx) {
-        userAlerts.splice(idx, 1);
-        localStorage.setItem('skyquest_alerts', JSON.stringify(userAlerts));
-        renderAlerts();
-    }
-    function renderAlerts() {
-        let alertDiv = document.getElementById('userAlerts');
-        if (!alertDiv) {
-            alertDiv = document.createElement('div');
-            alertDiv.id = 'userAlerts';
-            alertDiv.setAttribute('aria-live', 'polite');
-            alertDiv.style.maxWidth = '540px';
-            alertDiv.style.margin = '2rem auto 0 auto';
-            alertDiv.style.background = 'rgba(24,31,42,0.65)';
-            alertDiv.style.borderRadius = '1.2rem';
-            alertDiv.style.boxShadow = '0 2px 16px 0 #3ecfff22';
-            alertDiv.style.padding = '1.2rem 2rem';
-            alertDiv.style.textAlign = 'center';
-            document.querySelector('main').insertBefore(alertDiv, document.getElementById('how'));
-        }
-        if (userAlerts.length === 0) {
-            alertDiv.innerHTML = `<div style="color:#ffb347;font-size:1.1rem;">No alerts set. Click "Add alert" on an event to get reminders!</div>`;
-        } else {
-            alertDiv.innerHTML = `<div style="color:#3ecfff;font-size:1.1rem;font-weight:700;">Your Upcoming Alerts</div>`;
-            userAlerts.forEach((a, i) => {
-                const alertRow = document.createElement('div');
-                alertRow.className = 'alert-fade-in';
-                alertRow.style.display = 'flex';
-                alertRow.style.alignItems = 'center';
-                alertRow.style.justifyContent = 'space-between';
-                alertRow.style.background = 'rgba(62,207,255,0.10)';
-                alertRow.style.borderRadius = '0.7rem';
-                alertRow.style.margin = '0.7rem 0';
-                alertRow.style.padding = '0.7rem 1rem';
-                alertRow.style.transition = 'background 0.3s';
-                alertRow.innerHTML = `
-                    <span style="display:flex;align-items:center;gap:0.7rem;">
-                        <span style="font-size:1.3rem;">${a.icon}</span>
-                        <span style="font-weight:700;">${a.type}</span>
-                        <span style="color:#e0e6ef;">${a.date}</span>
-                        <button class="copy-btn" aria-label="Copy event details" style="background:none;border:none;color:#3ecfff;cursor:pointer;font-size:1.1rem;position:relative;">📋<span class="copied-tooltip">Copied!</span></button>
-                    </span>
-                    <button aria-label="Remove alert" style="background:#ffb347;color:#181f2a;border:none;border-radius:1.2rem;padding:0.3rem 1.1rem;cursor:pointer;font-weight:700;transition:background 0.2s;">Remove</button>
-                `;
-                alertRow.querySelector('button[aria-label="Remove alert"]').addEventListener('click', () => {
-                    alertRow.classList.remove('alert-fade-in');
-                    alertRow.classList.add('alert-fade-out');
-                    setTimeout(() => { removeAlert(i); }, 500);
-                });
-                // Copy event details
-                alertRow.querySelector('.copy-btn').addEventListener('click', function(e) {
-                    navigator.clipboard.writeText(`${a.type} - ${a.date}`);
-                    const tooltip = this.querySelector('.copied-tooltip');
-                    tooltip.classList.add('visible');
-                    setTimeout(()=>tooltip.classList.remove('visible'), 1200);
-                });
-                alertDiv.appendChild(alertRow);
+        // Section fade-in on scroll
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
             });
-        }
-    }
-    renderAlerts();
-
-    // Show next alert/event in greeting
-    function updateGreeting() {
-        let greeting = '';
-        if (userName) {
-            greeting = `Welcome back, ${userName}!`;
-        } else {
-            greeting = `Welcome to SkyQuest Tracker!`;
-        }
-        let nextAlert = userAlerts.length > 0 ? userAlerts[0] : getNextEvent();
-        let alertMsg = nextAlert ? `Next: ${nextAlert.type} (${nextAlert.date})` : '';
-        let heroContent = document.querySelector('.hero-content');
-        if (heroContent && !document.getElementById('userGreeting')) {
-            const greetDiv = document.createElement('div');
-            greetDiv.id = 'userGreeting';
-            greetDiv.setAttribute('aria-live', 'polite');
-            greetDiv.style.fontSize = '1.1rem';
-            greetDiv.style.marginBottom = '0.7rem';
-            greetDiv.style.color = '#3ecfff';
-            heroContent.insertBefore(greetDiv, heroContent.firstChild);
-        }
-        if (document.getElementById('userGreeting')) {
-            document.getElementById('userGreeting').textContent = greeting + (userLocation.city ? `  |  Location: ${userLocation.city}` : '') + (alertMsg ? `  |  ${alertMsg}` : '');
-        }
-    }
-
-    // =====================
-    // MODAL: ADD ALERT BUTTON
-    // =====================
-    function openModal(idx) {
-        const m = simulatedEvents[idx];
-        document.getElementById('modalImg').src = m.skyMap;
-        document.getElementById('modalImg').alt = m.alt;
-        document.getElementById('modalTitle').textContent = m.type;
-        document.getElementById('modalDate').textContent = m.date;
-        const vis = document.getElementById('modalVisibility');
-        vis.textContent = m.visibility + ' Visibility';
-        vis.className = 'event-visibility ' + m.visClass;
-        const addBtn = document.getElementById('addAlertBtn');
-        addBtn.onclick = () => addAlert(idx);
-        addBtn.textContent = userAlerts.some(a => a.type === m.type && a.date === m.date) ? 'Added!' : 'Add alert';
-        addBtn.style.background = userAlerts.some(a => a.type === m.type && a.date === m.date) ? '#ffb347' : '';
-        document.getElementById('eventModal').classList.add('active');
-        document.querySelector('.modal').focus();
-    }
-
-    // =====================
-    // ANIMATIONS & SECTION REVEALS
-    // =====================
-    const sections = document.querySelectorAll('section');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animation = 'fadeIn 1.2s ease';
-                entry.target.style.opacity = 1;
-            }
+        }, { threshold: 0.15 });
+        sections.forEach(section => {
+            section.style.animationPlayState = 'paused';
+            observer.observe(section);
         });
-    }, { threshold: 0.1 });
-    sections.forEach(section => {
-        section.style.opacity = 0;
-        observer.observe(section);
-    });
-
-    // =====================
-    // UPDATE GALLERY & COUNTDOWN TO USE FILTERS
-    // =====================
-    function updateEventGallery() {
-        let visibleEvents = simulatedEvents.filter(e => userLocation.city.toLowerCase() !== 'nowhere' && userEventPrefs.includes(e.type));
-        renderEventGallery(visibleEvents);
-        const gallery = document.getElementById('gallery');
-        if (visibleEvents.length === 0) {
-            gallery.innerHTML = `<div style="color:#ffb347;font-size:1.2rem;text-align:center;padding:2rem;">No visible events for your filters/location.<br><button onclick="changeLocation()" style="margin-top:1rem;background:#3ecfff;color:#181f2a;padding:0.7rem 1.5rem;border-radius:2rem;border:none;cursor:pointer;">Change Location</button></div>`;
-        }
-    }
-    function getNextEvent() {
-        let events = simulatedEvents.filter(e => userLocation.city.toLowerCase() !== 'nowhere' && userEventPrefs.includes(e.type));
-        if (userAlerts.length > 0) {
-            events = userAlerts;
-        }
-        if (events.length === 0) return null;
-        events.sort((a, b) => a.timestamp - b.timestamp);
-        return events[0];
-    }
-
-    // =====================
-    // INITIALIZE (re-run after upgrades)
-    // =====================
-    renderEventFilters();
-    renderAlerts();
-    updateGreeting();
-    updateEventGallery();
-    updateCountdown();
-    renderCarousel();
-
-    // =====================
-    // ADDITIONAL EVENT TYPES
-    // =====================
-    const extraEvents = [
-        { type: 'Starlink Train', icon: '🛰️', date: 'Sep 18, 2024, 20:30 UTC', timestamp: Date.UTC(2024,8,18,20,30,0), visibility: 'High', visClass: 'vis-high', skyMap: '', alt: 'Starlink satellites in a line', brightness: 8, duration: 12, kid: true },
-        { type: 'Visible Comet', icon: '☄️', date: 'Sep 22, 2024, 04:00 UTC', timestamp: Date.UTC(2024,8,22,4,0,0), visibility: 'Medium', visClass: 'vis-med', skyMap: '', alt: 'Comet with tail', brightness: 6, duration: 30, kid: true },
-        { type: 'Super-Moon', icon: '🌕', date: 'Sep 29, 2024, 23:00 UTC', timestamp: Date.UTC(2024,8,29,23,0,0), visibility: 'High', visClass: 'vis-high', skyMap: '', alt: 'Large full moon', brightness: 10, duration: 60, kid: true },
-        { type: 'Aurora Forecast', icon: '🌌', date: 'Sep 25, 2024, 01:00 UTC', timestamp: Date.UTC(2024,8,25,1,0,0), visibility: 'Low', visClass: 'vis-low', skyMap: '', alt: 'Aurora over horizon', brightness: 7, duration: 45, kid: true },
-        { type: 'Occultation', icon: '🌑', date: 'Sep 27, 2024, 03:00 UTC', timestamp: Date.UTC(2024,8,27,3,0,0), visibility: 'Medium', visClass: 'vis-med', skyMap: '', alt: 'Star hidden by moon', brightness: 5, duration: 10, kid: false },
-        { type: 'Planetary Opposition', icon: '🪐', date: 'Sep 30, 2024, 22:00 UTC', timestamp: Date.UTC(2024,8,30,22,0,0), visibility: 'High', visClass: 'vis-high', skyMap: '', alt: 'Bright planet at opposition', brightness: 9, duration: 120, kid: true }
-    ];
-    simulatedEvents.push(...extraEvents);
-    if (!eventTypes.includes('Starlink Train')) eventTypes.push('Starlink Train');
-    if (!eventTypes.includes('Visible Comet')) eventTypes.push('Visible Comet');
-    if (!eventTypes.includes('Super-Moon')) eventTypes.push('Super-Moon');
-    if (!eventTypes.includes('Aurora Forecast')) eventTypes.push('Aurora Forecast');
-    if (!eventTypes.includes('Occultation')) eventTypes.push('Occultation');
-    if (!eventTypes.includes('Planetary Opposition')) eventTypes.push('Planetary Opposition');
-    renderEventFilters();
-    updateEventGallery();
-    updateCountdown();
-
-    // =====================
-    // TODAY'S SKY WIDGET
-    // =====================
-    const skyConditions = [
-        {icon:'☀️', label:'Clear', fact:'Tonight is perfect for stargazing!'},
-        {icon:'⛅', label:'Partly Cloudy', fact:'Some clouds, but you can still catch bright events.'},
-        {icon:'☁️', label:'Overcast', fact:'Clouds may block the view—try again tomorrow.'}
-    ];
-    function renderSkyWidget() {
-        let widget = document.getElementById('skyWidget');
-        if (!widget) {
-            widget = document.createElement('div');
-            widget.id = 'skyWidget';
-            widget.setAttribute('aria-live', 'polite');
-            widget.style.maxWidth = '540px';
-            widget.style.margin = '2rem auto 0 auto';
-            widget.style.background = 'rgba(24,31,42,0.65)';
-            widget.style.borderRadius = '1.2rem';
-            widget.style.boxShadow = '0 2px 16px 0 #3ecfff22';
-            widget.style.padding = '1.2rem 2rem';
-            widget.style.textAlign = 'center';
-            widget.style.fontSize = '1.1rem';
-            widget.style.opacity = 0;
-            widget.style.transition = 'opacity 0.7s';
-            document.querySelector('main').insertBefore(widget, document.getElementById('userAlerts'));
-            setTimeout(()=>{widget.style.opacity=1;}, 100);
-        }
-        // Simulate random condition
-        const cond = skyConditions[Math.floor(Math.random()*skyConditions.length)];
-        widget.innerHTML = `<div style="font-size:2rem;">${cond.icon}</div><div style="font-weight:700;color:#3ecfff;">Tonight's Sky: ${cond.label}</div><div style="color:#e0e6ef;">${cond.fact}</div>`;
-    }
-    renderSkyWidget();
-
-    // =====================
-    // SIMULATED NOTIFICATIONS
-    // =====================
-    let notificationTimeout = null;
-    function checkNotifications() {
-        // Find soonest alert/event within 1 minute
-        const now = Date.now();
-        let soon = userAlerts.concat(simulatedEvents).filter(e => e.timestamp - now < 60000 && e.timestamp - now > 0);
-        if (soon.length > 0) {
-            showNotification(soon[0]);
-        } else {
-            hideNotification();
-        }
-    }
-    function showNotification(event) {
-        let notif = document.getElementById('skyNotification');
-        if (!notif) {
-            notif = document.createElement('div');
-            notif.id = 'skyNotification';
-            notif.setAttribute('role', 'alert');
-            notif.setAttribute('aria-live', 'assertive');
-            notif.style.position = 'fixed';
-            notif.style.top = '1.5rem';
-            notif.style.left = '50%';
-            notif.style.transform = 'translateX(-50%)';
-            notif.style.background = '#3ecfff';
-            notif.style.color = '#181f2a';
-            notif.style.padding = '1.2rem 2.5rem';
-            notif.style.borderRadius = '2rem';
-            notif.style.boxShadow = '0 4px 24px 0 #3ecfff55';
-            notif.style.fontWeight = '700';
-            notif.style.fontSize = '1.1rem';
-            notif.style.zIndex = 10000;
-            notif.style.display = 'flex';
-            notif.style.alignItems = 'center';
-            notif.style.gap = '1.2rem';
-            notif.style.opacity = 0;
-            notif.style.transition = 'opacity 0.7s';
-            notif.innerHTML = `<span id="notifMsg"></span><button id="notifDismiss" style="background:#ffb347;color:#181f2a;border:none;border-radius:1.2rem;padding:0.3rem 1.1rem;cursor:pointer;font-weight:700;">Dismiss</button><button id="notifSnooze" style="background:#e0e6ef;color:#181f2a;border:none;border-radius:1.2rem;padding:0.3rem 1.1rem;cursor:pointer;font-weight:700;">Snooze</button>`;
-            document.body.appendChild(notif);
-            setTimeout(()=>{notif.style.opacity=1;}, 100);
-        }
-        document.getElementById('notifMsg').textContent = `Look up now! ${event.type} is happening soon!`;
-        document.getElementById('notifDismiss').onclick = hideNotification;
-        document.getElementById('notifSnooze').onclick = function() {
-            hideNotification();
-            // Simulate snooze by not showing notification for 5 minutes
-            if (notificationTimeout) clearTimeout(notificationTimeout);
-            notificationTimeout = setTimeout(checkNotifications, 5*60*1000);
-        };
-        notif.focus();
-    }
-    function hideNotification() {
-        let notif = document.getElementById('skyNotification');
-        if (notif) {
-            notif.style.opacity = 0;
-            setTimeout(()=>{if(notif.parentNode) notif.parentNode.removeChild(notif);}, 700);
-        }
-    }
-    setInterval(checkNotifications, 5000);
-    checkNotifications();
-
-    // =====================
-    // KEYBOARD SHORTCUTS
-    // =====================
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'n') {
-            let notif = document.getElementById('skyNotification');
-            if (notif) notif.focus();
-        }
-        if (e.key === 'a') {
-            let alertDiv = document.getElementById('userAlerts');
-            if (alertDiv) alertDiv.focus();
-        }
-        if (e.key === 'f') {
-            let filterDiv = document.getElementById('eventFilters');
-            if (filterDiv) filterDiv.querySelector('input').focus();
-        }
-    });
-
-    // --- Mobile nav toggle ---
-    const nav = document.querySelector('nav');
-    const header = document.querySelector('header');
-    let mobileToggle = document.createElement('button');
-    mobileToggle.className = 'mobile-nav-toggle';
-    mobileToggle.setAttribute('aria-label', 'Open navigation menu');
-    mobileToggle.innerHTML = '☰';
-    header.appendChild(mobileToggle);
-    mobileToggle.onclick = function() {
-        nav.classList.toggle('open');
-        if (nav.classList.contains('open')) {
-            mobileToggle.setAttribute('aria-label', 'Close navigation menu');
-        } else {
-            mobileToggle.setAttribute('aria-label', 'Open navigation menu');
-        }
-    };
-    // Close nav on link click (mobile)
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', () => {
-            nav.classList.remove('open');
-            mobileToggle.setAttribute('aria-label', 'Open navigation menu');
-        });
-    });
-
-    // --- Button ripple effect ---
-    function addRipple(e) {
-        const btn = e.currentTarget;
-        const circle = document.createElement('span');
-        circle.className = 'ripple';
-        const rect = btn.getBoundingClientRect();
-        circle.style.width = circle.style.height = Math.max(rect.width, rect.height) + 'px';
-        circle.style.left = (e.clientX - rect.left - rect.width/2) + rect.width/2 + 'px';
-        circle.style.top = (e.clientY - rect.top - rect.height/2) + rect.height/2 + 'px';
-        btn.appendChild(circle);
-        setTimeout(() => circle.remove(), 500);
-    }
-    document.querySelectorAll('button, .notify-btn, .add-alert-btn').forEach(btn => {
-        btn.addEventListener('click', addRipple);
-    });
-
-    // --- Animate section headings on scroll ---
-    function animateHeadings() {
-        document.querySelectorAll('.section-title').forEach(h => {
-            const rect = h.getBoundingClientRect();
-            if (rect.top < window.innerHeight - 80) {
-                h.classList.add('visible');
-            }
-        });
-    }
-    window.addEventListener('scroll', animateHeadings);
-    window.addEventListener('DOMContentLoaded', animateHeadings);
-
-    // --- Real-time countdown badge and tab title ---
-    function updateCountdownBadge() {
-        const badge = document.getElementById('countdownBadge');
-        let next = getNextEvent();
-        if (!next) {
-            badge.style.display = 'none';
-            document.title = 'SkyQuest Tracker';
-            return;
-        }
-        const eventDate = new Date(next.timestamp);
-        const now = new Date();
-        let diff = Math.max(0, eventDate - now);
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        diff -= days * (1000 * 60 * 60 * 24);
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        diff -= hours * (1000 * 60 * 60);
-        const mins = Math.floor(diff / (1000 * 60));
-        diff -= mins * (1000 * 60);
-        const secs = Math.floor(diff / 1000);
-        badge.innerHTML = `<span style='font-size:1.3rem;'>⏳</span> Next: <b>${next.type}</b> <span id='badgeCountdown'>${String(days).padStart(2,'0')}:${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</span> <button class='section-btn' onclick='downloadICS(${next.timestamp})'>Add to Calendar</button>`;
-        badge.style.display = 'flex';
-        document.title = `${next.type} in ${days}d ${hours}h ${mins}m | SkyQuest Tracker`;
-    }
-    setInterval(updateCountdownBadge, 1000);
-    updateCountdownBadge();
-
-    // --- ICS file download for calendar integration ---
-    window.downloadICS = function(ts) {
-        const event = simulatedEvents.find(e => e.timestamp === ts);
-        if (!event) return;
-        const dtStart = new Date(event.timestamp).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-        const dtEnd = new Date(event.timestamp + 60*60*1000).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-        const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${event.type}\nDTSTART:${dtStart}\nDTEND:${dtEnd}\nDESCRIPTION:SkyQuest event: ${event.type} - ${event.date}\nEND:VEVENT\nEND:VCALENDAR`;
-        const blob = new Blob([ics.replace(/\n/g, '\r\n')], {type:'text/calendar'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${event.type.replace(/\s+/g,'_')}.ics`;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);}, 100);
-    };
-
-    // --- Daily/weekly digest (simulated) ---
-    function renderDigest(period) {
-        const digest = document.getElementById('digestList');
-        digest.innerHTML = '';
-        const now = new Date();
-        let end = new Date(now);
-        if (period === 'daily') end.setDate(now.getDate()+1);
-        else end.setDate(now.getDate()+7);
-        const events = simulatedEvents.filter(e => e.timestamp >= now.getTime() && e.timestamp <= end.getTime() && userEventPrefs.includes(e.type));
-        if (events.length === 0) {
-            digest.innerHTML = '<div style="color:#ffb347;">No upcoming events in this period.</div>';
-            return;
-        }
-        events.forEach(e => {
-            const div = document.createElement('div');
-            div.style.background = 'rgba(62,207,255,0.10)';
-            div.style.borderRadius = '0.7rem';
-            div.style.padding = '1rem 1.2rem';
-            div.style.margin = '0.5rem 0';
-            div.innerHTML = `<div style='font-size:1.2rem;font-weight:700;'>${e.icon} ${e.type}</div><div>${formatEventDate(e.timestamp)}</div><button class='section-btn' onclick='downloadICS(${e.timestamp})'>Add to Calendar</button>`;
-            digest.appendChild(div);
-        });
-    }
-    document.getElementById('digestDailyBtn').onclick = () => renderDigest('daily');
-    document.getElementById('digestWeeklyBtn').onclick = () => renderDigest('weekly');
-    renderDigest('daily');
-
-    // --- Localized time-zone display for all events ---
-    function formatEventDate(ts) {
-        const d = new Date(ts);
-        return `<span title='UTC'>${d.toUTCString().replace('GMT','UTC')}</span> <span style='color:#3ecfff;' title='Your local time'>(${d.toLocaleString([], {dateStyle:'medium', timeStyle:'short'})})</span>`;
-    }
-    // Patch event gallery and watchlist to use formatEventDate
-    const origRenderEventGallery = renderEventGallery;
-    renderEventGallery = function(events) {
-        const gallery = document.getElementById('gallery');
-        gallery.innerHTML = '';
-        events.forEach((event, idx) => {
-            const card = document.createElement('div');
-            card.className = 'event-card';
-            card.tabIndex = 0;
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `${event.type} on ${event.date}`);
-            const visScore = getVisibilityScore(event);
-            card.innerHTML = `
-                <div class="event-icon" aria-label="${event.type}">${event.icon}</div>
-                <div class="event-title">${event.type}</div>
-                <div class="event-datetime">${formatEventDate(event.timestamp)}</div>
-                <div class="event-visibility ${event.visClass}">${event.visibility} Visibility</div>
-                <div style="margin:0.5rem 0 0.2rem 0;">
-                    <span style="font-weight:700;color:#3ecfff;">Visibility Score:</span>
-                    <span title="Simulated: altitude, azimuth, twilight, Moon phase, light pollution, cloud cover">${visScore}/100</span>
-                </div>
-                <div style="margin:0.5rem 0;">${skyMapSVG(event)}</div>
-                <button class="section-btn" style="margin-top:0.7rem;" onclick="addToWatchlist(simulatedEvents[${simulatedEvents.indexOf(event)}])">Add to Watchlist</button>
-                <button class="section-btn" style="margin-top:0.7rem;" onclick="downloadICS(${event.timestamp})">Add to Calendar</button>
-            `;
-            card.addEventListener('click', () => openModal(idx));
-            card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(idx); });
-            gallery.appendChild(card);
-        });
-    };
-    const origRenderWatchlist = renderWatchlist;
-    renderWatchlist = function() {
-        const wl = document.getElementById('watchlist');
-        wl.innerHTML = '';
-        if (userWatchlist.length === 0) {
-            wl.innerHTML = '<div style="color:#ffb347;">No events in your watchlist yet.</div>';
-            return;
-        }
-        userWatchlist.forEach((e,i) => {
-            const div = document.createElement('div');
-            div.style.background = 'rgba(62,207,255,0.10)';
-            div.style.borderRadius = '0.7rem';
-            div.style.padding = '1rem 1.2rem';
-            div.style.minWidth = '180px';
-            div.style.textAlign = 'center';
-            div.innerHTML = `<div style="font-size:2rem;">${e.icon}</div><div style="font-weight:700;">${e.type}</div><div style="color:#e0e6ef;">${formatEventDate(e.timestamp)}</div><button class="section-btn" style="margin-top:0.7rem;" onclick="removeFromWatchlist(${i})">Remove</button><button class="section-btn" style="margin-top:0.7rem;" onclick="downloadICS(${e.timestamp})">Add to Calendar</button>`;
-            wl.appendChild(div);
-        });
-    };
-    // Patch highlights to use formatEventDate
-    const origRenderHighlights = renderHighlights;
-    renderHighlights = function() {
-        const now = new Date();
-        const month = now.getMonth();
-        const highlights = simulatedEvents.filter(e => new Date(e.timestamp).getMonth() === month).slice(0,5);
-        const list = document.getElementById('highlightsList');
-        list.innerHTML = '';
-        highlights.forEach(e => {
-            const div = document.createElement('div');
-            div.style.background = 'rgba(62,207,255,0.10)';
-            div.style.borderRadius = '0.7rem';
-            div.style.padding = '1rem 1.2rem';
-            div.style.minWidth = '180px';
-            div.style.textAlign = 'center';
-            div.innerHTML = `<div style="font-size:2rem;">${e.icon}</div><div style="font-weight:700;">${e.type}</div><div style="color:#e0e6ef;">${formatEventDate(e.timestamp)}</div>`;
-            list.appendChild(div);
-        });
-    };
-    renderHighlights();
     </script>
 </body>
 </html>
+
