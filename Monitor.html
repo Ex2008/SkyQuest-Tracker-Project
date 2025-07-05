@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Space Event Monitor</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0b1a2f; color: #fff; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #162447; border-radius: 10px; box-shadow: 0 2px 8px #0008; padding: 30px; }
+        h1 { text-align: center; color: #21e6c1; }
+        .event { border-bottom: 1px solid #21e6c1; padding: 16px 0; }
+        .event:last-child { border-bottom: none; }
+        .event-title { font-size: 1.2em; color: #fff; }
+        .event-date { color: #21e6c1; }
+        .event-location { color: #e43f5a; }
+        .loading { text-align: center; color: #21e6c1; }
+        .error { color: #e43f5a; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Live Space Event Monitor</h1>
+        <div id="events">
+            <div class="loading">Loading latest space events...</div>
+        </div>
+    </div>
+    <script>
+        const eventsDiv = document.getElementById('events');
+        const API_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=10&ordering=net';
+
+        async function fetchEvents() {
+            eventsDiv.innerHTML = '<div class="loading">Loading latest space events...</div>';
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                displayEvents(data.results);
+            } catch (error) {
+                eventsDiv.innerHTML = `<div class="error">Failed to load events: ${error.message}</div>`;
+            }
+        }
+
+        function displayEvents(events) {
+            if (!events.length) {
+                eventsDiv.innerHTML = '<div class="error">No upcoming space events found.</div>';
+                return;
+            }
+            eventsDiv.innerHTML = events.map(event => `
+                <div class="event">
+                    <div class="event-title">${event.name}</div>
+                    <div class="event-date">${new Date(event.net).toLocaleString()}</div>
+                    <div class="event-location">${event.pad?.location?.name || 'Unknown Location'}</div>
+                    <div>${event.mission?.description || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        fetchEvents();
+        setInterval(fetchEvents, 5 * 60 * 1000); // Refresh every 5 minutes
+    </script>
+</body>
+</html>
