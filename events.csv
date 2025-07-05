@@ -1,0 +1,41 @@
+event_type,location,time_of_day,duration,popularity_score,liked
+meteor shower,USA,night,120,8.5,1
+meteor shower,Canada,night,90,7.2,1
+meteor shower,Europe,night,150,8.8,1
+meteor shower,Australia,night,100,6.5,0
+meteor shower,Asia,night,80,7.0,1
+solar eclipse,USA,day,180,9.2,1
+solar eclipse,Europe,day,200,8.9,1
+solar eclipse,Asia,day,160,8.1,1
+solar eclipse,Africa,day,140,7.8,0
+solar eclipse,South America,day,170,8.3,1
+lunar eclipse,USA,night,240,8.7,1
+lunar eclipse,Europe,night,220,8.4,1
+lunar eclipse,Asia,night,200,7.9,1
+lunar eclipse,Australia,night,180,7.5,0
+lunar eclipse,Africa,night,210,8.0,1
+rocket launch,USA,day,60,9.0,1
+rocket launch,Europe,day,45,8.6,1
+rocket launch,Asia,day,75,8.2,1
+rocket launch,Russia,day,90,7.8,0
+rocket launch,India,day,55,8.4,1
+comet viewing,USA,night,300,7.5,1
+comet viewing,Europe,night,280,7.8,1
+comet viewing,Asia,night,320,7.2,0
+comet viewing,Australia,night,290,7.6,1
+comet viewing,South America,night,310,7.4,1
+aurora borealis,Canada,night,480,9.1,1
+aurora borealis,Norway,night,450,9.3,1
+aurora borealis,Sweden,night,420,8.9,1
+aurora borealis,Finland,night,460,9.0,1
+aurora borealis,Iceland,night,440,8.8,1
+planetary conjunction,USA,night,180,7.8,1
+planetary conjunction,Europe,night,160,7.5,1
+planetary conjunction,Asia,night,200,7.2,0
+planetary conjunction,Australia,night,170,7.6,1
+planetary conjunction,Africa,night,190,7.4,1
+star party,USA,night,360,6.8,1
+star party,Europe,night,320,7.1,1
+star party,Asia,night,380,6.5,0
+star party,Australia,night,340,6.9,1
+star party,South America,night,350,6.7,1 

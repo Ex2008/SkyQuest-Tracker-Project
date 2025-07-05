@@ -96,19 +96,52 @@
             justify-content: center;
         }
         .hero {
-            text-align: center;
-            background: linear-gradient(135deg, rgba(31,40,51,0.7) 60%, rgba(102,252,241,0.12) 100%);
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
             box-shadow: 0 12px 48px 0 rgba(127,127,213,0.18);
             border: 2px solid rgba(127,127,213,0.15);
             animation: fadeIn 1.2s;
         }
-        .hero-img {
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .hero-bg video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            min-width: 100%;
+            min-height: 100%;
+            filter: brightness(0.5) blur(1px);
+        }
+        .hero-bg-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(31,40,51,0.7) 60%, rgba(102,252,241,0.12) 100%);
+            z-index: 2;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
             width: 100%;
             max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 4rem 2rem;
             border-radius: 2rem;
-            margin: 0 auto 2.5rem auto;
-            box-shadow: 0 8px 48px 0 rgba(127,127,213,0.22);
-            display: block;
+            background: rgba(35, 41, 49, 0.35);
+            box-shadow: 0 8px 32px 0 rgba(31,40,51,0.25);
+            backdrop-filter: blur(8px) saturate(120%);
+            border: 1px solid rgba(102,252,241,0.12);
+            animation: fadeInUp 1.2s;
         }
         .hero-title {
             font-size: 3.2rem;
@@ -399,10 +432,19 @@
         </nav>
     </header>
     <section class="hero" id="hero">
-        <img class="hero-img" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80" alt="Rocket launch in space" loading="lazy">
-        <div class="hero-title">Track Space Events Before They Happen</div>
-        <div class="hero-desc">Never miss a rocket launch, meteor shower, or cosmic event again. Get timely alerts and stay connected to the wonders of the universe!</div>
-        <button class="cta-btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Learn More</button>
+        <!-- Video Background -->
+        <div class="hero-bg">
+            <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80">
+                <source src="https://archive.org/download/PerseidMeteorShower/PerseidMeteorShower.mp4" type="video/mp4">
+                <!-- Perseids Meteor Shower Timelapse from Beachfront B-Roll -->
+            </video>
+            <div class="hero-bg-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-title">Never Miss a Meteor Shower Again</div>
+            <div class="hero-desc">Personalized alerts for every celestial event in your sky.</div>
+            <button class="cta-btn" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Get Alerts Now</button>
+        </div>
     </section>
     <section id="about">
         <div class="section-flex">
