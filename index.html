@@ -60,26 +60,23 @@ section{
 .section-img{width:100%;max-width:560px;border-radius:1.4rem;box-shadow:0 6px 30px rgba(127,127,213,.16)}
 
 /* ----------  HERO (APOD) ---------- */
-#hero{padding:0;background:none;border:none;box-shadow:none;margin:0}
-.hero-bg{position:relative;min-height:640px;overflow:hidden}
-.hero-bg::after{/* dark overlay */
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(31,40,51,.7) 60%,rgba(102,252,241,.12) 100%);
+#hero{
+  margin:0;
+  padding:5rem 1rem 3rem;
+  background:none;border:none;box-shadow:none;
+  text-align:center;
 }
-/* hero background image */
-#hero-img{
-  position:absolute;
-  inset:0;
+#apod-img{
   width:100%;
-  height:100%;
-  object-fit:cover;            /* always fill the frame */
-  object-position:center center;/* keep the interesting bit centred */
-  filter:brightness(.6);        /* keep text readable */
+  max-width:900px;
+  height:auto;
+  border-radius:1rem;
+  box-shadow:0 6px 32px rgba(0,0,0,.35);
+  margin:2rem auto;
 }
-.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
 .hero-title{font-size:3rem;color:var(--stellar-cyan);margin-bottom:1rem;text-shadow:0 2px 16px var(--glass-purple)}
-.hero-desc{font-size:1.3rem;max-width:680px;margin-bottom:2rem}
-.btn{background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s}
+.hero-desc{font-size:1.3rem;max-width:680px;margin:0 auto 2rem}
+.btn{display:inline-block;background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s;text-decoration:none}
 .btn:hover{transform:translateY(-2px) scale(1.04)}
 
 /* ----------  LOCATION BAR ---------- */
@@ -126,17 +123,14 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
 </header>
 
 <!-- ---------- HERO (APOD) ---------- -->
+ <center>   
 <section id="hero">
-  <div class="hero-bg">
-    <img id="hero-img" alt="Astronomy Picture of the Day">
-    <div class="hero-content">
-      <h1 class="hero-title">Explore the Cosmos Every Day</h1>
-      <p class="hero-desc">Scroll down for today’s space picture, live space‑weather, asteroid near‑misses, Mars photos and more.</p>
-      <button class="btn" onclick="document.getElementById('live-events').scrollIntoView({behavior:'smooth'})">Jump to Live Events</button>
-    </div>
-  </div>
+  <h1 class="hero-title">Astronomy Picture of the Day</h1>
+  <img id="apod-img" alt="Astronomy Picture of the Day">
+  <p class="hero-desc">Scroll down for today’s space picture, live space‑weather, asteroid near‑misses, Mars photos and more.</p>
+  <a href="#live-events" class="btn">Jump to Live Events</a>
 </section>
-
+</center>
 <!-- ---------- LIVE DONKI EVENTS ---------- -->
 <section id="live-events">
   <h2 class="section-title">Live NASA Space‑Weather Feed</h2>
@@ -194,26 +188,34 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
 <!-- ----------  SCRIPTS ---------- -->
 <script type="module">
 /* ==== CONFIG ==== */
-const KEY = 'LSNy9VQ18vB0TgcA8zLN38to6koUkfer2US9aBd8';                       
+const KEY = 'LSNy9VQ18vB0TgcA8zLN38to6koUkfer2US9aBd8';          //  <--  replace with your actual key
 const donkiGrid   = document.getElementById('donki-grid');
 const asteroidGrid= document.getElementById('asteroid-grid');
 const marsWrap    = document.getElementById('mars-photos');
 const earthImg    = document.getElementById('earth-img');
 const earthCap    = document.getElementById('earth-caption');
-const heroImg     = document.getElementById('hero-img');
+const apodImg     = document.getElementById('apod-img');
+
+/* ==== SMOOTH SCROLL for anchor links ==== */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    if(id.length>1){
+      e.preventDefault();
+      document.querySelector(id).scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
 
 /* ==== APOD HERO ==== */
 (async function loadAPOD(){
   try{
-    const apod = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}`)
-                  .then(r=>r.json());
-
-    // Use HD version when available
-    heroImg.src = apod.hdurl || apod.url;
-    heroImg.alt = apod.title || 'Astronomy Picture of the Day';
+    const apod = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}`).then(r=>r.json());
+    apodImg.src = apod.hdurl || apod.url;
+    apodImg.alt = apod.title || 'Astronomy Picture of the Day';
   }catch(e){
     console.error(e);
-    heroImg.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80';
+    apodImg.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80';
   }
 })();
 
