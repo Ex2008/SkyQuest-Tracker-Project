@@ -66,7 +66,16 @@ section{
   content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(31,40,51,.7) 60%,rgba(102,252,241,.12) 100%);
 }
-#hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.6)}
+/* hero background image */
+#hero-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;            /* always fill the frame */
+  object-position:center center;/* keep the interesting bit centred */
+  filter:brightness(.6);        /* keep text readable */
+}
 .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
 .hero-title{font-size:3rem;color:var(--stellar-cyan);margin-bottom:1rem;text-shadow:0 2px 16px var(--glass-purple)}
 .hero-desc{font-size:1.3rem;max-width:680px;margin-bottom:2rem}
@@ -196,11 +205,16 @@ const heroImg     = document.getElementById('hero-img');
 /* ==== APOD HERO ==== */
 (async function loadAPOD(){
   try{
-    const apod = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}`).then(r=>r.json());
-    if(apod.media_type==='image') heroImg.src = apod.url;
-    else heroImg.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80';
-    heroImg.alt = apod.title || 'APOD';
-  }catch(e){console.error(e)}
+    const apod = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}`)
+                  .then(r=>r.json());
+
+    // Use HD version when available
+    heroImg.src = apod.hdurl || apod.url;
+    heroImg.alt = apod.title || 'Astronomy Picture of the Day';
+  }catch(e){
+    console.error(e);
+    heroImg.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80';
+  }
 })();
 
 /* ==== LOCATION HANDLING ==== */
