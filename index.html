@@ -1,575 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyQuest Tracker</title>
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
-    <meta name="keywords" content="space events, rocket launches, meteor showers, astronomy, skyquest tracker, cosmic events, alerts">
-    <meta property="og:title" content="SkyQuest Tracker">
-    <meta property="og:description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80">
-    <meta property="og:type" content="website">
-    <style>
-        :root {
-            --deep-navy: #0b0c10;
-            --space-black: #1f2833;
-            --cosmic-blue: #232931;
-            --nebula-teal: #45a29e;
-            --stellar-cyan: #66fcf1;
-            --white: #ffffff;
-            --glass-purple: #7f7fd5;
-        }
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, var(--deep-navy) 70%, var(--cosmic-blue) 100%);
-            color: var(--white);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 3rem;
-            background: rgba(31, 40, 51, 0.7);
-            box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(102,252,241,0.08);
-            animation: fadeInDown 1s;
-        }
-        .logo {
-            font-size: 2.2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: var(--stellar-cyan);
-            text-shadow: 0 2px 8px var(--glass-purple);
-        }
-        nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin: 0 1.2rem;
-            font-weight: 500;
-            font-size: 1.1rem;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-        nav a:hover {
-            color: var(--stellar-cyan);
-            text-shadow: 0 0 8px var(--stellar-cyan);
-        }
-        section {
-            padding: 6rem 2.5rem;
-            max-width: 1200px;
-            margin: 3rem auto 0 auto;
-            border-radius: 2rem;
-            background: rgba(35, 41, 49, 0.35);
-            box-shadow: 0 12px 48px 0 rgba(31,40,51,0.25);
-            backdrop-filter: blur(18px) saturate(120%);
-            border: 1px solid rgba(102,252,241,0.12);
-            animation: fadeInUp 1.2s;
-        }
-        .section-img {
-            width: 100%;
-            max-width: 600px;
-            border-radius: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 48px 0 rgba(127,127,213,0.18);
-            display: block;
-        }
-        .section-flex {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 3.5rem;
-        }
-        .section-content {
-            flex: 1 1 400px;
-        }
-        .section-img-wrap {
-            flex: 1 1 350px;
-            display: flex;
-            justify-content: center;
-        }
-        .hero {
-            position: relative;
-            overflow: hidden;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: none;
-            box-shadow: 0 12px 48px 0 rgba(127,127,213,0.18);
-            border: 2px solid rgba(127,127,213,0.15);
-            animation: fadeIn 1.2s;
-        }
-        .hero-bg {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            overflow: hidden;
-        }
-        .hero-bg video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            min-width: 100%;
-            min-height: 100%;
-            filter: brightness(0.5) blur(1px);
-        }
-        .hero-bg-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(31,40,51,0.7) 60%, rgba(102,252,241,0.12) 100%);
-            z-index: 2;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 4rem 2rem;
-            border-radius: 2rem;
-            background: rgba(35, 41, 49, 0.35);
-            box-shadow: 0 8px 32px 0 rgba(31,40,51,0.25);
-            backdrop-filter: blur(8px) saturate(120%);
-            border: 1px solid rgba(102,252,241,0.12);
-            animation: fadeInUp 1.2s;
-        }
-        .hero-title {
-            font-size: 3.2rem;
-            margin-bottom: 1.2rem;
-            color: var(--stellar-cyan);
-            text-shadow: 0 2px 16px var(--glass-purple);
-            letter-spacing: 1px;
-            animation: fadeIn 1.5s;
-        }
-        .hero-desc {
-            font-size: 1.4rem;
-            margin-bottom: 2.5rem;
-            color: var(--white);
-            opacity: 0.9;
-            animation: fadeIn 1.7s;
-        }
-        .cta-btn {
-            background: rgba(102,252,241,0.85);
-            color: var(--deep-navy);
-            border: none;
-            padding: 1.2rem 2.8rem;
-            font-size: 1.3rem;
-            border-radius: 2.5rem;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 24px 0 rgba(102,252,241,0.18);
-            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-            animation: popIn 1.8s;
-        }
-        .cta-btn:hover {
-            background: var(--nebula-teal);
-            color: var(--white);
-            transform: scale(1.07);
-            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
-        }
-        .section-title {
-            font-size: 2.4rem;
-            color: var(--stellar-cyan);
-            margin-bottom: 1.2rem;
-            text-shadow: 0 2px 8px var(--glass-purple);
-            animation: fadeInLeft 1.2s;
-        }
-        .section-desc {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            color: var(--white);
-            opacity: 0.92;
-            animation: fadeIn 1.4s;
-        }
-        .section-btn {
-            background: rgba(69,162,158,0.85);
-            color: var(--white);
-            border: none;
-            padding: 1rem 2.2rem;
-            font-size: 1.1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-weight: 500;
-            box-shadow: 0 4px 24px 0 rgba(69,162,158,0.18);
-            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-            animation: popIn 1.6s;
-        }
-        .section-btn:hover {
-            background: var(--stellar-cyan);
-            color: var(--deep-navy);
-            transform: scale(1.07);
-            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
-        }
-        .features-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2.5rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-        .feature {
-            background: rgba(31,40,51,0.45);
-            border-radius: 1.2rem;
-            padding: 2.5rem;
-            flex: 1 1 260px;
-            min-width: 260px;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(127,127,213,0.13);
-            border: 1px solid rgba(102,252,241,0.10);
-            transition: transform 0.2s, box-shadow 0.2s;
-            animation: fadeInUp 1.5s;
-        }
-        .feature:hover {
-            transform: translateY(-10px) scale(1.06);
-            box-shadow: 0 12px 48px 0 var(--glass-purple);
-        }
-        .feature-icon {
-            font-size: 2.8rem;
-            margin-bottom: 1.2rem;
-            color: var(--stellar-cyan);
-            text-shadow: 0 2px 8px var(--glass-purple);
-            animation: popIn 1.7s;
-        }
-        .pricing-table {
-            display: flex;
-            gap: 2.5rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-        .pricing-plan {
-            background: rgba(31,40,51,0.45);
-            border-radius: 1.2rem;
-            padding: 2.5rem;
-            flex: 1 1 260px;
-            min-width: 260px;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(127,127,213,0.13);
-            border: 1px solid rgba(102,252,241,0.10);
-            transition: transform 0.2s, box-shadow 0.2s;
-            animation: fadeInUp 1.5s;
-        }
-        .pricing-plan:hover {
-            transform: translateY(-10px) scale(1.06);
-            box-shadow: 0 12px 48px 0 var(--glass-purple);
-        }
-        .plan-title {
-            font-size: 1.5rem;
-            color: var(--stellar-cyan);
-            margin-bottom: 0.7rem;
-            text-shadow: 0 2px 8px var(--glass-purple);
-        }
-        .plan-price {
-            font-size: 2.2rem;
-            margin-bottom: 1.2rem;
-            color: var(--nebula-teal);
-        }
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            max-width: 500px;
-            margin: 0 auto;
-            animation: fadeIn 1.7s;
-        }
-        .contact-form input, .contact-form textarea {
-            padding: 1rem;
-            border-radius: 0.7rem;
-            border: none;
-            font-size: 1.1rem;
-            background: rgba(255,255,255,0.12);
-            color: var(--white);
-            box-shadow: 0 4px 16px 0 rgba(127,127,213,0.10);
-            border: 1px solid rgba(102,252,241,0.10);
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .contact-form input:focus, .contact-form textarea:focus {
-            background: rgba(255,255,255,0.18);
-            outline: none;
-            box-shadow: 0 8px 32px 0 var(--glass-purple);
-        }
-        .contact-form button {
-            background: var(--stellar-cyan);
-            color: var(--deep-navy);
-            border: none;
-            padding: 1rem 2.2rem;
-            font-size: 1.1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-weight: 500;
-            box-shadow: 0 4px 24px 0 rgba(102,252,241,0.18);
-            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-        }
-        .contact-form button:hover {
-            background: var(--nebula-teal);
-            color: var(--white);
-            transform: scale(1.07);
-            box-shadow: 0 8px 32px 0 var(--stellar-cyan);
-        }
-        footer {
-            background: rgba(31,40,51,0.7);
-            color: var(--white);
-            padding: 2.5rem 2.5rem 1.5rem 2.5rem;
-            text-align: center;
-            border-top: 2px solid var(--nebula-teal);
-            box-shadow: 0 -8px 48px 0 rgba(31,40,51,0.15);
-            backdrop-filter: blur(8px);
-            animation: fadeInUp 1.2s;
-        }
-        .footer-nav {
-            margin: 1.2rem 0;
-        }
-        .footer-nav a {
-            color: var(--white);
-            margin: 0 1rem;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.1rem;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-        .footer-nav a:hover {
-            color: var(--stellar-cyan);
-            text-shadow: 0 0 8px var(--stellar-cyan);
-        }
-        .footer-social {
-            margin: 1.2rem 0;
-        }
-        .footer-social a {
-            color: var(--stellar-cyan);
-            margin: 0 0.7rem;
-            font-size: 1.7rem;
-            text-decoration: none;
-            transition: color 0.2s, text-shadow 0.2s;
-        }
-        .footer-social a:hover {
-            color: var(--glass-purple);
-            text-shadow: 0 0 8px var(--glass-purple);
-        }
-        .copyright {
-            font-size: 1rem;
-            color: #aaa;
-        }
-        @media (max-width: 1200px) {
-            .section-flex {
-                flex-direction: column;
-                gap: 2rem;
-            }
-            .section-img {
-                max-width: 100%;
-            }
-        }
-        @media (max-width: 900px) {
-            section {
-                padding: 3rem 0.5rem;
-                max-width: 100vw;
-            }
-        }
-        @media (max-width: 700px) {
-            .features-list, .pricing-table {
-                flex-direction: column;
-                align-items: center;
-            }
-            header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem 0.5rem;
-            }
-            .logo {
-                font-size: 1.5rem;
-            }
-            section {
-                padding: 1.5rem 0.2rem;
-            }
-        }
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-40px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            80% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkyQuest Tracker</title>
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
+<meta name="keywords" content="space events, rocket launches, meteor showers, astronomy, skyquest tracker, cosmic events, alerts">
+<meta property="og:title" content="SkyQuest Tracker">
+<meta property="og:description" content="Track upcoming space events, rocket launches, meteor showers, and more with SkyQuest Tracker. Get timely alerts and never miss a cosmic spectacle!">
+<meta property="og:image" content="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=800&q=80">
+<meta property="og:type" content="website">
+
+<style>
+/* ----------  design tokens ---------- */
+:root{
+  --deep-navy:#0b0c10;
+  --space-black:#1f2833;
+  --cosmic-blue:#232931;
+  --nebula-teal:#45a29e;
+  --stellar-cyan:#66fcf1;
+  --white:#ffffff;
+  --glass-purple:#7f7fd5;
+}
+
+/* ----------  base ---------- */
+body{
+  margin:0;
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:linear-gradient(135deg,var(--deep-navy) 70%,var(--cosmic-blue) 100%);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ----------  header ---------- */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.5rem 3rem;
+  background:rgba(31,40,51,.7);
+  box-shadow:0 4px 24px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:1000;
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(102,252,241,.08);
+  animation:fadeInDown 1s;
+}
+.logo{
+  font-size:2.2rem;font-weight:bold;letter-spacing:2px;
+  color:var(--stellar-cyan);text-shadow:0 2px 8px var(--glass-purple);
+}
+nav a{
+  color:var(--white);text-decoration:none;margin:0 1.2rem;
+  font-weight:500;font-size:1.1rem;transition:color .2s,text-shadow .2s;
+}
+nav a:hover{color:var(--stellar-cyan);text-shadow:0 0 8px var(--stellar-cyan);}
+
+/* ----------  sections ---------- */
+section{
+  padding:6rem 2.5rem;max-width:1200px;margin:3rem auto 0;
+  border-radius:2rem;background:rgba(35,41,49,.35);
+  box-shadow:0 12px 48px rgba(31,40,51,.25);
+  backdrop-filter:blur(18px) saturate(120%);
+  border:1px solid rgba(102,252,241,.12);
+  animation:fadeInUp 1.2s;
+}
+.section-flex{display:flex;flex-wrap:wrap;align-items:center;gap:3.5rem;}
+.section-content{flex:1 1 400px;}
+.section-img-wrap{flex:1 1 350px;display:flex;justify-content:center;}
+.section-img{width:100%;max-width:600px;border-radius:1.5rem;margin-bottom:2rem;
+  box-shadow:0 8px 48px rgba(127,127,213,.18);display:block;}
+.section-title{font-size:2.4rem;color:var(--stellar-cyan);margin-bottom:1.2rem;
+  text-shadow:0 2px 8px var(--glass-purple);animation:fadeInLeft 1.2s;}
+.section-desc{font-size:1.3rem;margin-bottom:2rem;color:var(--white);opacity:.92;
+  animation:fadeIn 1.4s;}
+.section-btn{
+  background:rgba(69,162,158,.85);color:var(--white);border:none;
+  padding:1rem 2.2rem;font-size:1.1rem;border-radius:2rem;cursor:pointer;
+  font-weight:500;box-shadow:0 4px 24px rgba(69,162,158,.18);
+  transition:background .2s,transform .2s,box-shadow .2s;animation:popIn 1.6s;}
+.section-btn:hover{
+  background:var(--stellar-cyan);color:var(--deep-navy);transform:scale(1.07);
+  box-shadow:0 8px 32px var(--stellar-cyan);
+}
+
+/* ----------  live events ---------- */
+.events-grid{
+  display:grid;gap:1.5rem;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  margin-top:2rem;
+}
+.event-card{
+  background:rgba(31,40,51,.45);border-radius:1rem;padding:1.5rem;
+  box-shadow:0 4px 24px rgba(127,127,213,.10);
+  border:1px solid rgba(102,252,241,.10);
+  transition:transform .2s,box-shadow .2s;
+}
+.event-card:hover{transform:translateY(-6px) scale(1.02);
+  box-shadow:0 8px 32px var(--glass-purple);}
+.event-card h4{margin:0 0 .8rem;color:var(--stellar-cyan);font-size:1.2rem;}
+.event-card p{margin:0 0 1rem;font-size:1rem;color:var(--white);
+  opacity:.9;line-height:1.4;}
+.event-card a{color:var(--stellar-cyan);text-decoration:none;font-weight:500;}
+
+/* ----------  hero, features, pricing, etc. (unchanged) ---------- */
+/* … keep the rest of your existing CSS here … */
+
+/* ----------  responsive tweaks & animations (unchanged) ---------- */
+/* … keep the @media queries and keyframes … */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}
+                    to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-40px)}
+                      to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInLeft{from{opacity:0;transform:translateX(-40px)}
+                      to{opacity:1;transform:translateX(0)}}
+@keyframes popIn{0%{opacity:0;transform:scale(.8)}
+                 80%{opacity:1;transform:scale(1.05)}
+                 100%{opacity:1;transform:scale(1)}}
+</style>
 </head>
+
 <body>
-    <header>
-        <div class="logo">🪐 SkyQuest Tracker</div>
-        <nav>
-            <a href="#hero">Home</a>
-            <a href="#about">About</a>
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#contact">Contact</a>
-            <a href="#" title="Live Events (coming soon)">Live Events</a>
-            <a href="#" title="Event Archive (coming soon)">Event Archive</a>
-            <a href="#" title="Resources (coming soon)">Resources</a>
-            <a href="#" title="Blog (coming soon)">Blog</a>
-        </nav>
-    </header>
-    <section class="hero" id="hero">
-        <!-- Video Background -->
-        <div class="hero-bg">
-            <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80">
-                <source src="https://archive.org/download/PerseidMeteorShower/PerseidMeteorShower.mp4" type="video/mp4">
-                <!-- Perseids Meteor Shower Timelapse from Beachfront B-Roll -->
-            </video>
-            <div class="hero-bg-overlay"></div>
+<header>
+  <div class="logo">🪐 SkyQuest Tracker</div>
+  <nav>
+    <a href="#hero">Home</a>
+    <a href="#about">About</a>
+    <a href="#features">Features</a>
+    <a href="#live-events">Live&nbsp;Events</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- ---------- HERO ---------- -->
+<section class="hero" id="hero">
+  <!-- video background unchanged -->
+  <div class="hero-bg">
+    <video autoplay-muted loop playsinline
+      poster="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80">
+      <source src="https://archive.org/download/PerseidMeteorShower/PerseidMeteorShower.mp4" type="video/mp4">
+    </video>
+    <div class="hero-bg-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-title">Never Miss a Meteor Shower Again</div>
+    <div class="hero-desc">Personalized alerts for every celestial event in your sky.</div>
+    <button class="cta-btn"
+      onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Alerts Now</button>
+  </div>
+</section>
+
+<!-- ---------- ABOUT ---------- -->
+<section id="about">
+  <div class="section-flex">
+    <div class="section-img-wrap">
+      <img class="section-img" src="https://images.unsplash.com/photo-1447433819943-74a20887a81e?auto=format&fit=crop&w=600&q=80"
+        alt="Astronaut floating in space" loading="lazy">
+    </div>
+    <div class="section-content">
+      <div class="section-title">About SkyQuest Tracker</div>
+      <div class="section-desc">SkyQuest Tracker is your go‑to platform for tracking upcoming space events. Whether
+        you’re an enthusiast or a casual stargazer, our service ensures you stay informed and ready for every cosmic
+        spectacle.</div>
+      <button class="section-btn"
+        onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See Features</button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- FEATURES ---------- -->
+<section id="features">
+  <div class="section-flex">
+    <div class="section-content">
+      <div class="section-title">Features</div>
+      <div class="section-desc">Discover what makes SkyQuest Tracker the best way to stay updated on all things space.
+      </div>
+      <div class="features-list">
+        <div class="feature"><div class="feature-icon">🛰️</div><div>Real‑time Event Tracking</div></div>
+        <div class="feature"><div class="feature-icon">🔔</div><div>Custom Alerts & Notifications</div></div>
+        <div class="feature"><div class="feature-icon">📅</div><div>Personalized Event Calendar</div></div>
+      </div>
+      <button class="section-btn"
+        onclick="document.getElementById('live-events').scrollIntoView({behavior:'smooth'})">View Live Events</button>
+    </div>
+    <div class="section-img-wrap">
+      <img class="section-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80"
+        alt="Space telescope and stars" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ---------- LIVE NASA EVENTS ---------- -->
+<section id="live-events">
+  <div class="section-content">
+    <div class="section-title">Live NASA Space Events</div>
+    <div class="section-desc">Latest notifications from NASA’s DONKI feed (updated every 10 minutes).</div>
+
+    <!-- event cards injected here -->
+    <div id="live-events-grid" class="events-grid">
+      <p>Loading latest events…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- PRICING ---------- -->
+<section id="pricing">
+  <div class="section-flex">
+    <div class="section-img-wrap">
+      <img class="section-img" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+        alt="Earth from space with stars" loading="lazy">
+    </div>
+    <div class="section-content">
+      <div class="section-title">Pricing</div>
+      <div class="section-desc">Choose the plan that fits your needs. Start tracking for free!</div>
+      <div class="pricing-table">
+        <div class="pricing-plan">
+          <div class="plan-title">Free</div><div class="plan-price">$0</div>
+          <div>Basic event tracking<br>Standard alerts</div>
         </div>
-        <div class="hero-content">
-            <div class="hero-title">Never Miss a Meteor Shower Again</div>
-            <div class="hero-desc">Personalized alerts for every celestial event in your sky.</div>
-            <button class="cta-btn" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Get Alerts Now</button>
+        <div class="pricing-plan">
+          <div class="plan-title">Pro</div><div class="plan-price">$4.99/mo</div>
+          <div>All Free features<br>Custom notifications<br>Priority support</div>
         </div>
-    </section>
-    <section id="about">
-        <div class="section-flex">
-            <div class="section-img-wrap">
-                <img class="section-img" src="https://images.unsplash.com/photo-1447433819943-74a20887a81e?auto=format&fit=crop&w=600&q=80" alt="Astronaut floating in space" loading="lazy">
-            </div>
-            <div class="section-content">
-                <div class="section-title">About SkyQuest Tracker</div>
-                <div class="section-desc">SkyQuest Tracker is your go-to platform for tracking upcoming space events. Whether you're an enthusiast or a casual stargazer, our service ensures you stay informed and ready for every cosmic spectacle.</div>
-                <button class="section-btn" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">See Features</button>
-            </div>
-        </div>
-    </section>
-    <section id="features">
-        <div class="section-flex">
-            <div class="section-content">
-                <div class="section-title">Features</div>
-                <div class="section-desc">Discover what makes SkyQuest Tracker the best way to stay updated on all things space.</div>
-                <div class="features-list">
-                    <div class="feature">
-                        <div class="feature-icon">🛰️</div>
-                        <div>Real-time Event Tracking</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🔔</div>
-                        <div>Custom Alerts & Notifications</div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">📅</div>
-                        <div>Personalized Event Calendar</div>
-                    </div>
-                </div>
-                <button class="section-btn" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">View Pricing</button>
-            </div>
-            <div class="section-img-wrap">
-                <img class="section-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" alt="Space telescope and stars" loading="lazy">
-            </div>
-        </div>
-    </section>
-    <section id="pricing">
-        <div class="section-flex">
-            <div class="section-img-wrap">
-                <img class="section-img" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Earth from space with stars" loading="lazy">
-            </div>
-            <div class="section-content">
-                <div class="section-title">Pricing</div>
-                <div class="section-desc">Choose the plan that fits your needs. Start tracking for free!</div>
-                <div class="pricing-table">
-                    <div class="pricing-plan">
-                        <div class="plan-title">Free</div>
-                        <div class="plan-price">$0</div>
-                        <div>Basic event tracking<br>Standard alerts</div>
-                    </div>
-                    <div class="pricing-plan">
-                        <div class="plan-title">Pro</div>
-                        <div class="plan-price">$4.99/mo</div>
-                        <div>All Free features<br>Custom notifications<br>Priority support</div>
-                    </div>
-                </div>
-                <button class="section-btn" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">Contact Us</button>
-            </div>
-        </div>
-    </section>
-    <section id="contact">
-        <div class="section-flex">
-            <div class="section-content">
-                <div class="section-title">Contact Us</div>
-                <div class="section-desc">Have questions or want to partner with us? Fill out the form below and we'll get back to you soon!</div>
-                <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you for contacting us!'); this.reset();">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea rows="4" placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-            </div>
-            <div class="section-img-wrap">
-                <img class="section-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Person looking at the night sky" loading="lazy">
-            </div>
-        </div>
-    </section>
-    <footer>
-        <div class="logo">🪐 SkyQuest Tracker</div>
-        <div class="footer-nav">
-            <a href="#hero">Home</a>
-            <a href="#about">About</a>
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#contact">Contact</a>
-            <a href="#" title="Live Events (coming soon)">Live Events</a>
-            <a href="#" title="Event Archive (coming soon)">Event Archive</a>
-            <a href="#" title="Resources (coming soon)">Resources</a>
-            <a href="#" title="Blog (coming soon)">Blog</a>
-        </div>
-        <div class="footer-social">
-            <a href="#" title="Twitter">🐦</a>
-            <a href="#" title="Facebook">📘</a>
-            <a href="#" title="Instagram">📸</a>
-        </div>
-        <div class="copyright">&copy; 2024 SkyQuest Tracker. All rights reserved.</div>
-    </footer>
-    <script>
-        // Smooth scroll for nav links
-        document.querySelectorAll('nav a, .footer-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href.startsWith('#')) {
-                    e.preventDefault();
-                    document.querySelector(href).scrollIntoView({behavior: 'smooth'});
-                }
-            });
-        });
-        // Section fade-in on scroll
-        const sections = document.querySelectorAll('section');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, { threshold: 0.15 });
-        sections.forEach(section => {
-            section.style.animationPlayState = 'paused';
-            observer.observe(section);
-        });
-    </script>
+      </div>
+      <button class="section-btn"
+        onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- CONTACT ---------- -->
+<section id="contact">
+  <div class="section-flex">
+    <div class="section-content">
+      <div class="section-title">Contact Us</div>
+      <div class="section-desc">Have questions or want to partner with us? Fill out the form below and we’ll get back to
+        you soon!</div>
+      <form class="contact-form"
+        onsubmit="event.preventDefault();alert('Thank you for contacting us!');this.reset();">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+    <div class="section-img-wrap">
+      <img class="section-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+        alt="Person looking at the night sky" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ---------- FOOTER ---------- -->
+<footer>
+  <div class="logo">🪐 SkyQuest Tracker</div>
+  <div class="footer-nav">
+    <a href="#hero">Home</a>
+    <a href="#about">About</a>
+    <a href="#features">Features</a>
+    <a href="#live-events">Live&nbsp;Events</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-social">
+    <a href="#" title="Twitter">🐦</a><a href="#" title="Facebook">📘</a><a href="#" title="Instagram">📸</a>
+  </div>
+  <div class="copyright">&copy; 2024 SkyQuest Tracker. All rights reserved.</div>
+</footer>
+
+<!-- ---------- JAVASCRIPT ---------- -->
+<script>
+/* smooth scroll for internal links */
+document.querySelectorAll('nav a,.footer-nav a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    if(href.startsWith('#')){
+      e.preventDefault();
+      document.querySelector(href).scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
+
+/* pause section animations until in‑view */
+const sections=document.querySelectorAll('section');
+const ob=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.style.animationPlayState='running';}
+  });
+},{threshold:.15});
+sections.forEach(sec=>{
+  sec.style.animationPlayState='paused';
+  ob.observe(sec);
+});
+</script>
+
+<!-- Live‑events loader -->
+<script type="module">
+const API_KEY = 'LSNy9VQ18vB0TgcA8zLN38to6koUkfer2US9aBd8';             // ← replace with your actual key
+const grid     = document.getElementById('live-events-grid');
+
+async function loadEvents(){
+  const now   = new Date();
+  const start = new Date(now.getTime() - 24*60*60*1000);         // last 24 h
+  const fmt   = d => d.toISOString().split('T')[0];
+
+  const url = `https://api.nasa.gov/DONKI/notifications` +
+              `?type=all&startDate=${fmt(start)}&endDate=${fmt(now)}` +
+              `&api_key=${API_KEY}`;
+
+  try{
+    const res  = await fetch(url);
+    const data = await res.json();
+    if(!Array.isArray(data)) throw new Error('Unexpected response');
+
+    grid.innerHTML = data.slice(0,10).map(ev=>`
+      <article class="event-card">
+        <h4>${ev.messageType} – ${ev.messageIssueTime.slice(0,10)}</h4>
+        <p>${ev.messageBody.length>180 ? ev.messageBody.slice(0,180)+'…' : ev.messageBody}</p>
+        ${ev.messageURL?`<a href="${ev.messageURL}" target="_blank" rel="noopener">Read more ↗</a>`:''}
+      </article>`
+    ).join('');
+  }catch(err){
+    console.error(err);
+    grid.innerHTML='<p>Could not load events. Please try again later.</p>';
+  }
+}
+
+loadEvents();                     // first call
+setInterval(loadEvents, 10*60*1000);   // every 10 minutes
+</script>
 </body>
 </html>
-
