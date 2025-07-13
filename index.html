@@ -60,28 +60,27 @@ section{
 .section-img{width:100%;max-width:560px;border-radius:1.4rem;box-shadow:0 6px 30px rgba(127,127,213,.16)}
 
 /* ----------  HERO (APOD) ---------- */
-#hero{
-  margin:0;
-  padding:5rem 1rem 3rem;
-  background:linear-gradient(135deg,var(--space-black) 60%,var(--cosmic-blue) 100%);
-  text-align:center;
+#hero{padding:0;background:none;border:none;box-shadow:none;margin:0}
+.hero-bg{position:relative;min-height:640px;overflow:hidden}
+.hero-bg::after{/* dark overlay */
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(31,40,51,.7) 60%,rgba(102,252,241,.12) 100%);
 }
-.hero-inner{max-width:900px;margin:0 auto}
-.apod-wrap{margin-top:2.5rem}
-#apod-img{
+/* hero background image */
+#hero-img{
+  position:absolute;
+  inset:0;
   width:100%;
-  max-width:900px;
-  height:auto;
-  border-radius:1rem;
-  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  height:100%;
+  object-fit:cover;            /* always fill the frame */
+  object-position:center center;/* keep the interesting bit centred */
+  filter:brightness(.6);        /* keep text readable */
 }
-#apod-caption{
-  margin-top:.6rem;
-  font-size:.95rem;
-  opacity:.85;
-}
-/* button-as-link keeps previous styling */
-a.btn{display:inline-block;text-decoration:none}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.hero-title{font-size:3rem;color:var(--stellar-cyan);margin-bottom:1rem;text-shadow:0 2px 16px var(--glass-purple)}
+.hero-desc{font-size:1.3rem;max-width:680px;margin-bottom:2rem}
+.btn{background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s}
+.btn:hover{transform:translateY(-2px) scale(1.04)}
 
 /* ----------  LOCATION BAR ---------- */
 .location-bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1rem 0 2rem}
@@ -128,24 +127,16 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
 
 <!-- ---------- HERO (APOD) ---------- -->
 <section id="hero">
-    <div class="hero-inner">
+  <div class="hero-bg">
+    <img id="hero-img" alt="Astronomy Picture of the Day">
+    <div class="hero-content">
       <h1 class="hero-title">Explore the Cosmos Every Day</h1>
-      <p class="hero-desc">
-        Scroll down for today’s space picture, live space‑weather, asteroid near‑misses,
-        Mars photos and more.
-      </p>
-  
-      <!-- smooth‑scroll link styled as a button -->
-      <a href="#live-events" class="btn scroll-link">Jump to Live Events</a>
-  
-      <!-- Astronomy Picture of the Day -->
-      <figure class="apod-wrap">
-        <img id="apod-img" alt="Astronomy Picture of the Day" loading="lazy">
-        <figcaption id="apod-caption"></figcaption>
-      </figure>
+      <p class="hero-desc">Scroll down for today’s space picture, live space‑weather, asteroid near‑misses, Mars photos and more.</p>
+      <button class="btn" onclick="document.getElementById('live-events').scrollIntoView({behavior:'smooth'})">Jump to Live Events</button>
     </div>
-  </section>
-  
+  </div>
+</section>
+
 <!-- ---------- LIVE DONKI EVENTS ---------- -->
 <section id="live-events">
   <h2 class="section-title">Live NASA Space‑Weather Feed</h2>
