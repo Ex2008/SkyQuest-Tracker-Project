@@ -56,36 +56,6 @@ section{
 }
 .section-title{font-size:2.2rem;margin-bottom:.8rem;color:var(--stellar-cyan);text-shadow:0 1px 6px var(--glass-purple)}
 .section-desc{font-size:1.2rem;opacity:.90;margin-bottom:1.7rem}
-.section-flex{display:flex;flex-wrap:wrap;gap:3rem;align-items:center}
-.section-img{width:100%;max-width:560px;border-radius:1.4rem;box-shadow:0 6px 30px rgba(127,127,213,.16)}
-
-/* ----------  HERO (APOD) ---------- */
-#hero{
-  margin:0;
-  padding:5rem 1rem 3rem;
-  background:none;border:none;box-shadow:none;
-  text-align:center;
-}
-#apod-img{
-  width:100%;
-  max-width:900px;
-  height:auto;
-  border-radius:1rem;
-  box-shadow:0 6px 32px rgba(0,0,0,.35);
-  margin:2rem auto;
-}
-.hero-title{font-size:3rem;color:var(--stellar-cyan);margin-bottom:1rem;text-shadow:0 2px 16px var(--glass-purple)}
-.hero-desc{font-size:1.3rem;max-width:680px;margin:0 auto 2rem}
-.btn{display:inline-block;background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s;text-decoration:none}
-.btn:hover{transform:translateY(-2px) scale(1.04)}
-
-/* ----------  LOCATION BAR ---------- */
-.location-bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1rem 0 2rem}
-.location-bar input{flex:1 1 220px;min-width:160px;padding:.7rem 1rem;border-radius:.7rem;border:none;font-size:1rem;background:rgba(255,255,255,.10);color:var(--white)}
-.location-bar select{padding:.7rem 1rem;border-radius:.7rem;border:none;font-size:1rem;background:rgba(255,255,255,.10);color:var(--white)}
-.location-bar button{background:var(--nebula-teal);color:var(--white);border:none;font-size:1rem;padding:.65rem 1.3rem;border-radius:1.8rem;cursor:pointer;font-weight:500;box-shadow:0 3px 16px rgba(69,162,158,.25)}
-
-/* ----------  CARD GRIDS ---------- */
 .grid{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .card{
   background:rgba(31,40,51,.48);border-radius:1rem;padding:1.3rem;
@@ -96,9 +66,38 @@ section{
 .card h4{font-size:1.1rem;margin-bottom:.6rem;color:var(--stellar-cyan)}
 .card p{font-size:.95rem}
 
-/* ----------  MAR ROVER CAROUSEL ---------- */
+/* ----------  HERO (APOD) ---------- */
+#hero{text-align:center;margin:0;padding:5rem 1rem 3rem;background:none;border:none;box-shadow:none}
+#apod-img{width:100%;max-width:900px;height:auto;border-radius:1rem;box-shadow:0 6px 32px rgba(0,0,0,.35);margin:2rem auto}
+.apod-cap{font-size:1rem;opacity:.85;margin-bottom:1.5rem;max-width:900px;margin-left:auto;margin-right:auto}
+.hero-title{font-size:3rem;color:var(--stellar-cyan);margin-bottom:1rem;text-shadow:0 2px 16px var(--glass-purple)}
+.hero-desc{font-size:1.3rem;max-width:680px;margin:0 auto 2rem}
+.btn{display:inline-block;background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s;text-decoration:none}
+.btn:hover{transform:translateY(-2px) scale(1.04)}
+
+/* ----------  LOCATION BAR ---------- */
+.location-bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1rem 0 2rem}
+.location-bar input, .location-bar select{
+  flex:1 1 220px;min-width:160px;padding:.7rem 1rem;border-radius:.7rem;border:none;font-size:1rem;
+  background:rgba(255,255,255,.10);color:var(--white)
+}
+.location-bar button{background:var(--nebula-teal);color:var(--white);border:none;font-size:1rem;padding:.65rem 1.3rem;border-radius:1.8rem;cursor:pointer;font-weight:500;box-shadow:0 3px 16px rgba(69,162,158,.25)}
+
+#earth-img{
+  max-width:420px;   /* ↲ pick whatever width feels right */
+  width:100%;
+  margin:0 auto;
+}
+
+/* ----------  MAR ROVER CAROUSEL ---------- */
 #mars-photos{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem}
 #mars-photos img{height:180px;border-radius:1rem;scroll-snap-align:start;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+
+/* ----------  FAQ ---------- */
+details{margin:1rem 0;padding:1rem;border:1px solid rgba(102,252,241,.12);border-radius:.8rem;background:rgba(35,41,49,.30)}
+details[open]{background:rgba(35,41,49,.50)}
+summary{cursor:pointer;font-size:1.05rem;list-style:none}
+summary::-webkit-details-marker{display:none}
 
 /* ----------  FOOTER ---------- */
 footer{text-align:center;background:rgba(31,40,51,.65);margin-top:4rem;padding:2.5rem 1rem;border-top:2px solid var(--nebula-teal);box-shadow:0 -8px 36px rgba(0,0,0,.18);backdrop-filter:blur(8px)}
@@ -119,18 +118,21 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
     <a href="#asteroids">Asteroids</a>
     <a href="#mars">Mars</a>
     <a href="#earth">Earth</a>
+    <a href="#learn">Learn</a>
   </nav>
 </header>
 
 <!-- ---------- HERO (APOD) ---------- -->
- <center>   
-<section id="hero">
-  <h1 class="hero-title">Astronomy Picture of the Day</h1>
-  <img id="apod-img" alt="Astronomy Picture of the Day">
-  <p class="hero-desc">Scroll down for today’s space picture, live space‑weather, asteroid near‑misses, Mars photos and more.</p>
-  <a href="#live-events" class="btn">Jump to Live Events</a>
-</section>
+<center>
+    <section id="hero">
+        <h1 class="hero-title">Astronomy Picture of the Day</h1>
+        <img id="apod-img" alt="Astronomy Picture of the Day">
+        <p id="apod-cap" class="apod-cap"></p>
+        <p class="hero-desc">Scroll down for live space‑weather, asteroid near‑misses, Mars photos and more.</p>
+        <a href="#live-events" class="btn">Jump to Live Events</a>
+      </section>  
 </center>
+
 <!-- ---------- LIVE DONKI EVENTS ---------- -->
 <section id="live-events">
   <h2 class="section-title">Live NASA Space‑Weather Feed</h2>
@@ -158,6 +160,15 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
   <div id="asteroid-grid" class="grid"><p>Loading…</p></div>
 </section>
 
+<!-- ---------- EXOPLANET SPOTLIGHT ---------- -->
+<section id="exoplanet">
+  <h2 class="section-title">Exoplanet Spotlight</h2>
+  <p class="section-desc">Meet an alien world discovered by NASA’s Kepler, TESS and other space telescopes.</p>
+  <div id="exo-card" class="card" style="max-width:420px;margin:0 auto;text-align:center">
+    <p>Loading a random exoplanet…</p>
+  </div>
+</section>
+
 <!-- ---------- MARS ROVER PHOTOS ---------- -->
 <section id="mars">
   <h2 class="section-title">Latest Mars‑Rover Photos</h2>
@@ -173,14 +184,41 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
   <p id="earth-caption" style="opacity:.85;margin-top:1rem"></p>
 </section>
 
+<!-- ---------- FAQ / LEARN ---------- -->
+<section id="learn">
+  <h2 class="section-title">Explore &amp; Learn</h2>
+
+  <details>
+    <summary><strong>What does “LD” mean in Asteroid Close Calls?</strong></summary>
+    <p>LD stands for <em>Lunar Distance</em> – the average distance between Earth and the Moon (~384 000 km). An asteroid at “0.8 LD” will pass 20 % closer than the Moon.</p>
+  </details>
+
+  <details>
+    <summary><strong>How can I see the ISS overhead?</strong></summary>
+    <p>Scroll to the ISS card (coming soon). If you allow location access, it shows the next time (local) the ISS rises &gt; 10° above the horizon. Go outside a few minutes early and look in the direction shown – the ISS looks like a fast, bright star.</p>
+  </details>
+
+  <details>
+    <summary><strong>Why are some Mars photos dusty?</strong></summary>
+    <p>Mars is windy! Dust can stick to the camera lens cover. Engineers periodically clean it or use image processing to enhance clarity.</p>
+  </details>
+
+  <details>
+    <summary><strong>What’s special about the Astronomy Picture of the Day?</strong></summary>
+    <p>APOD is hand‑picked daily by astrophysicists. Click on the caption to open the full NASA page and learn the science behind the image.</p>
+  </details>
+</section>
+
 <footer>
   <div class="logo">🪐 SkyQuest</div>
   <div style="margin:1rem 0">
     <a href="#hero">Home</a> •
     <a href="#live-events">Live</a> •
     <a href="#asteroids">Asteroids</a> •
+    <a href="#exoplanet">Exoplanets</a> •
     <a href="#mars">Mars</a> •
-    <a href="#earth">Earth</a>
+    <a href="#earth">Earth</a> •
+    <a href="#learn">Learn</a>
   </div>
   <small>&copy; 2025 SkyQuest Tracker – All images courtesy of NASA / JPL / GSFC.</small>
 </footer>
@@ -188,52 +226,106 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
 <!-- ----------  SCRIPTS ---------- -->
 <script type="module">
 /* ==== CONFIG ==== */
-const KEY = 'LSNy9VQ18vB0TgcA8zLN38to6koUkfer2US9aBd8';          //  <--  replace with your actual key
-const donkiGrid   = document.getElementById('donki-grid');
-const asteroidGrid= document.getElementById('asteroid-grid');
-const marsWrap    = document.getElementById('mars-photos');
-const earthImg    = document.getElementById('earth-img');
-const earthCap    = document.getElementById('earth-caption');
-const apodImg     = document.getElementById('apod-img');
+const KEY = 'LSNy9VQ18vB0TgcA8zLN38to6koUkfer2US9aBd8';           //  <-- replace with your actual key
+const apodImg   = document.getElementById('apod-img');
+const apodCap   = document.getElementById('apod-cap');
+const donkiGrid = document.getElementById('donki-grid');
+const asteroidGrid = document.getElementById('asteroid-grid');
+const marsWrap  = document.getElementById('mars-photos');
+const earthImg  = document.getElementById('earth-img');
+const earthCap  = document.getElementById('earth-caption');
+const exoCard   = document.getElementById('exo-card');
 
-/* ==== SMOOTH SCROLL for anchor links ==== */
+/* ==== smooth‑scroll anchors ==== */
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
-    const id=a.getAttribute('href');
-    if(id.length>1){
+    const tgt=a.getAttribute('href');
+    if(tgt.length>1){
       e.preventDefault();
-      document.querySelector(id).scrollIntoView({behavior:'smooth'});
+      document.querySelector(tgt).scrollIntoView({behavior:'smooth'});
     }
   });
 });
 
-/* ==== APOD HERO ==== */
-(async function loadAPOD(){
+/* ==== APOD loader (robust) ==== */
+/* ==== APOD HERO (smart trim) ==== */
+(async ()=>{
   try{
-    const apod = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${KEY}`).then(r=>r.json());
-    apodImg.src = apod.hdurl || apod.url;
+    const url = `https://api.nasa.gov/planetary/apod?thumbs=true&api_key=${KEY}`;
+    const apod = await fetch(url).then(r=>r.json());
+
+    /* choose image or fallback thumbnail */
+    apodImg.src = apod.media_type === 'video'
+      ? (apod.thumbnail_url || apod.url || 'https://via.placeholder.com/900x600?text=No+thumbnail')
+      : (apod.hdurl || apod.url);
+
     apodImg.alt = apod.title || 'Astronomy Picture of the Day';
-  }catch(e){
-    console.error(e);
+
+    /* ---------- tidy explanation ---------- */
+    const RAW   = apod.explanation || '';
+    const CUT   = 'Explore Your Universe';
+    let text    = RAW.includes(CUT) ? RAW.split(CUT)[0] : RAW;
+    const MAX   = 2000;
+    if (text.length > MAX) text = text.slice(0, MAX) + '…';
+
+    const credit = apod.copyright ? ` • Credit: ${apod.copyright}` : '';
+
+    apodCap.innerHTML = `<strong>${apod.title}</strong> – ${apod.date}${credit}<br>${text}
+                         <a href="https://apod.nasa.gov/apod/" target="_blank" rel="noopener">full story ↗</a>`;
+  }catch(err){
+    console.error('APOD error:', err);
     apodImg.src = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80';
+    apodCap.textContent = 'Unable to load the Astronomy Picture of the Day.';
   }
 })();
 
+
+/* ==== EXOPLANET  (uses official TAP syntax) ==== */
+(async ()=>{
+  try{
+    /*  ADQL 2.0 supports RAND() + TOP 1  */
+    const q  = `select top 1 pl_name, pl_rade, pl_orbper, hostname, disc_year
+                from ps
+                where default_flag=1           -- use the default solution
+                order by RAND()`;
+
+    const url = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync' +
+                '?query=' + encodeURIComponent(q) +
+                '&format=json';
+
+    const data = await fetch(url).then(r=>r.json());
+    if(!Array.isArray(data) || !data.length) throw new Error('empty');
+
+    /* the service returns column names in upper‑case */
+    const p = data[0];
+    exoCard.innerHTML = `
+      <h4>${p.PL_NAME}</h4>
+      <p>Discovered: ${p.DISC_YEAR}</p>
+      <p>Planet Size: ${p.PL_RADE ? (+p.PL_RADE).toFixed(1) + ' × Earth' : '—'}</p>
+      <p>Orbit Period: ${p.PL_ORBPER ? (+p.PL_ORBPER).toFixed(1) + ' days' : '—'}</p>
+      <p>Host Star: ${p.HOSTNAME}</p>`;
+  }catch(e){
+    console.error('Exoplanet error:', e);
+    exoCard.innerHTML = '<p>Could not load exoplanet data.</p>';
+  }
+})();
+
+
 /* ==== LOCATION HANDLING ==== */
-let textFilter = localStorage.getItem('sq_place') || '';
-const locInput = document.getElementById('loc-input');
-locInput.value = textFilter;
+let textFilter=localStorage.getItem('sq_place')||'';
+const locInput=document.getElementById('loc-input');
+locInput.value=textFilter;
 document.getElementById('city-select').addEventListener('change',e=>{
   if(e.target.value){locInput.value=e.target.value;setFilter();}
 });
 document.getElementById('use-my-loc').addEventListener('click',()=>{
   navigator.geolocation.getCurrentPosition(
-    pos=>{textFilter = `${pos.coords.latitude.toFixed(2)},${pos.coords.longitude.toFixed(2)}`;locInput.value=textFilter;localStorage.setItem('sq_place',textFilter);loadDONKI();},
+    pos=>{textFilter=`${pos.coords.latitude.toFixed(2)},${pos.coords.longitude.toFixed(2)}`;locInput.value=textFilter;localStorage.setItem('sq_place',textFilter);loadDONKI();},
     ()=>alert('Location permission denied.')
   );
 });
 locInput.addEventListener('keyup',e=>{if(e.key==='Enter')setFilter();});
-function setFilter(){textFilter = locInput.value.trim();localStorage.setItem('sq_place',textFilter);loadDONKI();}
+function setFilter(){textFilter=locInput.value.trim();localStorage.setItem('sq_place',textFilter);loadDONKI();}
 
 /* ==== DONKI ==== */
 async function loadDONKI(){
@@ -241,74 +333,58 @@ async function loadDONKI(){
   const now=new Date(), start=new Date(now.getTime()-24*60*60*1000);
   const fmt=d=>d.toISOString().split('T')[0];
   try{
-    const data = await fetch(`https://api.nasa.gov/DONKI/notifications?startDate=${fmt(start)}&endDate=${fmt(now)}&type=all&api_key=${KEY}`).then(r=>r.json());
-    const events = Array.isArray(data)?data:[];
-
-    const filtered = textFilter
-      ? events.filter(ev=>ev.messageBody.toLowerCase().includes(textFilter.toLowerCase()))
-      : events;
-
-    donkiGrid.innerHTML = filtered.length
+    const data=await fetch(`https://api.nasa.gov/DONKI/notifications?startDate=${fmt(start)}&endDate=${fmt(now)}&type=all&api_key=${KEY}`).then(r=>r.json());
+    const events=Array.isArray(data)?data:[];
+    const filtered=textFilter?events.filter(ev=>ev.messageBody.toLowerCase().includes(textFilter.toLowerCase())):events;
+    donkiGrid.innerHTML=filtered.length
       ? filtered.slice(0,12).map(ev=>`
-          <article class="card">
-            <h4>${ev.messageType} – ${ev.messageIssueTime.slice(0,10)}</h4>
-            <p>${ev.messageBody.length>160?ev.messageBody.slice(0,160)+'…':ev.messageBody}</p>
-            ${ev.messageURL?`<a href="${ev.messageURL}" target="_blank" rel="noopener">Read more ↗</a>`:''}
-          </article>`).join('')
-      : `<p>No events mentioning “${textFilter || '—'}” in last 24 h.</p>`;
-  }catch(err){
-    donkiGrid.innerHTML='<p>Could not load DONKI feed.</p>';
-  }
-}
-
-/* ==== ASTEROID NEO WS ==== */
+         <article class="card">
+           <h4>${ev.messageType} – ${ev.messageIssueTime.slice(0,10)}</h4>
+           <p>${ev.messageBody.length>160?ev.messageBody.slice(0,160)+'…':ev.messageBody}</p>
+           ${ev.messageURL?`<a href="${ev.messageURL}" target="_blank" rel="noopener">Read more ↗</a>`:''}
+         </article>`).join('')
+      : `<p>No events mentioning “${textFilter||'—'}” in last 24 h.</p>`;
+  }catch(e){donkiGrid.innerHTML='<p>Could not load DONKI feed.</p>';}}
+/* ==== ASTEROIDS ==== */
 async function loadAsteroids(){
   asteroidGrid.innerHTML='<p>Loading…</p>';
   const today=new Date().toISOString().split('T')[0];
   try{
-    const res = await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${KEY}`).then(r=>r.json());
-    const objects = Object.values(res.near_earth_objects || {}).flat();
-    objects.sort((a,b)=>a.close_approach_data[0].miss_distance.lunar - b.close_approach_data[0].miss_distance.lunar);
-    asteroidGrid.innerHTML = objects.slice(0,10).map(neo=>{
-      const dist = (+neo.close_approach_data[0].miss_distance.lunar).toFixed(2);
+    const res=await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${KEY}`).then(r=>r.json());
+    const objs=Object.values(res.near_earth_objects||{}).flat();
+    objs.sort((a,b)=>a.close_approach_data[0].miss_distance.lunar-b.close_approach_data[0].miss_distance.lunar);
+    asteroidGrid.innerHTML=objs.slice(0,10).map(n=>{
+      const dist=(+n.close_approach_data[0].miss_distance.lunar).toFixed(2);
       return `<article class="card">
-                <h4>${neo.name}</h4>
-                <p>Miss Distance: <strong>${dist} LD</strong></p>
-                <p>Speed: ${(neo.close_approach_data[0].relative_velocity.kilometers_per_hour|0).toLocaleString()} km/h</p>
-              </article>`;
-    }).join('');
-  }catch(e){
-    asteroidGrid.innerHTML='<p>Could not load asteroid data.</p>';
-  }
-}
-
-/* ==== MARS ROVER PHOTOS ==== */
+        <h4>${n.name}</h4>
+        <p>Miss Distance: <strong>${dist} LD</strong></p>
+        <p>Speed: ${(n.close_approach_data[0].relative_velocity.kilometers_per_hour|0).toLocaleString()} km/h</p>
+      </article>`}).join('');
+  }catch(e){asteroidGrid.innerHTML='<p>Could not load asteroid data.</p>';}}
+/* ==== MARS PHOTOS ==== */
 async function loadMars(){
   marsWrap.innerHTML='<p>Loading…</p>';
   try{
-    const data = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/latest_photos?api_key=${KEY}`).then(r=>r.json());
-    marsWrap.innerHTML = (data.latest_photos||[]).slice(0,15).map(p=>`
-      <img src="${p.img_src}" alt="Mars" loading="lazy">`).join('');
-  }catch(e){marsWrap.innerHTML='<p>Could not load Mars photos.</p>';}
-}
-
+    const data=await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/latest_photos?api_key=${KEY}`).then(r=>r.json());
+    marsWrap.innerHTML=(data.latest_photos||[]).slice(0,15).map(p=>`<img src="${p.img_src}" alt="Mars" loading="lazy">`).join('');
+  }catch(e){marsWrap.innerHTML='<p>Could not load Mars photos.</p>';}}
 /* ==== EPIC EARTH ==== */
 async function loadEarth(){
   try{
-    const list = await fetch(`https://epic.gsfc.nasa.gov/api/natural`).then(r=>r.json());
+    const list=await fetch(`https://epic.gsfc.nasa.gov/api/natural`).then(r=>r.json());
     if(!list.length) return;
-    const pic = list[0];
-    const dt  = new Date(pic.date);
-    const path = `${dt.getUTCFullYear()}/${String(dt.getUTCMonth()+1).padStart(2,'0')}/${String(dt.getUTCDate()).padStart(2,'0')}`;
-    earthImg.src = `https://epic.gsfc.nasa.gov/archive/natural/${path}/png/${pic.image}.png`;
-    earthCap.textContent = `Captured ${dt.toUTCString()} by DSCOVR/EPIC.`;
+    const pic=list[0];
+    const dt=new Date(pic.date);
+    const path=`${dt.getUTCFullYear()}/${String(dt.getUTCMonth()+1).padStart(2,'0')}/${String(dt.getUTCDate()).padStart(2,'0')}`;
+    earthImg.src=`https://epic.gsfc.nasa.gov/archive/natural/${path}/png/${pic.image}.png`;
+    earthCap.textContent=`Captured ${dt.toUTCString()} by DSCOVR/EPIC.`;
   }catch(e){earthCap.textContent='Could not load EPIC image.';}
 }
 
 /* ==== INITIAL LOAD + TIMERS ==== */
 loadDONKI();loadAsteroids();loadMars();loadEarth();
 setInterval(loadDONKI,10*60*1000);
-setInterval(loadAsteroids,6*60*60*1000);   // asteroids update daily
+setInterval(loadAsteroids,6*60*60*1000);
 </script>
 </body>
 </html>
