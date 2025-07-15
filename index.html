@@ -75,14 +75,6 @@ section{
 .btn{display:inline-block;background:var(--stellar-cyan);color:var(--deep-navy);border:none;font-weight:600;padding:.9rem 2.2rem;border-radius:2rem;cursor:pointer;box-shadow:0 4px 18px rgba(102,252,241,.25);transition:transform .15s;text-decoration:none}
 .btn:hover{transform:translateY(-2px) scale(1.04)}
 
-/* ----------  LOCATION BAR ---------- */
-.location-bar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1rem 0 2rem}
-.location-bar input, .location-bar select{
-  flex:1 1 220px;min-width:160px;padding:.7rem 1rem;border-radius:.7rem;border:none;font-size:1rem;
-  background:rgba(255,255,255,.10);color:var(--white)
-}
-.location-bar button{background:var(--nebula-teal);color:var(--white);border:none;font-size:1rem;padding:.65rem 1.3rem;border-radius:1.8rem;cursor:pointer;font-weight:500;box-shadow:0 3px 16px rgba(69,162,158,.25)}
-
 #earth-img{
   max-width:420px;   /* ↲ pick whatever width feels right */
   width:100%;
@@ -142,19 +134,6 @@ footer a{color:var(--white);margin:0 .7rem;font-weight:500;text-decoration:none}
 <section id="live-events">
   <h2 class="section-title">Live NASA Space‑Weather Feed</h2>
   <p class="section-desc">Automatic DONKI notifications (updated every 10 min). Filter by place‑name to catch aurora alerts etc.</p>
-
-  <div class="location-bar">
-    <input id="loc-input" placeholder="Enter city / country name">
-    <select id="city-select">
-      <option value="">Popular cities…</option>
-      <option value="New York">New York</option>
-      <option value="Tokyo">Tokyo</option>
-      <option value="Sydney">Sydney</option>
-      <option value="London">London</option>
-    </select>
-    <button id="use-my-loc">Use my location</button>
-  </div>
-
   <div id="donki-grid" class="grid"><p>Loading…</p></div>
 </section>
 
@@ -315,41 +294,30 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
   }
 })();
 
-
-/* ==== LOCATION HANDLING ==== */
-let textFilter=localStorage.getItem('sq_place')||'';
-const locInput=document.getElementById('loc-input');
-locInput.value=textFilter;
-document.getElementById('city-select').addEventListener('change',e=>{
-  if(e.target.value){locInput.value=e.target.value;setFilter();}
-});
-document.getElementById('use-my-loc').addEventListener('click',()=>{
-  navigator.geolocation.getCurrentPosition(
-    pos=>{textFilter=`${pos.coords.latitude.toFixed(2)},${pos.coords.longitude.toFixed(2)}`;locInput.value=textFilter;localStorage.setItem('sq_place',textFilter);loadDONKI();},
-    ()=>alert('Location permission denied.')
-  );
-});
-locInput.addEventListener('keyup',e=>{if(e.key==='Enter')setFilter();});
-function setFilter(){textFilter=locInput.value.trim();localStorage.setItem('sq_place',textFilter);loadDONKI();}
-
-/* ==== DONKI ==== */
+/* ==== DONKI (global feed) ==== */
 async function loadDONKI(){
-  donkiGrid.innerHTML='<p>Loading…</p>';
-  const now=new Date(), start=new Date(now.getTime()-24*60*60*1000);
-  const fmt=d=>d.toISOString().split('T')[0];
+  donkiGrid.innerHTML = '<p>Loading…</p>';
+  const now   = new Date();
+  const start = new Date(now - 24*60*60*1000);
+  const fmt   = d => d.toISOString().split('T')[0];
+
   try{
-    const data=await fetch(`https://api.nasa.gov/DONKI/notifications?startDate=${fmt(start)}&endDate=${fmt(now)}&type=all&api_key=${KEY}`).then(r=>r.json());
-    const events=Array.isArray(data)?data:[];
-    const filtered=textFilter?events.filter(ev=>ev.messageBody.toLowerCase().includes(textFilter.toLowerCase())):events;
-    donkiGrid.innerHTML=filtered.length
-      ? filtered.slice(0,12).map(ev=>`
-         <article class="card">
-           <h4>${ev.messageType} – ${ev.messageIssueTime.slice(0,10)}</h4>
-           <p>${ev.messageBody.length>160?ev.messageBody.slice(0,160)+'…':ev.messageBody}</p>
-           ${ev.messageURL?`<a href="${ev.messageURL}" target="_blank" rel="noopener">Read more ↗</a>`:''}
-         </article>`).join('')
-      : `<p>No events mentioning “${textFilter||'—'}” in last 24 h.</p>`;
-  }catch(e){donkiGrid.innerHTML='<p>Could not load DONKI feed.</p>';}}
+    const url = `https://api.nasa.gov/DONKI/notifications?startDate=${fmt(start)}&endDate=${fmt(now)}&type=all&api_key=${KEY}`;
+    const data = await fetch(url).then(r => r.json());
+    const events = Array.isArray(data) ? data : [];
+
+    donkiGrid.innerHTML = events.slice(0,12).map(ev => `
+      <article class="card">
+        <h4>${ev.messageType} – ${ev.messageIssueTime.slice(0,10)}</h4>
+        <p>${ev.messageBody.length > 160 ? ev.messageBody.slice(0,160)+'…' : ev.messageBody}</p>
+        ${ev.messageURL ? `<a href="${ev.messageURL}" target="_blank">Read more ↗</a>` : ''}
+      </article>`).join('');
+  }catch(err){
+    console.error('DONKI error:', err);
+    donkiGrid.innerHTML = '<p>Could not load DONKI feed.</p>';
+  }
+}
+
 /* ==== ASTEROIDS ==== */
 async function loadAsteroids(){
   asteroidGrid.innerHTML='<p>Loading…</p>';
