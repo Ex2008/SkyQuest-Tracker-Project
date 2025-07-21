@@ -312,6 +312,21 @@
       scroll-snap-align: start;
       box-shadow: 0 3px 14px rgba(0, 0, 0, .25)
     }
+
+    /* Exo‑Ranker nav pill */
+    .exo-link {
+      background: var(--glass-purple);
+      color: var(--white);
+      padding: .55rem 1.25rem;
+      border-radius: 1.6rem;
+      font-weight: 700;
+      box-shadow: 0 0 18px rgba(127, 127, 213, .45);
+      transition: transform .15s;
+    }
+
+    .exo-link:hover {
+      transform: translateY(-2px) scale(1.05);
+    }
   </style>
 </head>
 
@@ -325,7 +340,9 @@
       <a href="#asteroids">Asteroids</a>
       <a href="#mars">Mars</a>
       <a href="#earth">Earth</a>
-      <a href="#library">Gallery</a><!-- internal section -->
+      <a href="#library">Gallery</a>
+      <!-- ⭐ NEW: big, flashy research‑page button -->
+      <a href="exo-ranker.html" class="exo-link" target="_blank" rel="noopener">🚀 Exo‑Ranker</a>
       <a href="https://images.nasa.gov" target="_blank" rel="noopener">
         NASA Library ↗
       </a><!-- opens full site in new tab -->
@@ -470,10 +487,10 @@
       <a href="#hero">Home</a> •
       <a href="#live-events">Live</a> •
       <a href="#asteroids">Asteroids</a> •
-      <a href="#exoplanet">Exoplanets</a> •
       <a href="#mars">Mars</a> •
       <a href="#earth">Earth</a> •
       <a href="#learn">Learn</a>
+      <a href="exo-ranker.html" target="_blank" rel="noopener">Exo‑Ranker</a>
     </div>
     <small>&copy; 2025 SkyQuest Tracker – All images courtesy of NASA / JPL / GSFC.</small>
   </footer>
