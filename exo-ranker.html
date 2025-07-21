@@ -69,67 +69,88 @@
   <!-- Plotly CDN -->
   <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
   <script>
-  /* ---------- helper palette ---------- */
   const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
 
-  /* ---------- main ---------- */
+  // Mapping for more readable feature names
+  const featureLabels = {
+    pl_rade: "Radius (R⊕)",
+    pl_bmasse: "Mass (M⊕)",
+    pl_eqt: "Eq. Temp (K)",
+    st_teff: "Star Temp (K)",
+    st_rad: "Star Radius (R☉)",
+    st_mass: "Star Mass (M☉)"
+  };
+
   (async () => {
     let data;
     try {
-      const res = await fetch('planet_data.json');   // <‑‑ your pre‑generated file
+      const res = await fetch('planet_data.json');
       data = await res.json();
     } catch(err){
       document.getElementById('chart').innerHTML =
-        '<p style=\"padding:2rem\">Could not load <code>planet_data.json</code>.</p>';
+        '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
       return;
     }
 
-    /* populate dropdowns with all numeric keys except cluster */
-    const numericKeys = Object.keys(data[0]).filter(
-      k => typeof data[0][k] === 'number' && k !== 'cluster'
-    ).sort();
-
+    const numericKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster').sort();
     const xSel = document.getElementById('xSel');
     const ySel = document.getElementById('ySel');
-    numericKeys.forEach(k=>{
-      const opt = `<option value="${k}">${k}</option>`;
-      xSel.insertAdjacentHTML('beforeend',opt);
-      ySel.insertAdjacentHTML('beforeend',opt);
+
+    numericKeys.forEach(k => {
+      const label = featureLabels[k] ? `${k} (${featureLabels[k]})` : k;
+      xSel.insertAdjacentHTML('beforeend', `<option value="${k}">${label}</option>`);
+      ySel.insertAdjacentHTML('beforeend', `<option value="${k}">${label}</option>`);
     });
     xSel.value = 'pl_rade';
     ySel.value = 'pl_bmasse';
 
-    /* draw / redraw plot */
     function plot(){
       const x = xSel.value, y = ySel.value;
+      const xLabel = featureLabels[x] || x;
+      const yLabel = featureLabels[y] || y;
+
       const clusters = [...new Set(data.map(d=>d.cluster))].sort();
       const traces = clusters.map((c,i)=>{
-        const pts = data.filter(d=>d.cluster===c);
+        const pts = data.filter(d=>d.cluster===c && d.pl_name !== "Earth");
         return {
           x: pts.map(p=>p[x]),
           y: pts.map(p=>p[y]),
           text: pts.map(p=>p.pl_name),
           customdata: pts,
-          mode:'markers', type:'scatter',
-          name:`Cluster ${c}`,
+          mode:'markers', type:'scatter', name:`Cluster ${c}`,
           marker:{color:palette[i%palette.length],size:7,opacity:0.8,line:{width:0}}
         };
       });
 
+      // Add Earth marker separately
+      const earth = data.find(p => p.pl_name === "Earth");
+      if (earth) {
+        traces.push({
+          x: [earth[x]],
+          y: [earth[y]],
+          text: ["Earth"],
+          customdata: [earth],
+          mode: 'markers+text',
+          type: 'scatter',
+          name: 'Earth',
+          textposition: 'top center',
+          marker: {color: '#ffffff', size: 14, line: {color:'#000', width: 2}, symbol: 'star'}
+        });
+      }
+
       Plotly.newPlot('chart', traces, {
-        title:`${x} vs ${y}`,
-        xaxis:{title:x, zeroline:false},
-        yaxis:{title:y, zeroline:false},
-        template:'plotly_dark',
-        margin:{l:60,r:20,t:60,b:60},
-        legend:{orientation:'h',x:0.01,y:1.12},
-        dragmode:'pan'
+        title: `${xLabel} vs ${yLabel}`,
+        xaxis: {title: xLabel, zeroline:false},
+        yaxis: {title: yLabel, zeroline:false},
+        template: 'plotly_dark',
+        margin: {l:60, r:20, t:60, b:60},
+        legend: {orientation:'h', x:0.01, y:1.12},
+        dragmode: 'pan'
       }, {responsive:true});
     }
 
-    /* show explainer on click */
     document.getElementById('chart')
-      .addEventListener('plotly_click', ev=>{
+      .addEventListener('plotly_click', ev => {
         const p = ev.detail.points[0].customdata;
         document.getElementById('info').innerHTML =
           `<h2>${p.pl_name}</h2>
@@ -139,7 +160,7 @@
 
     xSel.onchange = plot;
     ySel.onchange = plot;
-    plot();   // initial
+    plot();
   })();
   </script>
 </body>
