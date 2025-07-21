@@ -29,7 +29,7 @@
     h1 span{color:var(--cyan)}
     select{
       padding:.45rem .8rem;border-radius:.55rem;border:1px solid var(--border);
-      background:#111;color:#fff;font-size:1rem;min-width:170px;margin:.3rem .6rem;
+      background:#111;color:#fff;font-size:1rem;min-width:220px;margin:.3rem .6rem;
     }
     #chart{
       margin-top:1.8rem;height:620px;border:1px solid var(--border);
@@ -71,14 +71,16 @@
   <script>
   const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
 
-  // Mapping for more readable feature names
+  // Key features shown first in dropdown
+  const keyFeatures = ['pl_rade','pl_bmasse','pl_eqt','st_teff','st_rad','st_mass'];
+
+  // Mapping for human-friendly labels
   const featureLabels = {
-    pl_rade: "Radius (R⊕)",
-    pl_bmasse: "Mass (M⊕)",
-    pl_eqt: "Eq. Temp (K)",
-    st_teff: "Star Temp (K)",
-    st_rad: "Star Radius (R☉)",
-    st_mass: "Star Mass (M☉)"
+    pl_rade: "Radius (R⊕)", pl_bmasse: "Mass (M⊕)", pl_eqt: "Equilibrium Temp (K)",
+    st_teff: "Star Temp (K)", st_rad: "Star Radius (R☉)", st_mass: "Star Mass (M☉)",
+    sy_dist: "System Distance (ly)", pl_orbper: "Orbital Period (days)",
+    pl_orbeccen: "Orbital Eccentricity", st_logg: "Surface Gravity (log g)",
+    sy_vmag: "Visual Magnitude", sy_kmag: "Infrared Mag (K band)", pl_insol: "Stellar Insolation (S⊕)"
   };
 
   (async () => {
@@ -92,14 +94,17 @@
       return;
     }
 
-    const numericKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster').sort();
+    const allKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster');
+    const orderedKeys = [...keyFeatures, ...allKeys.filter(k => !keyFeatures.includes(k))];
+
     const xSel = document.getElementById('xSel');
     const ySel = document.getElementById('ySel');
 
-    numericKeys.forEach(k => {
-      const label = featureLabels[k] ? `${k} (${featureLabels[k]})` : k;
-      xSel.insertAdjacentHTML('beforeend', `<option value="${k}">${label}</option>`);
-      ySel.insertAdjacentHTML('beforeend', `<option value="${k}">${label}</option>`);
+    orderedKeys.forEach(k => {
+      const label = featureLabels[k] ? `${k} – ${featureLabels[k]}` : k;
+      const opt = `<option value="${k}">${label}</option>`;
+      xSel.insertAdjacentHTML('beforeend', opt);
+      ySel.insertAdjacentHTML('beforeend', opt);
     });
     xSel.value = 'pl_rade';
     ySel.value = 'pl_bmasse';
@@ -122,30 +127,24 @@
         };
       });
 
-      // Add Earth marker separately
       const earth = data.find(p => p.pl_name === "Earth");
       if (earth) {
         traces.push({
-          x: [earth[x]],
-          y: [earth[y]],
-          text: ["Earth"],
-          customdata: [earth],
-          mode: 'markers+text',
-          type: 'scatter',
-          name: 'Earth',
+          x: [earth[x]], y: [earth[y]], text: ["🌍 Earth"], customdata: [earth],
+          mode: 'markers+text', type: 'scatter', name: '🌍 Earth',
           textposition: 'top center',
-          marker: {color: '#ffffff', size: 14, line: {color:'#000', width: 2}, symbol: 'star'}
+          marker: {color: 'yellow', size: 16, line: {color:'#000', width: 2}, symbol: 'star'}
         });
       }
 
       Plotly.newPlot('chart', traces, {
-        title: `${xLabel} vs ${yLabel}`,
-        xaxis: {title: xLabel, zeroline:false},
-        yaxis: {title: yLabel, zeroline:false},
-        template: 'plotly_dark',
-        margin: {l:60, r:20, t:60, b:60},
-        legend: {orientation:'h', x:0.01, y:1.12},
-        dragmode: 'pan'
+        title:`${xLabel} vs ${yLabel}`,
+        xaxis:{title:xLabel, zeroline:false},
+        yaxis:{title:yLabel, zeroline:false},
+        template:'plotly_dark',
+        margin:{l:60,r:20,t:60,b:60},
+        legend:{orientation:'h',x:0.01,y:1.12},
+        dragmode:'pan'
       }, {responsive:true});
     }
 
