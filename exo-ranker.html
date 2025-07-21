@@ -1,139 +1,106 @@
-<!-- exo-ranker.html  |  place at repo root -->
+<!-- exo‑ranker.html  -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Exo‑Ranker – Earth‑like Exoplanets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exo‑Ranker – Explore Earth‑like Exoplanets</title>
 
+  <!-- ─── simple glass‑morphism theme ─── -->
   <style>
-    :root{--glass-purple:#7f7fd5;--stellar-cyan:#66fcf1;--deep-navy:#0b0c10;--white:#ffffff;}
-    body{margin:0;font-family:"Segoe UI",Arial,sans-serif;
-         background:linear-gradient(135deg,#0b0c10 70%,#232931 100%);
-         color:#fff;min-height:100vh;display:flex;flex-direction:column;}
-    header{display:flex;justify-content:space-between;align-items:center;
-           padding:1rem 2rem;background:rgba(31,40,51,.6);
-           backdrop-filter:blur(8px);}
-    .logo{font-size:1.6rem;font-weight:700;color:var(--stellar-cyan);}    
-    nav a{color:var(--white);text-decoration:none;font-weight:600;}
-    nav a:hover{text-decoration:underline;}
-    .exo-link{background:var(--glass-purple);color:var(--white);padding:.55rem 1.25rem;border-radius:1.6rem;font-weight:700;box-shadow:0 0 18px rgba(127,127,213,.45);transition:transform .15s;}
-    .exo-link:hover{transform:translateY(-2px) scale(1.05);}    
-    main{flex:1;padding:2rem;max-width:1280px;margin:0 auto;}
-    #root{min-height:70vh;}
-    .api-key{margin:1rem 0;max-width:420px;width:100%;padding:.6rem;border-radius:.5rem;border:1px solid #666;background:#111;color:#eee;}
+    :root {
+      --deep‑navy:#0b0c10; --cosmic‑blue:#232931; --stellar‑cyan:#66fcf1; --glass‑purple:#7f7fd5; --white:#fff;
+    }
+    *{box‑sizing:border‑box;padding:0;margin:0}
+    body{min‑height:100vh;font‑family:"Segoe UI",Arial,sans‑serif;color:var(--white);
+         background:linear‑gradient(135deg,var(--deep‑navy)70%,var(--cosmic‑blue)100%);display:flex;flex‑direction:column}
+    header{display:flex;justify‑content:space‑between;align‑items:center;padding:1rem 2rem;
+           background:rgba(31,40,51,.6);backdrop‑filter:blur(8px)}
+    .logo{font‑size:1.7rem;font‑weight:700;color:var(--stellar‑cyan)}
+    nav a{color:var(--white);text‑decoration:none;font‑weight:600;margin‑left:1rem}
+    nav a:hover{text‑decoration:underline}
+    main{flex:1;margin:0 auto;max‑width:1280px;padding:2rem}
+
+    h1 span{color:var(--stellar‑cyan)}
+    select{margin:.2rem .6rem;padding:.35rem;border‑radius:.4rem;background:#111;color:#fff;border:1px solid #666}
+    #chart{height:620px;width:100%;margin‑top:1.7rem;border:1px solid rgba(102,252,241,.08);border‑radius:1rem}
+    #info{margin‑top:1.5rem;padding:1rem;background:rgba(35,41,49,.45);border:1px solid rgba(102,252,241,.12);border‑radius:1rem;min‑height:120px}
+    #info h2{color:var(--stellar‑cyan);margin‑bottom:.5rem}
   </style>
 </head>
-
 <body>
   <header>
     <div class="logo">🪐 SkyQuest / Exo‑Ranker</div>
-    <nav><a class="exo-link" href="index.html">← Back Home</a></nav>
+    <nav><a href="index.html" class="back">← Back Home</a></nav>
   </header>
 
   <main>
-    <h1 style="font-size:2.6rem;margin-bottom:.6rem">Exo‑Ranker:
-      <span style="color:var(--stellar-cyan)">Which exoplanets look most Earth‑like?</span>
-    </h1>
-    <p>Paste your <strong>OpenAI&nbsp;API key</strong> to unlock AI clustering and planet
-       explanations:</p>
-    <input id="key" class="api-key" type="password" placeholder="sk‑..." />
+    <h1 style="font‑size:2.4rem;margin‑bottom:.8rem">Exo‑Ranker: <span>Which exoplanets look most Earth‑like?</span></h1>
+    <p>Select any two numerical parameters to plot the full, pre‑processed exoplanet catalogue (no API calls needed).</p>
 
-    <!-- React app mounts here -->
-    <div id="root"></div>
+    <div style="margin‑top:1rem">
+      <label for="xSel">X‑axis:</label>
+      <select id="xSel"></select>
+      <label for="ySel" style="margin‑left:.8rem">Y‑axis:</label>
+      <select id="ySel"></select>
+    </div>
+
+    <div id="chart"></div>
+    <div id="info"><em>Click a planet dot to read its 150‑word explainer.</em></div>
   </main>
 
-  <!-- ─── dependencies (UMD/ESM via CDN) ─── -->
-  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/recharts/umd/Recharts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ml-kmeans@3/dist/ml-kmeans.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
+  <!-- ─── Plotly ─── -->
+  <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+  <script>
+    // colours for up to 6 clusters
+    const palette=['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3'];
 
-  <!-- ─── Exo‑Ranker component (transpiled on‑the‑fly) ─── -->
-  <script type="text/babel">
-    const {ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer} = Recharts;
+    async function init(){
+      const res=await fetch('processed_planets.json'); // <-- pre‑generated offline (has cluster & explanation)
+      const data=await res.json();
 
-    function tempClass(k){
-      if(k==null) return "Unknown";
-      if(k<255) return "Frozen";
-      if(k<=330) return "Temperate";
-      return "Hot";
+      // populate dropdowns with numeric keys excluding cluster id
+      const numericKeys=Object.keys(data[0]).filter(k=>typeof data[0][k]==='number'&&k!=='cluster');
+      const xSel=document.getElementById('xSel');
+      const ySel=document.getElementById('ySel');
+      numericKeys.forEach(k=>{
+        xSel.innerHTML+=`<option value="${k}">${k}</option>`;
+        ySel.innerHTML+=`<option value="${k}">${k}</option>`;
+      });
+      xSel.value='pl_rade';
+      ySel.value='pl_bmasse';
+
+      function draw(){
+        const x=xSel.value, y=ySel.value;
+        const traces=[];
+        const clusters=[...new Set(data.map(d=>d.cluster))].sort();
+        clusters.forEach((c,i)=>{
+          const pts=data.filter(d=>d.cluster===c);
+          traces.push({
+            x:pts.map(d=>d[x]),
+            y:pts.map(d=>d[y]),
+            text:pts.map(d=>d.pl_name),
+            customdata:pts, // pass full obj for click handler
+            mode:'markers',type:'scatter',name:`Cluster ${c}`,
+            marker:{color:palette[i%palette.length],size:6,opacity:0.8}
+          });
+        });
+        Plotly.newPlot('chart',traces,{
+          title:`${x} vs ${y}`,
+          xaxis:{title:x},yaxis:{title:y},template:'plotly_dark',legend:{orientation:'h'}
+        });
+      }
+
+      xSel.onchange=draw; ySel.onchange=draw; draw();
+
+      // click event to show explanation
+      document.getElementById('chart').on('plotly_click',(ev)=>{
+        const d=ev.points[0].customdata;
+        const info=document.getElementById('info');
+        info.innerHTML=`<h2>${d.pl_name}</h2><p><strong>Cluster:</strong> ${d.cluster} • <strong>Temp class:</strong> ${d.temp_class}</p><p>${d.explanation}</p>`;
+      });
     }
-
-    function ExoRanker(){
-      const [planets,setPlanets]=React.useState([]);
-      const [loading,setLoading]=React.useState(true);
-      const [apiKey,setApiKey]=React.useState("");
-      const [selected,setSelected]=React.useState(null);
-
-      React.useEffect(()=>{
-        fetch("https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query="+
-              encodeURIComponent("select pl_name,pl_eqt,pl_rade,pl_masse from pscomppars where pl_eqt is not null and pl_rade is not null limit 200")+
-              "&format=json")
-          .then(r=>r.json())
-          .then(d=>{setPlanets(d);setLoading(false);});
-      },[]);
-
-      React.useEffect(()=>{
-        if(!apiKey||!planets.length) return;
-        (async()=>{
-          const enriched=[];
-          for(const p of planets){
-            const vec=[p.pl_rade||0,p.pl_masse||0,p.pl_eqt||0];
-            const emb=await fetch("https://api.openai.com/v1/embeddings",{
-              method:"POST",
-              headers:{"Content-Type":"application/json",Authorization:`Bearer ${apiKey}`},
-              body:JSON.stringify({model:"text-embedding-3-small",input:vec.join(",")})
-            }).then(r=>r.json()).then(j=>j.data[0].embedding);
-            enriched.push({...p,embedding:emb,tempClass:tempClass(p.pl_eqt)});
-          }
-          const km=mlKmeans(enriched.map(e=>e.embedding),4);
-          enriched.forEach((p,i)=>p.cluster=km.clusters[i]);
-          setPlanets(enriched);
-        })();
-      },[apiKey]);
-
-      if(loading) return <p>Loading NASA catalogue…</p>;
-
-      return (
-        <>
-          <input className="api-key" type="password" placeholder="OpenAI key here" value={apiKey} onChange={e=>setApiKey(e.target.value)} />
-          <ResponsiveContainer width="100%" height={400}>
-            <ScatterChart>
-              <XAxis dataKey="pl_rade" name="Radius (R⊕)" />
-              <YAxis dataKey="pl_eqt" name="EqTemp (K)" />
-              <Tooltip cursor={{strokeDasharray:"3 3"}} />
-              {[0,1,2,3].map(c=>(
-                <Scatter key={c} data={planets.filter(p=>p.cluster===c)} fill="currentColor" opacity={0.75} onClick={({payload})=>setSelected(payload)} />
-              ))}
-            </ScatterChart>
-          </ResponsiveContainer>
-          {selected && <PlanetCard planet={selected} apiKey={apiKey} />}
-        </>
-      );
-    }
-
-    function PlanetCard({planet,apiKey}){
-      const [text,setText]=React.useState("");
-      React.useEffect(()=>{
-        if(!apiKey||text) return;
-        fetch("https://api.openai.com/v1/chat/completions",{
-          method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${apiKey}`},
-          body:JSON.stringify({model:"gpt-4o-mini",messages:[{role:"system",content:"You are a concise science communicator."},{role:"user",content:`In ~150 words, explain why ${planet.pl_name} is interesting. Radius ${planet.pl_rade} R_earth, Mass ${planet.pl_masse} M_earth, EqTemp ${planet.pl_eqt} K.`}],max_tokens:220})
-        }).then(r=>r.json()).then(j=>setText(j.choices[0].message.content.trim()));
-      },[apiKey,planet]);
-
-      return (
-        <div style={{marginTop:"1.5rem",padding:"1rem",background:"rgba(35,41,49,.5)",borderRadius:"1rem"}}>
-          <h2 style={{color:"var(--stellar-cyan)"}}>{planet.pl_name}</h2>
-          <p><strong>Temp class:</strong> {planet.tempClass}</p>
-          <p style={{whiteSpace:"pre-wrap"}}>{text||"Loading explanation…"}</p>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<ExoRanker/>);
+    init();
   </script>
 </body>
 </html>
