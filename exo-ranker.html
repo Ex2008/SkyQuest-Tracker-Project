@@ -1,106 +1,146 @@
-<!-- exo‑ranker.html  -->
+<!-- exo‑ranker.html  —  STATIC showcase, no runtime API keys needed -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exo‑Ranker – Explore Earth‑like Exoplanets</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Exo‑Ranker – Earth‑like Exoplanets</title>
 
-  <!-- ─── simple glass‑morphism theme ─── -->
+  <!-- ─── minimal glass‑morphism theme ─── -->
   <style>
-    :root {
-      --deep‑navy:#0b0c10; --cosmic‑blue:#232931; --stellar‑cyan:#66fcf1; --glass‑purple:#7f7fd5; --white:#fff;
+    :root{
+      --navy:#0b0c10;--blue:#232931;--cyan:#66fcf1;--purple:#7f7fd5;--white:#fff;
+      --panel-bg:rgba(35,41,49,.55);--border:rgba(102,252,241,.12);
     }
-    *{box‑sizing:border‑box;padding:0;margin:0}
-    body{min‑height:100vh;font‑family:"Segoe UI",Arial,sans‑serif;color:var(--white);
-         background:linear‑gradient(135deg,var(--deep‑navy)70%,var(--cosmic‑blue)100%);display:flex;flex‑direction:column}
-    header{display:flex;justify‑content:space‑between;align‑items:center;padding:1rem 2rem;
-           background:rgba(31,40,51,.6);backdrop‑filter:blur(8px)}
-    .logo{font‑size:1.7rem;font‑weight:700;color:var(--stellar‑cyan)}
-    nav a{color:var(--white);text‑decoration:none;font‑weight:600;margin‑left:1rem}
-    nav a:hover{text‑decoration:underline}
-    main{flex:1;margin:0 auto;max‑width:1280px;padding:2rem}
-
-    h1 span{color:var(--stellar‑cyan)}
-    select{margin:.2rem .6rem;padding:.35rem;border‑radius:.4rem;background:#111;color:#fff;border:1px solid #666}
-    #chart{height:620px;width:100%;margin‑top:1.7rem;border:1px solid rgba(102,252,241,.08);border‑radius:1rem}
-    #info{margin‑top:1.5rem;padding:1rem;background:rgba(35,41,49,.45);border:1px solid rgba(102,252,241,.12);border‑radius:1rem;min‑height:120px}
-    #info h2{color:var(--stellar‑cyan);margin‑bottom:.5rem}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
+    body{
+      min-height:100vh;display:flex;flex-direction:column;color:var(--white);
+      background:linear-gradient(135deg,var(--navy) 70%,var(--blue) 100%);
+    }
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:1rem 2rem;background:rgba(31,40,51,.6);backdrop-filter:blur(8px);
+    }
+    .logo{font-size:1.75rem;font-weight:700;color:var(--cyan)}
+    header a{color:var(--white);text-decoration:none;font-weight:600}
+    header a:hover{text-decoration:underline}
+    main{flex:1;width:100%;max-width:1280px;margin:0 auto;padding:2rem;text-align:center}
+    h1{font-size:2.3rem;margin-bottom:1rem}
+    h1 span{color:var(--cyan)}
+    select{
+      padding:.45rem .8rem;border-radius:.55rem;border:1px solid var(--border);
+      background:#111;color:#fff;font-size:1rem;min-width:170px;margin:.3rem .6rem;
+    }
+    #chart{
+      margin-top:1.8rem;height:620px;border:1px solid var(--border);
+      border-radius:1rem;
+    }
+    #info{
+      margin-top:1.5rem;padding:1rem;min-height:140px;
+      background:var(--panel-bg);border:1px solid var(--border);border-radius:1rem;
+    }
+    #info h2{color:var(--cyan);margin-bottom:.4rem}
   </style>
 </head>
 <body>
   <header>
     <div class="logo">🪐 SkyQuest / Exo‑Ranker</div>
-    <nav><a href="index.html" class="back">← Back Home</a></nav>
+    <nav><a href="index.html">← Back Home</a></nav>
   </header>
 
   <main>
-    <h1 style="font‑size:2.4rem;margin‑bottom:.8rem">Exo‑Ranker: <span>Which exoplanets look most Earth‑like?</span></h1>
-    <p>Select any two numerical parameters to plot the full, pre‑processed exoplanet catalogue (no API calls needed).</p>
+    <h1>Which <span>exoplanets</span> look most Earth‑like?</h1>
 
-    <div style="margin‑top:1rem">
-      <label for="xSel">X‑axis:</label>
+    <p>Choose any two numerical parameters to explore the full catalogue.</p>
+
+    <div style="margin-top:1.2rem">
+      <label for="xSel">X‑axis</label>
       <select id="xSel"></select>
-      <label for="ySel" style="margin‑left:.8rem">Y‑axis:</label>
+
+      <label for="ySel" style="margin-left:.9rem">Y‑axis</label>
       <select id="ySel"></select>
     </div>
 
     <div id="chart"></div>
+
     <div id="info"><em>Click a planet dot to read its 150‑word explainer.</em></div>
   </main>
 
-  <!-- ─── Plotly ─── -->
+  <!-- Plotly CDN -->
   <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
   <script>
-    // colours for up to 6 clusters
-    const palette=['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3'];
+  /* ---------- helper palette ---------- */
+  const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
 
-    async function init(){
-      const res=await fetch('processed_planets.json'); // <-- pre‑generated offline (has cluster & explanation)
-      const data=await res.json();
-
-      // populate dropdowns with numeric keys excluding cluster id
-      const numericKeys=Object.keys(data[0]).filter(k=>typeof data[0][k]==='number'&&k!=='cluster');
-      const xSel=document.getElementById('xSel');
-      const ySel=document.getElementById('ySel');
-      numericKeys.forEach(k=>{
-        xSel.innerHTML+=`<option value="${k}">${k}</option>`;
-        ySel.innerHTML+=`<option value="${k}">${k}</option>`;
-      });
-      xSel.value='pl_rade';
-      ySel.value='pl_bmasse';
-
-      function draw(){
-        const x=xSel.value, y=ySel.value;
-        const traces=[];
-        const clusters=[...new Set(data.map(d=>d.cluster))].sort();
-        clusters.forEach((c,i)=>{
-          const pts=data.filter(d=>d.cluster===c);
-          traces.push({
-            x:pts.map(d=>d[x]),
-            y:pts.map(d=>d[y]),
-            text:pts.map(d=>d.pl_name),
-            customdata:pts, // pass full obj for click handler
-            mode:'markers',type:'scatter',name:`Cluster ${c}`,
-            marker:{color:palette[i%palette.length],size:6,opacity:0.8}
-          });
-        });
-        Plotly.newPlot('chart',traces,{
-          title:`${x} vs ${y}`,
-          xaxis:{title:x},yaxis:{title:y},template:'plotly_dark',legend:{orientation:'h'}
-        });
-      }
-
-      xSel.onchange=draw; ySel.onchange=draw; draw();
-
-      // click event to show explanation
-      document.getElementById('chart').on('plotly_click',(ev)=>{
-        const d=ev.points[0].customdata;
-        const info=document.getElementById('info');
-        info.innerHTML=`<h2>${d.pl_name}</h2><p><strong>Cluster:</strong> ${d.cluster} • <strong>Temp class:</strong> ${d.temp_class}</p><p>${d.explanation}</p>`;
-      });
+  /* ---------- main ---------- */
+  (async () => {
+    let data;
+    try {
+      const res = await fetch('planet_data.json');   // <‑‑ your pre‑generated file
+      data = await res.json();
+    } catch(err){
+      document.getElementById('chart').innerHTML =
+        '<p style=\"padding:2rem\">Could not load <code>planet_data.json</code>.</p>';
+      return;
     }
-    init();
+
+    /* populate dropdowns with all numeric keys except cluster */
+    const numericKeys = Object.keys(data[0]).filter(
+      k => typeof data[0][k] === 'number' && k !== 'cluster'
+    ).sort();
+
+    const xSel = document.getElementById('xSel');
+    const ySel = document.getElementById('ySel');
+    numericKeys.forEach(k=>{
+      const opt = `<option value="${k}">${k}</option>`;
+      xSel.insertAdjacentHTML('beforeend',opt);
+      ySel.insertAdjacentHTML('beforeend',opt);
+    });
+    xSel.value = 'pl_rade';
+    ySel.value = 'pl_bmasse';
+
+    /* draw / redraw plot */
+    function plot(){
+      const x = xSel.value, y = ySel.value;
+      const clusters = [...new Set(data.map(d=>d.cluster))].sort();
+      const traces = clusters.map((c,i)=>{
+        const pts = data.filter(d=>d.cluster===c);
+        return {
+          x: pts.map(p=>p[x]),
+          y: pts.map(p=>p[y]),
+          text: pts.map(p=>p.pl_name),
+          customdata: pts,
+          mode:'markers', type:'scatter',
+          name:`Cluster ${c}`,
+          marker:{color:palette[i%palette.length],size:7,opacity:0.8,line:{width:0}}
+        };
+      });
+
+      Plotly.newPlot('chart', traces, {
+        title:`${x} vs ${y}`,
+        xaxis:{title:x, zeroline:false},
+        yaxis:{title:y, zeroline:false},
+        template:'plotly_dark',
+        margin:{l:60,r:20,t:60,b:60},
+        legend:{orientation:'h',x:0.01,y:1.12},
+        dragmode:'pan'
+      }, {responsive:true});
+    }
+
+    /* show explainer on click */
+    document.getElementById('chart')
+      .addEventListener('plotly_click', ev=>{
+        const p = ev.detail.points[0].customdata;
+        document.getElementById('info').innerHTML =
+          `<h2>${p.pl_name}</h2>
+           <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
+           <p>${p.explanation}</p>`;
+      });
+
+    xSel.onchange = plot;
+    ySel.onchange = plot;
+    plot();   // initial
+  })();
   </script>
 </body>
 </html>
