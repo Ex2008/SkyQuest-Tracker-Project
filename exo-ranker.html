@@ -1,246 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Exo‑Ranker – Earth‑like Exoplanets</title>
+  <title>Exo​-Ranker – Earth-like Exoplanets</title>
   <style>
-    :root{
-      --navy:#0b0c10; --blue:#232931; --cyan:#66fcf1; --white:#fff;
-      --panel-bg:rgba(35,41,49,.55); --border:rgba(102,252,241,.12);
+    :root {
+      --navy: #0b0c10;
+      --blue: #232931;
+      --cyan: #66fcf1;
+      --purple: #7f7fd5;
+      --white: #fff;
+      --panel-bg: rgba(35, 41, 49, .55);
+      --border: rgba(102, 252, 241, .12);
     }
-    *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
-    body{min-height:100vh;display:flex;flex-direction:column;color:var(--white);
-         background:linear-gradient(135deg,var(--navy)70%,var(--blue)100%)}
-    header{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;
-           background:rgba(31,40,51,.6);backdrop-filter:blur(8px)}
-    .logo{font-size:1.75rem;font-weight:700;color:var(--cyan)}
-    main{flex:1;width:100%;max-width:1280px;margin:0 auto;padding:2rem}
-    h1{font-size:2.3rem;margin-bottom:1rem;text-align:center}
-    h1 span{color:var(--cyan)}
-    /* ─── tab buttons ─── */
-    .tab-buttons{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
-    .tab-buttons button{padding:.6rem 1.2rem;background:#111;color:var(--white);border:1px solid var(--border);
-                        border-radius:.5rem;cursor:pointer;font-size:1rem}
-    .tab-buttons button.active{background:var(--cyan);color:#000}
-    /* ─── tab content areas ─── */
-    .tab-content{display:none;margin-top:1.6rem}
-    .tab-content.active{display:block}
-    #info{margin-top:1.6rem;padding:1rem;min-height:140px;background:var(--panel-bg);
-          border:1px solid var(--border);border-radius:1rem}
-    #info h2{color:var(--cyan);margin-bottom:.4rem}
-    select{padding:.45rem .8rem;border-radius:.55rem;border:1px solid var(--border);
-           background:#111;color:#fff;font-size:1rem;min-width:200px;margin:.3rem .6rem}
-    optgroup[label]{color:var(--cyan);font-weight:bold}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy) 70%, var(--blue) 100%);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(31, 40, 51, .6);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--cyan)
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 1rem
+    }
+
+    h1 span {
+      color: var(--cyan)
+    }
+
+    select {
+      padding: .45rem .8rem;
+      border-radius: .55rem;
+      border: 1px solid var(--border);
+      background: #111;
+      color: #fff;
+      font-size: 1rem;
+      min-width: 220px;
+      margin: .3rem .6rem;
+    }
+
+    #chart,
+    #rankings {
+      margin-top: 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+    }
+
+    #chart {
+      height: 620px;
+    }
+
+    #rankings {
+      height: 400px;
+      margin-top: 2rem;
+    }
+
+    #info {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      min-height: 140px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+    }
+
+    #info h2 {
+      color: var(--cyan);
+      margin-bottom: .4rem
+    }
+
+    optgroup[label] {
+      color: var(--cyan);
+      font-weight: bold;
+    }
   </style>
 </head>
+
 <body>
-<header>
-  <div class="logo">🪐 SkyQuest / Exo‑Ranker</div>
-  <nav><a href="index.html" style="color:var(--cyan)">← Back Home</a></nav>
-</header>
+  <header>
+    <div class="logo">🪐 SkyQuest / Exo​-Ranker</div>
+    <nav><a href="index.html">← Back Home</a></nav>
+  </header>
 
-<main>
-  <h1>Which <span>exoplanets</span> look most Earth‑like?</h1>
-
-  <!-- ─── TABS ─── -->
-  <div class="tab-buttons">
-    <button class="tabBtn active" data-tab="scatter">🧭 Scatter</button>
-    <button class="tabBtn" data-tab="rankTab">📊 Rankings</button>
-    <button class="tabBtn" data-tab="radarTab">🕸️ Radar</button>
-    <button class="tabBtn" data-tab="heatTab">🌡 Heatmap</button>
-    <button class="tabBtn" data-tab="parTab">📈 Parallel</button>
-  </div>
-
-  <!-- ─── SCATTER ─── -->
-  <div id="scatter" class="tab-content active">
-    <p style="text-align:center">Choose any two numerical parameters to explore the full catalogue.</p>
-    <div style="text-align:center;margin-top:1rem">
-      <label for="xSel">X‑axis</label><select id="xSel"></select>
-      <label for="ySel" style="margin-left:.9rem">Y‑axis</label><select id="ySel"></select>
+  <main>
+    <h1>Which <span>exoplanets</span> look most Earth​-like?</h1>
+    <p>Choose any two numerical parameters to explore the full catalogue.</p>
+    <div style="margin-top:1.2rem">
+      <label for="xSel">X​-axis</label>
+      <select id="xSel"></select>
+      <label for="ySel" style="margin-left:.9rem">Y​-axis</label>
+      <select id="ySel"></select>
     </div>
-    <div id="scatterChart" style="height:620px"></div>
-  </div>
+    <div id="chart"></div>
+    <div id="rankings"></div>
+    <div id="info"><em>Click a planet dot to read its 150-word explainer.</em></div>
+  </main>
 
-  <!-- ─── RANKINGS ─── -->
-  <div id="rankTab" class="tab-content"><div id="rankingsChart" style="height:520px"></div></div>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script>
+    const palette = ['#66fcf1', '#ffcc00', '#ff6666', '#9966ff', '#00d084', '#ff7eb3', '#ffa600'];
+    const keyFeatures = ['pl_rade', 'pl_bmasse', 'pl_eqt', 'st_teff', 'st_rad', 'st_mass'];
 
-  <!-- ─── RADAR ─── -->
-  <div id="radarTab" class="tab-content"><div id="radarChart" style="height:520px"></div></div>
-
-  <!-- ─── HEATMAP ─── -->
-  <div id="heatTab"  class="tab-content"><div id="heatChart"  style="height:520px"></div></div>
-
-  <!-- ─── PARALLEL ─── -->
-  <div id="parTab"   class="tab-content"><div id="parChart"   style="height:520px"></div></div>
-
-  <div id="info"><em>Click a point in any chart to read its explainer.</em></div>
-</main>
-
-<!-- ─── Plotly CDN ─── -->
-<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-/* ---------- palette & key features ---------- */
-const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
-const radarKeys = ['pl_rade','pl_bmasse','pl_insol','pl_orbeccen','st_teff']; // 5‑axis radar
-const featureLabels = {
-  pl_rade:"Radius (R⊕)",pl_bmasse:"Mass (M⊕)",pl_insol:"Insolation (S⊕)",
-  pl_orbeccen:"Eccentricity",st_teff:"Star T (K)"
-};
-/* -------- dropdown categories (only for scatter) ------- */
-const featureCategories={
- 'Planet Size':['pl_rade','pl_radeerr1','pl_radeerr2'],
- 'Planet Mass':['pl_bmasse','pl_bmasseerr1','pl_bmasseerr2'],
- 'Orbit':['pl_orbper','pl_orbsmax','pl_orbeccen'],
- 'Star':['st_teff','st_rad','st_mass'],
- 'Energy':['pl_insol','pl_eqt']
-};
-
-/* ---------- helpers ---------- */
-const byId = id=>document.getElementById(id);
-function norm(val,min,max){return (val-min)/(max-min);}
-function makeTabs(){
-  document.querySelectorAll('.tabBtn').forEach(btn=>{
-    btn.onclick=()=>{
-      document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-      btn.classList.add('active');
-      byId(btn.dataset.tab).classList.add('active');
-      Plotly.Plots.resize(document.querySelector('.tab-content.active div[id$="Chart"]'));
+    const featureCategories = {
+      'Key Features': ['pl_rade', 'pl_bmasse', 'pl_eqt', 'st_teff', 'st_rad', 'st_mass'],
+      'Orbital & Discovery': ['pl_orbper', 'pl_orbpererr1', 'pl_orbpererr2', 'pl_orbperlim', 'pl_orbsmax', 'pl_orbsmaxerr1', 'pl_orbsmaxerr2', 'pl_orbsmaxlim', 'pl_orbeccen', 'pl_orbeccenerr1', 'pl_orbeccenerr2', 'pl_orbeccenlim'],
+      'Radius & Mass': ['pl_radeerr1', 'pl_radeerr2', 'pl_radelim', 'pl_radj', 'pl_radjerr1', 'pl_radjerr2', 'pl_radjlim', 'pl_bmasseerr1', 'pl_bmasseerr2', 'pl_bmasselim', 'pl_bmassj', 'pl_bmassjerr1', 'pl_bmassjerr2', 'pl_bmassjlim', 'pl_bmassprov'],
+      'Energy & Temperature': ['pl_insol', 'pl_insolerr1', 'pl_insolerr2', 'pl_insollim', 'pl_eqterr1', 'pl_eqterr2', 'pl_eqtlim'],
+      'Star Parameters': ['st_spectype', 'st_tefferr1', 'st_tefferr2', 'st_tefflim', 'st_raderr1', 'st_raderr2', 'st_radlim', 'st_masserr1', 'st_masserr2', 'st_masslim', 'st_met', 'st_meterr1', 'st_meterr2', 'st_metlim', 'st_metratio', 'st_logg', 'st_loggerr1', 'st_loggerr2', 'st_logglim'],
+      'Distance & Brightness': ['sy_dist', 'sy_disterr1', 'sy_disterr2', 'sy_vmag', 'sy_vmagerr1', 'sy_vmagerr2', 'sy_kmag', 'sy_kmagerr1', 'sy_kmagerr2', 'sy_gaiamag', 'sy_gaiamagerr1', 'sy_gaiamagerr2'],
+      'Discovery & Flags': ['disc_year', 'discoverymethod', 'disc_facility', 'pl_controv_flag', 'ttv_flag', 'sy_snum', 'sy_pnum']
     };
-  });
-}
 
-/* ---------- fetch data & init ---------- */
-(async()=>{
-  const res = await fetch('planet_data.json');
-  const data = await res.json();
-  makeTabs();
-  fillDropdowns(data);
-  drawScatter(data);
-  drawRankings(data);
-  drawRadar(data,'Earth');          // default radar Earth vs Earth
-  drawHeat(data);
-  drawParallel(data);
-
-  // scatter click updates info + radar
-  byId('scatterChart').on('plotly_click',ev=>{
-    const p = ev.points[0].customdata;
-    showInfo(p);
-    drawRadar(data,p.pl_name);
-  });
-  // rankings click behaves similarly
-  byId('rankingsChart').on('plotly_click',ev=>{
-    const p = ev.points[0].customdata;
-    showInfo(p);
-    drawRadar(data,p.pl_name);
-    // also jump to radar tab
-    document.querySelector('[data-tab="radarTab"]').click();
-  });
-
-  byId('xSel').onchange=()=>drawScatter(data);
-  byId('ySel').onchange=()=>drawScatter(data);
-})();
-
-/* ---------- UI builders ---------- */
-function fillDropdowns(data){
-  const xSel=byId('xSel'), ySel=byId('ySel');
-  for(const [group,keys] of Object.entries(featureCategories)){
-    const gX=document.createElement('optgroup'), gY=document.createElement('optgroup');
-    gX.label=gY.label=group;
-    keys.forEach(k=>{
-      let lab=k+(featureLabels[k]?` – ${featureLabels[k]}`:'');
-      gX.appendChild(new Option(lab,k)); gY.appendChild(new Option(lab,k));
-    });
-    xSel.appendChild(gX); ySel.appendChild(gY);
-  }
-  xSel.value='pl_rade'; ySel.value='pl_bmasse';
-}
-
-/* ---------- Scatter ---------- */
-function drawScatter(data){
-  const x=byId('xSel').value, y=byId('ySel').value;
-  const clusters=[...new Set(data.map(d=>d.cluster||0))].sort();
-  const traces=clusters.map((c,i)=>{
-    const pts=data.filter(d=>d.cluster===c && d.pl_name!=='Earth');
-    return{
-      x:pts.map(p=>p[x]), y:pts.map(p=>p[y]), text:pts.map(p=>p.pl_name),
-      customdata:pts, mode:'markers', type:'scatter', name:`Cluster ${c}`,
-      marker:{color:palette[i%palette.length],size:7,opacity:0.8}
+    const featureLabels = {
+      pl_rade: "Planet Radius (R⊕)", pl_bmasse: "Planet Mass (M⊕)", pl_eqt: "Equilibrium Temperature (K)", st_teff: "Star Temperature (K)", st_rad: "Star Radius (R☉)", st_mass: "Star Mass (M☉)",
+      pl_orbper: "Orbital Period (days)", pl_orbpererr1: "Orbital Period Error (+)", pl_orbpererr2: "Orbital Period Error (–)", pl_orbperlim: "Orbital Period Limit Flag", pl_orbsmax: "Orbit Semi-Major Axis (AU)", pl_orbsmaxerr1: "Axis Error (+)", pl_orbsmaxerr2: "Axis Error (–)", pl_orbsmaxlim: "Axis Limit Flag", pl_orbeccen: "Orbital Eccentricity", pl_orbeccenerr1: "Eccentricity Error (+)", pl_orbeccenerr2: "Eccentricity Error (–)", pl_orbeccenlim: "Eccentricity Limit Flag",
+      pl_radeerr1: "Radius Error (+)", pl_radeerr2: "Radius Error (–)", pl_radelim: "Radius Limit Flag", pl_radj: "Radius (Jupiter)", pl_radjerr1: "Radius (Jupiter) Error (+)", pl_radjerr2: "Radius (Jupiter) Error (–)", pl_radjlim: "Radius (Jupiter) Limit Flag", pl_bmasseerr1: "Mass Error (+)", pl_bmasseerr2: "Mass Error (–)", pl_bmasselim: "Mass Limit Flag", pl_bmassj: "Mass (Jupiter)", pl_bmassjerr1: "Mass (Jupiter) Error (+)", pl_bmassjerr2: "Mass (Jupiter) Error (–)", pl_bmassjlim: "Mass (Jupiter) Limit Flag", pl_bmassprov: "Mass Provenance",
+      pl_insol: "Stellar Insolation (S⊕)", pl_insolerr1: "Insolation Error (+)", pl_insolerr2: "Insolation Error (–)", pl_insollim: "Insolation Limit Flag", pl_eqterr1: "Equilibrium Temp Error (+)", pl_eqterr2: "Equilibrium Temp Error (–)", pl_eqtlim: "Equilibrium Temp Limit Flag",
+      st_spectype: "Spectral Type", st_tefferr1: "Star Temp Error (+)", st_tefferr2: "Star Temp Error (–)", st_tefflim: "Star Temp Limit Flag", st_raderr1: "Star Radius Error (+)", st_raderr2: "Star Radius Error (–)", st_radlim: "Star Radius Limit Flag", st_masserr1: "Star Mass Error (+)", st_masserr2: "Star Mass Error (–)", st_masslim: "Star Mass Limit Flag", st_met: "Metallicity", st_meterr1: "Metallicity Error (+)", st_meterr2: "Metallicity Error (–)", st_metlim: "Metallicity Limit", st_metratio: "Metallicity Ratio", st_logg: "Surface Gravity (log g)", st_loggerr1: "Gravity Error (+)", st_loggerr2: "Gravity Error (–)", st_logglim: "Gravity Limit",
+      sy_dist: "System Distance (pc)", sy_disterr1: "Distance Error (+)", sy_disterr2: "Distance Error (–)", sy_vmag: "Visual Magnitude (V)", sy_vmagerr1: "Vmag Error (+)", sy_vmagerr2: "Vmag Error (–)", sy_kmag: "Infrared Magnitude (K)", sy_kmagerr1: "Kmag Error (+)", sy_kmagerr2: "Kmag Error (–)", sy_gaiamag: "Gaia Magnitude", sy_gaiamagerr1: "GaiaMag Error (+)", sy_gaiamagerr2: "GaiaMag Error (–)",
+      disc_year: "Discovery Year", discoverymethod: "Discovery Method", disc_facility: "Discovery Facility", pl_controv_flag: "Controversial Detection", ttv_flag: "TTV Flag", sy_snum: "# Stars in System", sy_pnum: "# Planets in System"
     };
-  });
-  const earth=data.find(p=>p.pl_name==='Earth');
-  if(earth){
-    traces.push({x:[earth[x]],y:[earth[y]],text:['🌍 Earth'],customdata:[earth],
-      mode:'markers+text',type:'scatter',name:'🌍 Earth',
-      textposition:'top center', marker:{color:'#FFD700',size:16,symbol:'star',line:{color:'#222',width:2}}});
-  }
-  Plotly.newPlot('scatterChart',traces,
-    {title:`${x} vs ${y}`,template:'plotly_dark',legend:{orientation:'h'},margin:{l:60,r:20,t:60,b:60},
-     xaxis:{title:x},yaxis:{title:y}}, {responsive:true});
-}
 
-/* ---------- Rankings ---------- */
-function drawRankings(data){
-  const ranked=data.filter(p=>p.pl_name!=='Earth'&&p.pl_rade&&p.pl_bmasse)
-    .map(p=>{
-      const diffR=Math.abs(p.pl_rade-1), diffM=Math.abs(p.pl_bmasse-1);
-      return {...p,sim:1/(1+diffR+diffM)};
-    }).sort((a,b)=>b.sim-a.sim).slice(0,10);
-  Plotly.newPlot('rankingsChart',[{
-    type:'bar',orientation:'h',
-    x:ranked.map(p=>p.sim.toFixed(3)).reverse(),
-    y:ranked.map(p=>p.pl_name).reverse(),
-    text:ranked.map(p=>p.pl_name),customdata:ranked,
-    marker:{color:'#66fcf1'}
-  }],{title:'Top‑10 Earth‑like (radius & mass)',template:'plotly_dark',
-      margin:{l:100,r:20,t:60,b:40},xaxis:{title:'Similarity'},yaxis:{automargin:true}});
-}
+    const populateDropdowns = () => {
+      const xSel = document.getElementById('xSel');
+      const ySel = document.getElementById('ySel');
+      for (const [groupName, keys] of Object.entries(featureCategories)) {
+        const groupX = document.createElement('optgroup');
+        const groupY = document.createElement('optgroup');
+        groupX.label = groupY.label = groupName;
+        keys.forEach(k => {
+          const label = featureLabels[k] || k;
+          const optX = new Option(`${k} – ${label}`, k);
+          const optY = new Option(`${k} – ${label}`, k);
+          groupX.appendChild(optX);
+          groupY.appendChild(optY);
+        });
+        xSel.appendChild(groupX);
+        ySel.appendChild(groupY);
+      }
+      xSel.value = 'pl_rade';
+      ySel.value = 'pl_bmasse';
+    };
 
-/* ---------- Radar ---------- */
-function drawRadar(data,planetName){
-  const planet=data.find(p=>p.pl_name===planetName)||data[0];
-  const earth =data.find(p=>p.pl_name==='Earth');
-  const theta=radarKeys.map(k=>featureLabels[k]);
-  const pVals=radarKeys.map(k=>planet[k]);
-  const eVals=radarKeys.map(k=>earth[k]);
-  Plotly.newPlot('radarChart',[
-    {type:'scatterpolar',r:eVals,theta,fill:'toself',name:'Earth',line:{color:'#FFD700'}},
-    {type:'scatterpolar',r:pVals,theta,fill:'toself',name:planet.pl_name,
-     customdata:[planet],line:{color:'#66fcf1'}}
-  ],{polar:{radialaxis:{visible:true}},template:'plotly_dark',
-     title:`Earth vs ${planet.pl_name}`,margin:{t:60}});
-}
+    const plotChart = (data) => {
+      const x = xSel.value, y = ySel.value;
+      const xLabel = featureLabels[x] || x;
+      const yLabel = featureLabels[y] || y;
+      const clusters = [...new Set(data.map(d => d.cluster))].sort();
+      const traces = clusters.map((c, i) => {
+        const pts = data.filter(d => d.cluster === c && d.pl_name !== "Earth");
+        return {
+          x: pts.map(p => p[x]),
+          y: pts.map(p => p[y]),
+          text: pts.map(p => p.pl_name),
+          customdata: pts,
+          mode: 'markers',
+          type: 'scatter',
+          name: `Cluster ${c}`,
+          marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
+        };
+      });
+      const earth = data.find(p => p.pl_name === "Earth");
+      if (earth) {
+        traces.push({
+          x: [earth[x]],
+          y: [earth[y]],
+          text: ["🌍 Earth"],
+          customdata: [earth],
+          mode: 'markers+text',
+          type: 'scatter',
+          name: '🌍 Earth',
+          textposition: 'top center',
+          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
+        });
+      }
+      Plotly.newPlot('chart', traces, {
+        title: `${xLabel} vs ${yLabel}`,
+        xaxis: { title: xLabel },
+        yaxis: { title: yLabel },
+        template: 'plotly_dark',
+        margin: { l: 60, r: 20, t: 60, b: 60 },
+        legend: { orientation: 'h', x: 0.01, y: 1.3 },
+        dragmode: 'pan'
+      }, { responsive: true });
+    };
 
-/* ---------- Heatmap ---------- */
-function drawHeat(data){
-  const xs=data.map(p=>p.pl_rade);
-  const ys=data.map(p=>p.pl_bmasse);
-  const zs=data.map(p=>p.pl_eqt||0);
-  Plotly.newPlot('heatChart',[{
-    x:xs,y:ys,z:zs,customdata:data,type:'histogram2d',
-    colorscale:'Viridis',colorbar:{title:'EQT (K)'}
-  }],{title:'Radius vs Mass – coloured by Eq.Temp',template:'plotly_dark',
-      xaxis:{title:'Radius (R⊕)'},yaxis:{title:'Mass (M⊕)'}});
-}
+    const plotRankings = (data) => {
+      const ranked = data.filter(p => p.pl_name !== "Earth" && p.pl_rade && p.pl_bmasse).map(p => {
+        const diffRadius = Math.abs(p.pl_rade - 1);
+        const diffMass = Math.abs(p.pl_bmasse - 1);
+        p.similarity = 1 / (1 + diffRadius + diffMass);
+        return p;
+      }).sort((a, b) => b.similarity - a.similarity).slice(0, 10);
 
-/* ---------- Parallel Coordinates ---------- */
-function drawParallel(data){
-  const dims = radarKeys.map(k=>({
-      range:[Math.min(...data.map(d=>d[k]||0)), Math.max(...data.map(d=>d[k]||0))],
-      label:featureLabels[k], values:data.map(d=>d[k]||0)
-  }));
-  Plotly.newPlot('parChart',[{type:'parcoords',dimensions:dims,
-      line:{color:data.map(d=>d.cluster||0),colorscale:'Jet'}}],
-      {title:'Parallel Coordinates (5 key features)',template:'plotly_dark'});
-}
+      Plotly.newPlot('rankings', [{
+        type: 'bar',
+        x: ranked.map(p => p.similarity.toFixed(3)),
+        y: ranked.map(p => p.pl_name),
+        orientation: 'h',
+        text: ranked.map(p => p.pl_name),
+        marker: { color: '#66fcf1' }
+      }], {
+        title: "Top 10 Earth-like Planets (based on radius & mass)",
+        xaxis: { title: "Similarity Score" },
+        yaxis: { title: "Planet Name", automargin: true },
+        template: 'plotly_dark',
+        margin: { l: 100, r: 20, t: 60, b: 40 }
+      });
+    };
 
-/* ---------- Info card ---------- */
-function showInfo(p){
-  byId('info').innerHTML=`<h2>${p.pl_name}</h2>
-    <p><strong>Cluster:</strong> ${p.cluster??'N/A'} • <strong>Temp class:</strong> ${p.temp_class??'–'}</p>
-    <p>${p.explanation??'No description yet.'}</p>`;
-}
-</script>
+    (async () => {
+      try {
+        const res = await fetch('planet_data.json');
+        const data = await res.json();
+        populateDropdowns();
+        plotChart(data);
+        plotRankings(data);
+        xSel.onchange = () => plotChart(data);
+        ySel.onchange = () => plotChart(data);
+        document.getElementById('chart').addEventListener('plotly_click', ev => {
+          const p = ev.detail.points[0].customdata;
+          document.getElementById('info').innerHTML = `<h2>${p.pl_name}</h2><p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p><p>${p.explanation}</p>`;
+        });
+      } catch (err) {
+        document.getElementById('chart').innerHTML = '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
+      }
+    })();
+  </script>
 </body>
+
 </html>
