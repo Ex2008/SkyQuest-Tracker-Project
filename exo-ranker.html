@@ -224,39 +224,34 @@
 
     function plotChart(data) {
       const x = xSel.value, y = ySel.value;
-      const xLabel = featureLabels[x] || x, yLabel = featureLabels[y] || y;
+      const xLabel = featureLabels[x], yLabel = featureLabels[y];
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
         return {
-          x: pts.map(p => p[x]),
-          y: pts.map(p => p[y]),
+          x: pts.map(p => p[x]), y: pts.map(p => p[y]),
           text: pts.map(p => p.pl_name),
           customdata: pts,
-          mode: 'markers',
-          type: 'scatter',
+          mode: 'markers', type: 'scatter',
           name: `Cluster ${c}`,
           marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
         };
       });
       const earth = data.find(p => p.pl_name === 'Earth');
-      if (earth) traces.push({
-        x: [earth[x]], y: [earth[y]],
-        text: ['🌍 Earth'], customdata: [earth],
-        mode: 'markers+text', type: 'scatter',
-        name: '🌍 Earth',
-        textposition: 'top center',
-        marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
-      });
-
+      if (earth) {
+        traces.push({
+          x: [earth[x]], y: [earth[y]],
+          text: ['🌍 Earth'], customdata: [earth],
+          mode: 'markers+text', type: 'scatter', name: '🌍 Earth',
+          textposition: 'top center',
+          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
+        });
+      }
       Plotly.newPlot('chart', traces, {
         title: `${xLabel} vs ${yLabel}`,
-        xaxis: { title: xLabel },
-        yaxis: { title: yLabel },
-        template: 'plotly_dark',
-        margin: { l: 60, r: 20, t: 60, b: 60 },
-        legend: { orientation: 'h', x: 0.01, y: 1.3 },
-        dragmode: 'pan'
+        xaxis: { title: xLabel }, yaxis: { title: yLabel },
+        template: 'plotly_dark', margin: { l: 60, r: 20, t: 60, b: 60 },
+        legend: { orientation: 'h', x: 0.01, y: 1.3 }, dragmode: 'pan'
       }, { responsive: true });
     }
 
@@ -264,11 +259,9 @@
       const ranked = data
         .filter(p => p.pl_name !== 'Earth')
         .map(p => {
-          // RMS of normalized difference
           const diffs = keyFeatures.map(f => (p[f] - earthRef[f]) / earthRef[f]);
           const rms = Math.sqrt(diffs.reduce((s, d) => s + d * d, 0) / diffs.length);
-          let sim = 1 - rms; sim = Math.max(0, Math.min(1, sim));
-          p.similarity = sim;
+          p.similarity = Math.max(0, 1 - rms);
           return p;
         })
         .sort((a, b) => b.similarity - a.similarity)
@@ -280,10 +273,11 @@
         y: ranked.map(p => p.pl_name).reverse(),
         orientation: 'h',
         text: ranked.map(p => (p.similarity * 100).toFixed(1) + '%'),
+        customdata: ranked,
         marker: { color: '#66fcf1' }
       }], {
         title: 'Top 10 Earth‑like Planets (6‑feature similarity)',
-        xaxis: { title: 'Similarity (1 = identical)', range: [0, 1] },
+        xaxis: { title: 'Similarity (1=identical)', range: [0, 1] },
         yaxis: { automargin: true },
         template: 'plotly_dark',
         margin: { l: 120, r: 20, t: 60, b: 40 }
@@ -292,7 +286,6 @@
 
     (async () => {
       try {
-        // load both raw & enriched JSON
         const [rawRes, enrRes] = await Promise.all([
           fetch('planet_data.json'),
           fetch('planet_data_enriched.json')
@@ -300,7 +293,7 @@
         const raw = await rawRes.json();
         const enriched = await enrRes.json();
 
-        // merge them by name into a single array
+        // merge
         const data = raw.map(p => {
           const name = p.pl_name;
           return {
@@ -321,14 +314,19 @@
         xSel.addEventListener('change', () => plotChart(data));
         ySel.addEventListener('change', () => plotChart(data));
 
-        document.getElementById('chart').addEventListener('plotly_click', ev => {
-          const p = ev.detail.points[0].customdata;
-          document.getElementById('info').innerHTML = `
-            <h2>${p.pl_name}</h2>
-            <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
-            <p>${p.explanation}</p>
-          `;
+        // show explainer on click in both charts
+        ['chart', 'rankings'].forEach(id => {
+          document.getElementById(id)
+            .addEventListener('plotly_click', ev => {
+              const p = ev.detail.points[0].customdata;
+              document.getElementById('info').innerHTML = `
+                <h2>${p.pl_name}</h2>
+                <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
+                <p>${p.explanation}</p>
+              `;
+            });
         });
+
       } catch (err) {
         document.getElementById('chart').innerHTML =
           '<p style="padding:2rem">Could not load JSON files.</p>';
