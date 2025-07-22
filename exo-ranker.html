@@ -222,26 +222,42 @@
     };
 
     const plotRankings = (data) => {
-      const ranked = data.filter(p => p.pl_name !== "Earth" && p.pl_rade && p.pl_bmasse).map(p => {
-        const diffRadius = Math.abs(p.pl_rade - 1);
-        const diffMass = Math.abs(p.pl_bmasse - 1);
-        p.similarity = 1 / (1 + diffRadius + diffMass);
-        return p;
-      }).sort((a, b) => b.similarity - a.similarity).slice(0, 10);
+      // ---------- compute similarity ----------
+      const ranked = data
+        .filter(p => p.pl_name !== 'Earth')           // omit Earth
+        .map(p => {
+          let sumSq = 0; let counted = 0;
+          keyFeatures.forEach(k => {
+            if (p[k] != null) {                       // skip null / undefined
+              const diff = (p[k] - earthRef[k]);
+              sumSq += diff * diff;
+              counted++;
+            }
+          });
+          const dist = Math.sqrt(sumSq);              // Euclidean distance
+          let sim = 1 - dist;                         // raw similarity (may go < 0)
+          if (sim < 0) sim = 0;                       // clamp to 0
+          p.similarity = sim;
+          return p;
+        })
+        .sort((a, b) => b.similarity - a.similarity)  // best first
+        .slice(0, 10);                                // top‑10
 
-      Plotly.newPlot('rankings', [{
+      // ---------- make bar chart ----------
+      Plotly.newPlot('rankingsChart', [{
         type: 'bar',
-        x: ranked.map(p => p.similarity.toFixed(3)),
-        y: ranked.map(p => p.pl_name),
+        x: ranked.map(p => p.similarity.toFixed(3)).reverse(),
+        y: ranked.map(p => p.pl_name).reverse(),
         orientation: 'h',
         text: ranked.map(p => p.pl_name),
+        customdata: ranked,           // so clicks still work
         marker: { color: '#66fcf1' }
       }], {
-        title: "Top 10 Earth-like Planets (based on radius & mass)",
-        xaxis: { title: "Similarity Score" },
-        yaxis: { title: "Planet Name", automargin: true },
+        title: 'Top‑10 Earth‑like Planets (6‑feature similarity)',
+        xaxis: { title: 'Earth Similarity (1 = identical)', range: [0, 1] },
+        yaxis: { automargin: true },
         template: 'plotly_dark',
-        margin: { l: 100, r: 20, t: 60, b: 40 }
+        margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     };
 
