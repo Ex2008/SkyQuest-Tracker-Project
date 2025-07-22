@@ -1,6 +1,7 @@
 <!-- exo‑ranker.html  —  STATIC showcase, no runtime API keys needed -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -8,40 +9,108 @@
 
   <!-- ─── minimal glass‑morphism theme ─── -->
   <style>
-    :root{
-      --navy:#0b0c10;--blue:#232931;--cyan:#66fcf1;--purple:#7f7fd5;--white:#fff;
-      --panel-bg:rgba(35,41,49,.55);--border:rgba(102,252,241,.12);
+    :root {
+      --navy: #0b0c10;
+      --blue: #232931;
+      --cyan: #66fcf1;
+      --purple: #7f7fd5;
+      --white: #fff;
+      --panel-bg: rgba(35, 41, 49, .55);
+      --border: rgba(102, 252, 241, .12);
     }
-    *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
-    body{
-      min-height:100vh;display:flex;flex-direction:column;color:var(--white);
-      background:linear-gradient(135deg,var(--navy) 70%,var(--blue) 100%);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif
     }
-    header{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:1rem 2rem;background:rgba(31,40,51,.6);backdrop-filter:blur(8px);
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy) 70%, var(--blue) 100%);
     }
-    .logo{font-size:1.75rem;font-weight:700;color:var(--cyan)}
-    header a{color:var(--white);text-decoration:none;font-weight:600}
-    header a:hover{text-decoration:underline}
-    main{flex:1;width:100%;max-width:1280px;margin:0 auto;padding:2rem;text-align:center}
-    h1{font-size:2.3rem;margin-bottom:1rem}
-    h1 span{color:var(--cyan)}
-    select{
-      padding:.45rem .8rem;border-radius:.55rem;border:1px solid var(--border);
-      background:#111;color:#fff;font-size:1rem;min-width:220px;margin:.3rem .6rem;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(31, 40, 51, .6);
+      backdrop-filter: blur(8px);
     }
-    #chart{
-      margin-top:1.8rem;height:620px;border:1px solid var(--border);
-      border-radius:1rem;
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--cyan)
     }
-    #info{
-      margin-top:1.5rem;padding:1rem;min-height:140px;
-      background:var(--panel-bg);border:1px solid var(--border);border-radius:1rem;
+
+    header a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600
     }
-    #info h2{color:var(--cyan);margin-bottom:.4rem}
+
+    header a:hover {
+      text-decoration: underline
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 1rem
+    }
+
+    h1 span {
+      color: var(--cyan)
+    }
+
+    select {
+      padding: .45rem .8rem;
+      border-radius: .55rem;
+      border: 1px solid var(--border);
+      background: #111;
+      color: #fff;
+      font-size: 1rem;
+      min-width: 220px;
+      margin: .3rem .6rem;
+    }
+
+    #chart {
+      margin-top: 1.8rem;
+      height: 620px;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+    }
+
+    #info {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      min-height: 140px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+    }
+
+    #info h2 {
+      color: var(--cyan);
+      margin-bottom: .4rem
+    }
   </style>
 </head>
+
 <body>
   <header>
     <div class="logo">🪐 SkyQuest / Exo‑Ranker</div>
@@ -67,186 +136,218 @@
   </main>
 
   <!-- Plotly CDN -->
- <script>
-const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
+  <script>
+    const palette = ['#66fcf1', '#ffcc00', '#ff6666', '#9966ff', '#00d084', '#ff7eb3', '#ffa600'];
 
-// Key features for dropdown prioritization
-const keyFeatures = ['pl_rade','pl_bmasse','pl_eqt','st_teff','st_rad','st_mass'];
+    // Key features for dropdown prioritization
+    const keyFeatures = ['pl_rade', 'pl_bmasse', 'pl_eqt', 'st_teff', 'st_rad', 'st_mass'];
 
-// Human-readable labels for all known features
-const featureLabels = {
-  // Key features
-  pl_rade: "Planet Radius (R⊕)",
-  pl_bmasse: "Planet Mass (M⊕)",
-  pl_eqt: "Equilibrium Temperature (K)",
-  st_teff: "Star Temperature (K)",
-  st_rad: "Star Radius (R☉)",
-  st_mass: "Star Mass (M☉)",
+    // Human-readable labels for all known features
+    const featureLabels = {
+      // --- Key Features ---
+      pl_rade: "Planet Radius (R⊕)",
+      pl_bmasse: "Planet Mass (M⊕)",
+      pl_eqt: "Equilibrium Temperature (K)",
+      st_teff: "Star Temperature (K)",
+      st_rad: "Star Radius (R☉)",
+      st_mass: "Star Mass (M☉)",
 
-  // Orbital & discovery
-  pl_orbper: "Orbital Period (days)",
-  pl_orbpererr1: "Orbital Period Error (+)",
-  pl_orbpererr2: "Orbital Period Error (–)",
-  pl_orbperlim: "Orbital Period Limit Flag",
-  pl_orbsmax: "Orbit Semi-Major Axis (AU)",
-  pl_orbsmaxerr1: "Axis Error (+)",
-  pl_orbsmaxerr2: "Axis Error (–)",
-  pl_orbsmaxlim: "Axis Limit Flag",
-  pl_orbeccen: "Orbital Eccentricity",
-  pl_orbeccenerr1: "Eccentricity Error (+)",
-  pl_orbeccenerr2: "Eccentricity Error (–)",
-  pl_orbeccenlim: "Eccentricity Limit Flag",
+      // --- Orbital Parameters ---
+      pl_orbper: "Orbital Period (days)",
+      pl_orbpererr1: "Orbital Period Error (+)",
+      pl_orbpererr2: "Orbital Period Error (–)",
+      pl_orbperlim: "Orbital Period Limit Flag",
+      pl_orbsmax: "Orbit Semi-Major Axis (AU)",
+      pl_orbsmaxerr1: "Axis Error (+)",
+      pl_orbsmaxerr2: "Axis Error (–)",
+      pl_orbsmaxlim: "Axis Limit Flag",
+      pl_orbeccen: "Orbital Eccentricity",
+      pl_orbeccenerr1: "Eccentricity Error (+)",
+      pl_orbeccenerr2: "Eccentricity Error (–)",
+      pl_orbeccenlim: "Eccentricity Limit Flag",
 
-  // Radius, mass
-  pl_radeerr1: "Radius Error (+)",
-  pl_radeerr2: "Radius Error (–)",
-  pl_radelim: "Radius Limit Flag",
-  pl_radj: "Radius (Jupiter)",
-  pl_radjerr1: "Radius (Jupiter) Error (+)",
-  pl_radjerr2: "Radius (Jupiter) Error (–)",
-  pl_radjlim: "Radius (Jupiter) Limit Flag",
-  pl_bmasseerr1: "Mass Error (+)",
-  pl_bmasseerr2: "Mass Error (–)",
-  pl_bmasselim: "Mass Limit Flag",
-  pl_bmassj: "Mass (Jupiter)",
-  pl_bmassjerr1: "Mass (Jupiter) Error (+)",
-  pl_bmassjerr2: "Mass (Jupiter) Error (–)",
-  pl_bmassjlim: "Mass (Jupiter) Limit Flag",
-  pl_bmassprov: "Mass Provenance",
+      // --- Planet Radius & Mass ---
+      pl_radeerr1: "Radius Error (+)",
+      pl_radeerr2: "Radius Error (–)",
+      pl_radelim: "Radius Limit Flag",
+      pl_radj: "Radius (Jupiter R♃)",
+      pl_radjerr1: "Radius (Jupiter) Error (+)",
+      pl_radjerr2: "Radius (Jupiter) Error (–)",
+      pl_radjlim: "Radius (Jupiter) Limit Flag",
+      pl_bmasseerr1: "Mass Error (+)",
+      pl_bmasseerr2: "Mass Error (–)",
+      pl_bmasselim: "Mass Limit Flag",
+      pl_bmassj: "Mass (Jupiter M♃)",
+      pl_bmassjerr1: "Mass (Jupiter) Error (+)",
+      pl_bmassjerr2: "Mass (Jupiter) Error (–)",
+      pl_bmassjlim: "Mass (Jupiter) Limit Flag",
+      pl_bmassprov: "Mass Provenance",
 
-  // Star parameters
-  st_spectype: "Spectral Type",
-  st_logg: "Surface Gravity (log g)",
-  st_loggerr1: "Gravity Error (+)",
-  st_loggerr2: "Gravity Error (–)",
-  st_logglim: "Gravity Limit",
-  st_met: "Metallicity",
-  st_meterr1: "Metallicity Error (+)",
-  st_meterr2: "Metallicity Error (–)",
-  st_metlim: "Metallicity Limit",
-  st_metratio: "Metallicity Ratio",
+      // --- Planet Energy ---
+      pl_insol: "Stellar Insolation (S⊕)",
+      pl_insolerr1: "Insolation Error (+)",
+      pl_insolerr2: "Insolation Error (–)",
+      pl_insollim: "Insolation Limit Flag",
+      pl_eqterr1: "Equilibrium Temp Error (+)",
+      pl_eqterr2: "Equilibrium Temp Error (–)",
+      pl_eqtlim: "Equilibrium Temp Limit Flag",
 
-  // Distance & brightness
-  sy_dist: "System Distance (pc)",
-  sy_disterr1: "Distance Error (+)",
-  sy_disterr2: "Distance Error (–)",
-  sy_vmag: "Visual Magnitude (V)",
-  sy_vmagerr1: "Vmag Error (+)",
-  sy_vmagerr2: "Vmag Error (–)",
-  sy_kmag: "Infrared Magnitude (K)",
-  sy_kmagerr1: "Kmag Error (+)",
-  sy_kmagerr2: "Kmag Error (–)",
-  sy_gaiamag: "Gaia Magnitude",
-  sy_gaiamagerr1: "GaiaMag Error (+)",
-  sy_gaiamagerr2: "GaiaMag Error (–)",
+      // --- Star Properties ---
+      st_spectype: "Spectral Type",
+      st_tefferr1: "Star Temp Error (+)",
+      st_tefferr2: "Star Temp Error (–)",
+      st_tefflim: "Star Temp Limit Flag",
+      st_raderr1: "Star Radius Error (+)",
+      st_raderr2: "Star Radius Error (–)",
+      st_radlim: "Star Radius Limit Flag",
+      st_masserr1: "Star Mass Error (+)",
+      st_masserr2: "Star Mass Error (–)",
+      st_masslim: "Star Mass Limit Flag",
+      st_met: "Metallicity [Fe/H]",
+      st_meterr1: "Metallicity Error (+)",
+      st_meterr2: "Metallicity Error (–)",
+      st_metlim: "Metallicity Limit",
+      st_metratio: "Metallicity Ratio",
+      st_logg: "Surface Gravity (log g)",
+      st_loggerr1: "Gravity Error (+)",
+      st_loggerr2: "Gravity Error (–)",
+      st_logglim: "Gravity Limit",
 
-  // Discovery & flags
-  disc_year: "Discovery Year",
-  discoverymethod: "Discovery Method",
-  disc_facility: "Discovery Facility",
-  pl_controv_flag: "Controversial Detection",
-  ttv_flag: "TTV Flag",
-  sy_snum: "# Stars in System",
-  sy_pnum: "# Planets in System"
-};
+      // --- System Info ---
+      sy_snum: "Number of Stars",
+      sy_pnum: "Number of Planets",
+      sy_dist: "System Distance (pc)",
+      sy_disterr1: "Distance Error (+)",
+      sy_disterr2: "Distance Error (–)",
+
+      // --- Brightness ---
+      sy_vmag: "Visual Magnitude (V)",
+      sy_vmagerr1: "Vmag Error (+)",
+      sy_vmagerr2: "Vmag Error (–)",
+      sy_kmag: "Infrared Magnitude (K)",
+      sy_kmagerr1: "Kmag Error (+)",
+      sy_kmagerr2: "Kmag Error (–)",
+      sy_gaiamag: "Gaia Magnitude",
+      sy_gaiamagerr1: "GaiaMag Error (+)",
+      sy_gaiamagerr2: "GaiaMag Error (–)",
+
+      // --- Discovery Details & Flags ---
+      disc_year: "Discovery Year",
+      discoverymethod: "Discovery Method",
+      disc_facility: "Discovery Facility",
+      pl_controv_flag: "Controversial Detection",
+      ttv_flag: "TTV Detected",
+
+      // --- Positioning (not plotted, but included for reference) ---
+      rastr: "RA (hms)",
+      ra: "RA (degrees)",
+      decstr: "Dec (dms)",
+      dec: "Dec (degrees)",
+
+      // --- Identification ---
+      pl_name: "Planet Name",
+      hostname: "Host Star Name"
+    };
 
 
-(async () => {
-  let data;
-  try {
-    const res = await fetch('planet_data.json');
-    data = await res.json();
-  } catch (err) {
-    document.getElementById('chart').innerHTML =
-      '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
-    return;
-  }
 
-  const allKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster');
-  const orderedKeys = [...keyFeatures, ...allKeys.filter(k => !keyFeatures.includes(k))];
+    (async () => {
+      let data;
+      try {
+        const res = await fetch('planet_data.json');
+        data = await res.json();
+      } catch (err) {
+        document.getElementById('chart').innerHTML =
+          '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
+        return;
+      }
 
-  const xSel = document.getElementById('xSel');
-  const ySel = document.getElementById('ySel');
+      const allKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster');
+      const orderedKeys = [...keyFeatures, ...allKeys.filter(k => !keyFeatures.includes(k))];
 
-  orderedKeys.forEach(k => {
-    const label = featureLabels[k] ? `${k} – ${featureLabels[k]}` : `${k} – [Unlabeled]`;
-    const opt = `<option value="${k}">${label}</option>`;
-    xSel.insertAdjacentHTML('beforeend', opt);
-    ySel.insertAdjacentHTML('beforeend', opt);
-  });
+      const xSel = document.getElementById('xSel');
+      const ySel = document.getElementById('ySel');
 
-  xSel.value = 'pl_rade';
-  ySel.value = 'pl_bmasse';
-
-  function plot() {
-    const x = xSel.value, y = ySel.value;
-    const xLabel = featureLabels[x] || x;
-    const yLabel = featureLabels[y] || y;
-
-    const clusters = [...new Set(data.map(d => d.cluster))].sort();
-    const traces = clusters.map((c, i) => {
-      const pts = data.filter(d => d.cluster === c && d.pl_name !== "Earth");
-      return {
-        x: pts.map(p => p[x]),
-        y: pts.map(p => p[y]),
-        text: pts.map(p => p.pl_name),
-        customdata: pts,
-        mode: 'markers',
-        type: 'scatter',
-        name: `Cluster ${c}`,
-        marker: {
-          color: palette[i % palette.length],
-          size: 7,
-          opacity: 0.8,
-          line: { width: 0 }
-        }
-      };
-    });
-
-    const earth = data.find(p => p.pl_name === "Earth");
-    if (earth) {
-      traces.push({
-        x: [earth[x]],
-        y: [earth[y]],
-        text: ["🌍 Earth"],
-        customdata: [earth],
-        mode: 'markers+text',
-        type: 'scatter',
-        name: '🌍 Earth',
-        textposition: 'top center',
-        marker: {
-          color: '#FFD700',
-          size: 18,
-          symbol: 'star',
-          line: { color: '#000', width: 2 }
-        }
+      orderedKeys.forEach(k => {
+        const label = featureLabels[k] ? `${k} – ${featureLabels[k]}` : `${k} – [Unlabeled]`;
+        const opt = `<option value="${k}">${label}</option>`;
+        xSel.insertAdjacentHTML('beforeend', opt);
+        ySel.insertAdjacentHTML('beforeend', opt);
       });
-    }
 
-    Plotly.newPlot('chart', traces, {
-      title: `${xLabel} vs ${yLabel}`,
-      xaxis: { title: xLabel, zeroline: false },
-      yaxis: { title: yLabel, zeroline: false },
-      template: 'plotly_dark',
-      margin: { l: 60, r: 20, t: 60, b: 60 },
-      legend: { orientation: 'h', x: 0.01, y: 1.3 },
-      dragmode: 'pan'
-    }, { responsive: true });
-  }
+      xSel.value = 'pl_rade';
+      ySel.value = 'pl_bmasse';
 
-  document.getElementById('chart').addEventListener('plotly_click', ev => {
-    const p = ev.detail.points[0].customdata;
-    document.getElementById('info').innerHTML =
-      `<h2>${p.pl_name}</h2>
+      function plot() {
+        const x = xSel.value, y = ySel.value;
+        const xLabel = featureLabels[x] || x;
+        const yLabel = featureLabels[y] || y;
+
+        const clusters = [...new Set(data.map(d => d.cluster))].sort();
+        const traces = clusters.map((c, i) => {
+          const pts = data.filter(d => d.cluster === c && d.pl_name !== "Earth");
+          return {
+            x: pts.map(p => p[x]),
+            y: pts.map(p => p[y]),
+            text: pts.map(p => p.pl_name),
+            customdata: pts,
+            mode: 'markers',
+            type: 'scatter',
+            name: `Cluster ${c}`,
+            marker: {
+              color: palette[i % palette.length],
+              size: 7,
+              opacity: 0.8,
+              line: { width: 0 }
+            }
+          };
+        });
+
+        const earth = data.find(p => p.pl_name === "Earth");
+        if (earth) {
+          traces.push({
+            x: [earth[x]],
+            y: [earth[y]],
+            text: ["🌍 Earth"],
+            customdata: [earth],
+            mode: 'markers+text',
+            type: 'scatter',
+            name: '🌍 Earth',
+            textposition: 'top center',
+            marker: {
+              color: '#FFD700',
+              size: 18,
+              symbol: 'star',
+              line: { color: '#000', width: 2 }
+            }
+          });
+        }
+
+        Plotly.newPlot('chart', traces, {
+          title: `${xLabel} vs ${yLabel}`,
+          xaxis: { title: xLabel, zeroline: false },
+          yaxis: { title: yLabel, zeroline: false },
+          template: 'plotly_dark',
+          margin: { l: 60, r: 20, t: 60, b: 60 },
+          legend: { orientation: 'h', x: 0.01, y: 1.3 },
+          dragmode: 'pan'
+        }, { responsive: true });
+      }
+
+      document.getElementById('chart').addEventListener('plotly_click', ev => {
+        const p = ev.detail.points[0].customdata;
+        document.getElementById('info').innerHTML =
+          `<h2>${p.pl_name}</h2>
        <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
        <p>${p.explanation}</p>`;
-  });
+      });
 
-  xSel.onchange = plot;
-  ySel.onchange = plot;
-  plot();
-})();
-</script>
+      xSel.onchange = plot;
+      ySel.onchange = plot;
+      plot();
+    })();
+  </script>
 
 </body>
+
 </html>
