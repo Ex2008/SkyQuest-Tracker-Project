@@ -75,24 +75,81 @@ const keyFeatures = ['pl_rade','pl_bmasse','pl_eqt','st_teff','st_rad','st_mass'
 
 // Human-readable labels for all known features
 const featureLabels = {
+  // Key features
   pl_rade: "Planet Radius (R⊕)",
   pl_bmasse: "Planet Mass (M⊕)",
-  pl_eqt: "Equilibrium Temp (K)",
-  st_teff: "Stellar Temp (K)",
-  st_rad: "Stellar Radius (R☉)",
-  st_mass: "Stellar Mass (M☉)",
+  pl_eqt: "Equilibrium Temperature (K)",
+  st_teff: "Star Temperature (K)",
+  st_rad: "Star Radius (R☉)",
+  st_mass: "Star Mass (M☉)",
+
+  // Orbital & discovery
   pl_orbper: "Orbital Period (days)",
+  pl_orbpererr1: "Orbital Period Error (+)",
+  pl_orbpererr2: "Orbital Period Error (–)",
+  pl_orbperlim: "Orbital Period Limit Flag",
   pl_orbsmax: "Orbit Semi-Major Axis (AU)",
+  pl_orbsmaxerr1: "Axis Error (+)",
+  pl_orbsmaxerr2: "Axis Error (–)",
+  pl_orbsmaxlim: "Axis Limit Flag",
   pl_orbeccen: "Orbital Eccentricity",
-  pl_insol: "Insolation (S⊕)",
-  sy_dist: "System Distance (pc)",
+  pl_orbeccenerr1: "Eccentricity Error (+)",
+  pl_orbeccenerr2: "Eccentricity Error (–)",
+  pl_orbeccenlim: "Eccentricity Limit Flag",
+
+  // Radius, mass
+  pl_radeerr1: "Radius Error (+)",
+  pl_radeerr2: "Radius Error (–)",
+  pl_radelim: "Radius Limit Flag",
+  pl_radj: "Radius (Jupiter)",
+  pl_radjerr1: "Radius (Jupiter) Error (+)",
+  pl_radjerr2: "Radius (Jupiter) Error (–)",
+  pl_radjlim: "Radius (Jupiter) Limit Flag",
+  pl_bmasseerr1: "Mass Error (+)",
+  pl_bmasseerr2: "Mass Error (–)",
+  pl_bmasselim: "Mass Limit Flag",
+  pl_bmassj: "Mass (Jupiter)",
+  pl_bmassjerr1: "Mass (Jupiter) Error (+)",
+  pl_bmassjerr2: "Mass (Jupiter) Error (–)",
+  pl_bmassjlim: "Mass (Jupiter) Limit Flag",
+  pl_bmassprov: "Mass Provenance",
+
+  // Star parameters
+  st_spectype: "Spectral Type",
   st_logg: "Surface Gravity (log g)",
-  sy_vmag: "Visual Magnitude",
-  sy_kmag: "Infrared Mag (K)",
-  sy_gaiamag: "Gaia Mag",
+  st_loggerr1: "Gravity Error (+)",
+  st_loggerr2: "Gravity Error (–)",
+  st_logglim: "Gravity Limit",
   st_met: "Metallicity",
-  st_spectype: "Spectral Type Code"
+  st_meterr1: "Metallicity Error (+)",
+  st_meterr2: "Metallicity Error (–)",
+  st_metlim: "Metallicity Limit",
+  st_metratio: "Metallicity Ratio",
+
+  // Distance & brightness
+  sy_dist: "System Distance (pc)",
+  sy_disterr1: "Distance Error (+)",
+  sy_disterr2: "Distance Error (–)",
+  sy_vmag: "Visual Magnitude (V)",
+  sy_vmagerr1: "Vmag Error (+)",
+  sy_vmagerr2: "Vmag Error (–)",
+  sy_kmag: "Infrared Magnitude (K)",
+  sy_kmagerr1: "Kmag Error (+)",
+  sy_kmagerr2: "Kmag Error (–)",
+  sy_gaiamag: "Gaia Magnitude",
+  sy_gaiamagerr1: "GaiaMag Error (+)",
+  sy_gaiamagerr2: "GaiaMag Error (–)",
+
+  // Discovery & flags
+  disc_year: "Discovery Year",
+  discoverymethod: "Discovery Method",
+  disc_facility: "Discovery Facility",
+  pl_controv_flag: "Controversial Detection",
+  ttv_flag: "TTV Flag",
+  sy_snum: "# Stars in System",
+  sy_pnum: "# Planets in System"
 };
+
 
 (async () => {
   let data;
