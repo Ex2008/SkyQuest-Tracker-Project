@@ -1,0 +1,11 @@
+{
+  "name": "exo-ranker-data-gen",
+  "version": "1.0.0",
+  "scripts": {
+    "generate-data": "node generate_planet_data.js"
+  },
+  "dependencies": {
+    "openai": "^4.5.0",
+    "dotenv": "^16.0.0"
+  }
+}

@@ -224,11 +224,10 @@
 
     function plotChart(data) {
       const x = xSel.value, y = ySel.value;
-      const xLabel = featureLabels[x] || x;
-      const yLabel = featureLabels[y] || y;
+      const xLabel = featureLabels[x] || x, yLabel = featureLabels[y] || y;
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
-        const pts = data.filter(d => d.cluster === c && d.pl_name !== "Earth");
+        const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
@@ -240,14 +239,11 @@
           marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
         };
       });
-      const earth = data.find(p => p.pl_name === "Earth");
+      const earth = data.find(p => p.pl_name === 'Earth');
       if (earth) traces.push({
-        x: [earth[x]],
-        y: [earth[y]],
-        text: ["🌍 Earth"],
-        customdata: [earth],
-        mode: 'markers+text',
-        type: 'scatter',
+        x: [earth[x]], y: [earth[y]],
+        text: ['🌍 Earth'], customdata: [earth],
+        mode: 'markers+text', type: 'scatter',
         name: '🌍 Earth',
         textposition: 'top center',
         marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
@@ -265,33 +261,19 @@
     }
 
     function plotRankings(data, earthRef) {
-      // build the ranked list
       const ranked = data
         .filter(p => p.pl_name !== 'Earth')
         .map(p => {
-          // compute relative differences for each key feature
-          const relDiffs = keyFeatures.map(k => {
-            const a = p[k], b = earthRef[k];
-            // if either is missing, treat diff as zero
-            return (a != null && b != null) ? (a - b) / b : 0;
-          });
-
-          // RMS of those differences
-          const meanSq = relDiffs.reduce((sum, d) => sum + d * d, 0) / keyFeatures.length;
-          const dist = Math.sqrt(meanSq);
-
-          // similarity = 1 - dist, clamped to [0,1]
-          let sim = 1 - dist;
-          if (sim < 0) sim = 0;
-          if (sim > 1) sim = 1;
-
+          // RMS of normalized difference
+          const diffs = keyFeatures.map(f => (p[f] - earthRef[f]) / earthRef[f]);
+          const rms = Math.sqrt(diffs.reduce((s, d) => s + d * d, 0) / diffs.length);
+          let sim = 1 - rms; sim = Math.max(0, Math.min(1, sim));
           p.similarity = sim;
           return p;
         })
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 10);
 
-      // now draw the horizontal bar chart
       Plotly.newPlot('rankings', [{
         type: 'bar',
         x: ranked.map(p => p.similarity.toFixed(3)).reverse(),
@@ -301,39 +283,59 @@
         marker: { color: '#66fcf1' }
       }], {
         title: 'Top 10 Earth‑like Planets (6‑feature similarity)',
-        xaxis: {
-          title: 'Similarity (1 = identical)',
-          range: [0, 1]
-        },
+        xaxis: { title: 'Similarity (1 = identical)', range: [0, 1] },
         yaxis: { automargin: true },
         template: 'plotly_dark',
         margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     }
 
-
     (async () => {
       try {
-        const res = await fetch('planet_data.json');
-        const data = await res.json();
+        // load both raw & enriched JSON
+        const [rawRes, enrRes] = await Promise.all([
+          fetch('planet_data.json'),
+          fetch('planet_data_enriched.json')
+        ]);
+        const raw = await rawRes.json();
+        const enriched = await enrRes.json();
+
+        // merge them by name into a single array
+        const data = raw.map(p => {
+          const name = p.pl_name;
+          return {
+            ...p,
+            cluster: enriched.clusters[name],
+            similarity: enriched.similarity[name],
+            temp_class: enriched.tempClass[name],
+            explanation: enriched.explainers[name]
+          };
+        });
+
         const earthRef = data.find(p => p.pl_name === 'Earth');
+
         populateDropdowns();
         plotChart(data);
         plotRankings(data, earthRef);
+
         xSel.addEventListener('change', () => plotChart(data));
         ySel.addEventListener('change', () => plotChart(data));
+
         document.getElementById('chart').addEventListener('plotly_click', ev => {
           const p = ev.detail.points[0].customdata;
-          document.getElementById('info').innerHTML =
-            `<h2>${p.pl_name}</h2>
-             <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
-             <p>${p.explanation}</p>`;
+          document.getElementById('info').innerHTML = `
+            <h2>${p.pl_name}</h2>
+            <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
+            <p>${p.explanation}</p>
+          `;
         });
       } catch (err) {
         document.getElementById('chart').innerHTML =
-          '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
+          '<p style="padding:2rem">Could not load JSON files.</p>';
       }
     })();
+
+
   </script>
 </body>
 
