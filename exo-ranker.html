@@ -67,100 +67,129 @@
   </main>
 
   <!-- Plotly CDN -->
-  <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-  <script>
-  const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
+ <script>
+const palette = ['#66fcf1','#ffcc00','#ff6666','#9966ff','#00d084','#ff7eb3','#ffa600'];
 
-  // Key features shown first in dropdown
-  const keyFeatures = ['pl_rade','pl_bmasse','pl_eqt','st_teff','st_rad','st_mass'];
+// Key features for dropdown prioritization
+const keyFeatures = ['pl_rade','pl_bmasse','pl_eqt','st_teff','st_rad','st_mass'];
 
-  // Mapping for human-friendly labels
-  const featureLabels = {
-    pl_rade: "Radius (R⊕)", pl_bmasse: "Mass (M⊕)", pl_eqt: "Equilibrium Temp (K)",
-    st_teff: "Star Temp (K)", st_rad: "Star Radius (R☉)", st_mass: "Star Mass (M☉)",
-    sy_dist: "System Distance (ly)", pl_orbper: "Orbital Period (days)",
-    pl_orbeccen: "Orbital Eccentricity", st_logg: "Surface Gravity (log g)",
-    sy_vmag: "Visual Magnitude", sy_kmag: "Infrared Mag (K band)", pl_insol: "Stellar Insolation (S⊕)"
-  };
+// Human-readable labels for all known features
+const featureLabels = {
+  pl_rade: "Planet Radius (R⊕)",
+  pl_bmasse: "Planet Mass (M⊕)",
+  pl_eqt: "Equilibrium Temp (K)",
+  st_teff: "Stellar Temp (K)",
+  st_rad: "Stellar Radius (R☉)",
+  st_mass: "Stellar Mass (M☉)",
+  pl_orbper: "Orbital Period (days)",
+  pl_orbsmax: "Orbit Semi-Major Axis (AU)",
+  pl_orbeccen: "Orbital Eccentricity",
+  pl_insol: "Insolation (S⊕)",
+  sy_dist: "System Distance (pc)",
+  st_logg: "Surface Gravity (log g)",
+  sy_vmag: "Visual Magnitude",
+  sy_kmag: "Infrared Mag (K)",
+  sy_gaiamag: "Gaia Mag",
+  st_met: "Metallicity",
+  st_spectype: "Spectral Type Code"
+};
 
-  (async () => {
-    let data;
-    try {
-      const res = await fetch('planet_data.json');
-      data = await res.json();
-    } catch(err){
-      document.getElementById('chart').innerHTML =
-        '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
-      return;
-    }
+(async () => {
+  let data;
+  try {
+    const res = await fetch('planet_data.json');
+    data = await res.json();
+  } catch (err) {
+    document.getElementById('chart').innerHTML =
+      '<p style="padding:2rem">Could not load <code>planet_data.json</code>.</p>';
+    return;
+  }
 
-    const allKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster');
-    const orderedKeys = [...keyFeatures, ...allKeys.filter(k => !keyFeatures.includes(k))];
+  const allKeys = Object.keys(data[0]).filter(k => typeof data[0][k] === 'number' && k !== 'cluster');
+  const orderedKeys = [...keyFeatures, ...allKeys.filter(k => !keyFeatures.includes(k))];
 
-    const xSel = document.getElementById('xSel');
-    const ySel = document.getElementById('ySel');
+  const xSel = document.getElementById('xSel');
+  const ySel = document.getElementById('ySel');
 
-    orderedKeys.forEach(k => {
-      const label = featureLabels[k] ? `${k} – ${featureLabels[k]}` : k;
-      const opt = `<option value="${k}">${label}</option>`;
-      xSel.insertAdjacentHTML('beforeend', opt);
-      ySel.insertAdjacentHTML('beforeend', opt);
+  orderedKeys.forEach(k => {
+    const label = featureLabels[k] ? `${k} – ${featureLabels[k]}` : `${k} – [Unlabeled]`;
+    const opt = `<option value="${k}">${label}</option>`;
+    xSel.insertAdjacentHTML('beforeend', opt);
+    ySel.insertAdjacentHTML('beforeend', opt);
+  });
+
+  xSel.value = 'pl_rade';
+  ySel.value = 'pl_bmasse';
+
+  function plot() {
+    const x = xSel.value, y = ySel.value;
+    const xLabel = featureLabels[x] || x;
+    const yLabel = featureLabels[y] || y;
+
+    const clusters = [...new Set(data.map(d => d.cluster))].sort();
+    const traces = clusters.map((c, i) => {
+      const pts = data.filter(d => d.cluster === c && d.pl_name !== "Earth");
+      return {
+        x: pts.map(p => p[x]),
+        y: pts.map(p => p[y]),
+        text: pts.map(p => p.pl_name),
+        customdata: pts,
+        mode: 'markers',
+        type: 'scatter',
+        name: `Cluster ${c}`,
+        marker: {
+          color: palette[i % palette.length],
+          size: 7,
+          opacity: 0.8,
+          line: { width: 0 }
+        }
+      };
     });
-    xSel.value = 'pl_rade';
-    ySel.value = 'pl_bmasse';
 
-    function plot(){
-      const x = xSel.value, y = ySel.value;
-      const xLabel = featureLabels[x] || x;
-      const yLabel = featureLabels[y] || y;
-
-      const clusters = [...new Set(data.map(d=>d.cluster))].sort();
-      const traces = clusters.map((c,i)=>{
-        const pts = data.filter(d=>d.cluster===c && d.pl_name !== "Earth");
-        return {
-          x: pts.map(p=>p[x]),
-          y: pts.map(p=>p[y]),
-          text: pts.map(p=>p.pl_name),
-          customdata: pts,
-          mode:'markers', type:'scatter', name:`Cluster ${c}`,
-          marker:{color:palette[i%palette.length],size:7,opacity:0.8,line:{width:0}}
-        };
+    const earth = data.find(p => p.pl_name === "Earth");
+    if (earth) {
+      traces.push({
+        x: [earth[x]],
+        y: [earth[y]],
+        text: ["🌍 Earth"],
+        customdata: [earth],
+        mode: 'markers+text',
+        type: 'scatter',
+        name: '🌍 Earth',
+        textposition: 'top center',
+        marker: {
+          color: '#FFD700',
+          size: 18,
+          symbol: 'star',
+          line: { color: '#000', width: 2 }
+        }
       });
-
-      const earth = data.find(p => p.pl_name === "Earth");
-      if (earth) {
-        traces.push({
-          x: [earth[x]], y: [earth[y]], text: ["🌍 Earth"], customdata: [earth],
-          mode: 'markers+text', type: 'scatter', name: '🌍 Earth',
-          textposition: 'top center',
-          marker: {color: 'yellow', size: 16, line: {color:'#000', width: 2}, symbol: 'star'}
-        });
-      }
-
-      Plotly.newPlot('chart', traces, {
-        title:`${xLabel} vs ${yLabel}`,
-        xaxis:{title:xLabel, zeroline:false},
-        yaxis:{title:yLabel, zeroline:false},
-        template:'plotly_dark',
-        margin:{l:60,r:20,t:60,b:60},
-        legend:{orientation:'h',x:0.01,y:1.12},
-        dragmode:'pan'
-      }, {responsive:true});
     }
 
-    document.getElementById('chart')
-      .addEventListener('plotly_click', ev => {
-        const p = ev.detail.points[0].customdata;
-        document.getElementById('info').innerHTML =
-          `<h2>${p.pl_name}</h2>
-           <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
-           <p>${p.explanation}</p>`;
-      });
+    Plotly.newPlot('chart', traces, {
+      title: `${xLabel} vs ${yLabel}`,
+      xaxis: { title: xLabel, zeroline: false },
+      yaxis: { title: yLabel, zeroline: false },
+      template: 'plotly_dark',
+      margin: { l: 60, r: 20, t: 60, b: 60 },
+      legend: { orientation: 'h', x: 0.01, y: 1.3 },
+      dragmode: 'pan'
+    }, { responsive: true });
+  }
 
-    xSel.onchange = plot;
-    ySel.onchange = plot;
-    plot();
-  })();
-  </script>
+  document.getElementById('chart').addEventListener('plotly_click', ev => {
+    const p = ev.detail.points[0].customdata;
+    document.getElementById('info').innerHTML =
+      `<h2>${p.pl_name}</h2>
+       <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
+       <p>${p.explanation}</p>`;
+  });
+
+  xSel.onchange = plot;
+  ySel.onchange = plot;
+  plot();
+})();
+</script>
+
 </body>
 </html>
