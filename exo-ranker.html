@@ -15,12 +15,14 @@
       --panel-bg: rgba(35, 41, 49, .55);
       --border: rgba(102, 252, 241, .12);
     }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: "Segoe UI", Arial, sans-serif
     }
+
     body {
       min-height: 100vh;
       display: flex;
@@ -28,6 +30,7 @@
       color: var(--white);
       background: linear-gradient(135deg, var(--navy) 70%, var(--blue) 100%);
     }
+
     header {
       display: flex;
       justify-content: space-between;
@@ -36,11 +39,13 @@
       background: rgba(31, 40, 51, .6);
       backdrop-filter: blur(8px);
     }
+
     .logo {
       font-size: 1.75rem;
       font-weight: 700;
       color: var(--cyan)
     }
+
     main {
       flex: 1;
       width: 100%;
@@ -49,13 +54,16 @@
       padding: 2rem;
       text-align: center
     }
+
     h1 {
       font-size: 2.3rem;
       margin-bottom: 1rem
     }
+
     h1 span {
       color: var(--cyan)
     }
+
     select {
       padding: .45rem .8rem;
       border-radius: .55rem;
@@ -66,12 +74,23 @@
       min-width: 220px;
       margin: .3rem .6rem;
     }
-    #chart {
+
+    #chart,
+    #rankings {
       margin-top: 1.8rem;
-      height: 620px;
       border: 1px solid var(--border);
       border-radius: 1rem;
     }
+
+    #chart {
+      height: 620px;
+    }
+
+    #rankings {
+      height: 400px;
+      margin-top: 2rem;
+    }
+
     #info {
       margin-top: 1.5rem;
       padding: 1rem;
@@ -80,10 +99,12 @@
       border: 1px solid var(--border);
       border-radius: 1rem;
     }
+
     #info h2 {
       color: var(--cyan);
       margin-bottom: .4rem
     }
+
     optgroup[label] {
       color: var(--cyan);
       font-weight: bold;
@@ -107,6 +128,7 @@
       <select id="ySel"></select>
     </div>
     <div id="chart"></div>
+    <div id="rankings"></div>
     <div id="info"><em>Click a planet dot to read its 150-word explainer.</em></div>
   </main>
 
@@ -199,12 +221,37 @@
       }, { responsive: true });
     };
 
+    const plotRankings = (data) => {
+      const ranked = data.filter(p => p.pl_name !== "Earth" && p.pl_rade && p.pl_bmasse).map(p => {
+        const diffRadius = Math.abs(p.pl_rade - 1);
+        const diffMass = Math.abs(p.pl_bmasse - 1);
+        p.similarity = 1 / (1 + diffRadius + diffMass);
+        return p;
+      }).sort((a, b) => b.similarity - a.similarity).slice(0, 10);
+
+      Plotly.newPlot('rankings', [{
+        type: 'bar',
+        x: ranked.map(p => p.similarity.toFixed(3)),
+        y: ranked.map(p => p.pl_name),
+        orientation: 'h',
+        text: ranked.map(p => p.pl_name),
+        marker: { color: '#66fcf1' }
+      }], {
+        title: "Top 10 Earth-like Planets (based on radius & mass)",
+        xaxis: { title: "Similarity Score" },
+        yaxis: { title: "Planet Name", automargin: true },
+        template: 'plotly_dark',
+        margin: { l: 100, r: 20, t: 60, b: 40 }
+      });
+    };
+
     (async () => {
       try {
         const res = await fetch('planet_data.json');
         const data = await res.json();
         populateDropdowns();
         plotChart(data);
+        plotRankings(data);
         xSel.onchange = () => plotChart(data);
         ySel.onchange = () => plotChart(data);
         document.getElementById('chart').addEventListener('plotly_click', ev => {
