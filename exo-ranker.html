@@ -331,9 +331,11 @@
 
 
       } catch (err) {
+        console.error('💥 Exo‑Ranker runtime error:', err);
         document.getElementById('chart').innerHTML =
-          '<p style="padding:2rem">Could not load JSON files.</p>';
+          `<p style="padding:2rem;color:#f66">${err.message}</p>`;
       }
+
     })();
 
 
