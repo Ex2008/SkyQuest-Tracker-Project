@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Exo​-Ranker – Earth-like Exoplanets</title>
+  <title>Exo‑Ranker – Earth‑like Exoplanets</title>
   <style>
     :root {
       --navy: #0b0c10;
@@ -113,38 +113,42 @@
 
 <body>
   <header>
-    <div class="logo">🪐 SkyQuest / Exo​-Ranker</div>
-    <nav><a href="index.html">← Back Home</a></nav>
+    <div class="logo">🪐 SkyQuest / Exo‑Ranker</div>
+    <nav><a href="index.html">← Back Home</a></nav>
   </header>
 
   <main>
-    <h1>Which <span>exoplanets</span> look most Earth​-like?</h1>
+    <h1>Which <span>exoplanets</span> look most Earth‑like?</h1>
     <p>Choose any two numerical parameters to explore the full catalogue.</p>
 
     <div style="margin-top:1.2rem">
-      <label for="xSel">X​-axis</label>
+      <label for="xSel">X‑axis</label>
       <select id="xSel"></select>
-      <label for="ySel" style="margin-left:.9rem">Y​-axis</label>
+      <label for="ySel" style="margin-left:.9rem">Y‑axis</label>
       <select id="ySel"></select>
     </div>
 
     <div id="chart"></div>
     <div id="rankings"></div>
-    <div id="info"><em>Click a planet dot to read its 150-word explainer.</em></div>
+    <div id="info"><em>Click a planet dot to read its 150‑word explainer.</em></div>
   </main>
 
-  <!-- load a working Plotly build -->
+  <!-- Plotly CDN -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script>
-    // grab these once up‑front
+    // Elements
     const xSel = document.getElementById('xSel');
     const ySel = document.getElementById('ySel');
 
+    // Constants
     const palette = ['#66fcf1', '#ffcc00', '#ff6666', '#9966ff', '#00d084', '#ff7eb3', '#ffa600'];
     const keyFeatures = ['pl_rade', 'pl_bmasse', 'pl_eqt', 'st_teff', 'st_rad', 'st_mass'];
 
+    /* ------------------------------------------------------------------
+       1.  DROPDOWN LABEL CONFIG
+    ------------------------------------------------------------------ */
     const featureCategories = {
-      'Key Features': ['pl_rade', 'pl_bmasse', 'pl_eqt', 'st_teff', 'st_rad', 'st_mass'],
+      'Key Features': keyFeatures,
       'Orbital & Discovery': ['pl_orbper', 'pl_orbpererr1', 'pl_orbpererr2', 'pl_orbperlim',
         'pl_orbsmax', 'pl_orbsmaxerr1', 'pl_orbsmaxerr2', 'pl_orbsmaxlim',
         'pl_orbeccen', 'pl_orbeccenerr1', 'pl_orbeccenerr2', 'pl_orbeccenlim'],
@@ -163,6 +167,7 @@
       'Discovery & Flags': ['disc_year', 'discoverymethod', 'disc_facility', 'pl_controv_flag',
         'ttv_flag', 'sy_snum', 'sy_pnum']
     };
+
 
     const featureLabels = {
       pl_rade: "Planet Radius (R⊕)", pl_bmasse: "Planet Mass (M⊕)", pl_eqt: "Equilibrium Temperature (K)",
@@ -222,9 +227,14 @@
       ySel.value = 'pl_bmasse';
     }
 
+    /* ------------------------------------------------------------------
+       2.  VISUALISATION HELPERS
+    ------------------------------------------------------------------ */
     function plotChart(data) {
       const x = xSel.value, y = ySel.value;
-      const xLabel = featureLabels[x], yLabel = featureLabels[y];
+      const xLabel = featureLabels[x] || x;
+      const yLabel = featureLabels[y] || y;
+
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
@@ -232,27 +242,37 @@
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
           text: pts.map(p => p.pl_name),
-          customdata: pts, // Each entry should be a planet object
-          mode: 'markers', type: 'scatter',
+          customdata: pts,
+          mode: 'markers',
+          type: 'scatter',
           name: `Cluster ${c}`,
           marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
         };
       });
+
       const earth = data.find(p => p.pl_name === 'Earth');
       if (earth) {
         traces.push({
-          x: [earth[x]], y: [earth[y]],
-          text: ['🌍 Earth'], customdata: [earth],
-          mode: 'markers+text', type: 'scatter', name: '🌍 Earth',
+          x: [earth[x]],
+          y: [earth[y]],
+          text: ['🌍 Earth'],
+          customdata: [earth],
+          mode: 'markers+text',
+          type: 'scatter',
+          name: '🌍 Earth',
           textposition: 'top center',
           marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
         });
       }
+
       Plotly.newPlot('chart', traces, {
         title: `${xLabel} vs ${yLabel}`,
-        xaxis: { title: xLabel }, yaxis: { title: yLabel },
-        template: 'plotly_dark', margin: { l: 60, r: 20, t: 60, b: 60 },
-        legend: { orientation: 'h', x: 0.01, y: 1.3 }, dragmode: 'pan'
+        xaxis: { title: xLabel },
+        yaxis: { title: yLabel },
+        template: 'plotly_dark',
+        margin: { l: 60, r: 20, t: 60, b: 60 },
+        legend: { orientation: 'h', x: 0.01, y: 1.3 },
+        dragmode: 'pan'
       }, { responsive: true });
     }
 
@@ -260,8 +280,11 @@
       const ranked = data
         .filter(p => p.pl_name !== 'Earth')
         .map(p => {
-          const diffs = keyFeatures.map(f => (p[f] - earthRef[f]) / earthRef[f]);
-          const rms = Math.sqrt(diffs.reduce((s, d) => s + d * d, 0) / diffs.length);
+          const diffs = keyFeatures.map(f => {
+            const a = +p[f], b = +earthRef[f];
+            return (isFinite(a) && isFinite(b) && b !== 0) ? (a - b) / b : 0;
+          });
+          const rms = Math.hypot(...diffs) / Math.sqrt(diffs.length);
           p.similarity = Math.max(0, 1 - rms);
           return p;
         })
@@ -274,71 +297,76 @@
         y: ranked.map(p => p.pl_name).reverse(),
         orientation: 'h',
         text: ranked.map(p => (p.similarity * 100).toFixed(1) + '%'),
-        customdata: ranked.map(p => p), // <--- fix: provide per-bar customdata
+        customdata: ranked,
         marker: { color: '#66fcf1' }
       }], {
         title: 'Top 10 Earth‑like Planets (6‑feature similarity)',
-        xaxis: { title: 'Similarity (1=identical)', range: [0, 1] },
+        xaxis: { title: 'Similarity (1 = identical)', range: [0, 1] },
         yaxis: { automargin: true },
         template: 'plotly_dark',
         margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     }
 
-
+    /* ------------------------------------------------------------------
+       3.  DATA LOADING + EARTH FALLBACK
+    ------------------------------------------------------------------ */
     (async () => {
       try {
         const [rawRes, enrRes] = await Promise.all([
-          fetch('data/planet_data.json'),
-          fetch('data/planet_data_enriched.json')
+          fetch('planet_data.json'),
+          fetch('planet_data_enriched.json')
         ]);
         const raw = await rawRes.json();
         const enriched = await enrRes.json();
 
-        // merge
+        // ─── 3.1 Merge raw + enrichment maps ───────────────────────────
         const data = raw.map(p => {
           const name = p.pl_name;
           return {
             ...p,
-            cluster: enriched.clusters[name],
-            similarity: enriched.similarity[name],
-            temp_class: enriched.tempClass[name],
-            explanation: enriched.explainers[name]
+            cluster: enriched.clusters?.[name] ?? 'N/A',
+            similarity: enriched.similarity?.[name] ?? null,
+            temp_class: enriched.tempClass?.[name] ?? '—',
+            explanation: enriched.explainers?.[name] ?? ''
           };
         });
 
-        const earthRef = data.find(p => p.pl_name === 'Earth');
+        // ─── 3.2 Inject synthetic Earth row if missing ────────────────
+        let earthRef = data.find(p => p.pl_name === 'Earth');
+        if (!earthRef) {
+          earthRef = {
+            pl_name: 'Earth', hostname: 'Sun',
+            pl_rade: 1, pl_bmasse: 1, pl_eqt: 255,
+            st_teff: 5772, st_rad: 1, st_mass: 1,
+            cluster: 'Ref', temp_class: 'G‑zone', similarity: 1,
+            explanation: 'Our home planet – used as the baseline for similarity calculations.'
+          };
+          data.push(earthRef);
+        }
 
+        // ─── 3.3 Render UI ────────────────────────────────────────────
         populateDropdowns();
         plotChart(data);
         plotRankings(data, earthRef);
 
+        // ─── 3.4 Event wiring ─────────────────────────────────────────
         xSel.addEventListener('change', () => plotChart(data));
         ySel.addEventListener('change', () => plotChart(data));
-
-        // show explainer on click in both charts
         ['chart', 'rankings'].forEach(id => {
-          document.getElementById(id)
-            .addEventListener('plotly_click', ev => {
-              const p = ev.detail.points[0].customdata;
-              document.getElementById('info').innerHTML = `
-        <h2>${p.pl_name || p.name}</h2>
-        <p><strong>Cluster:</strong> ${p.cluster ?? 'N/A'} • <strong>Temp class:</strong> ${p.temp_class ?? 'N/A'}</p>
-        <p>${p.explanation ? p.explanation : '<em>No explainer found.</em>'}</p>
-      `;
-            });
+          document.getElementById(id).addEventListener('plotly_click', ev => {
+            const p = ev.detail.points[0].customdata;
+            document.getElementById('info').innerHTML = `
+              <h2>${p.pl_name}</h2>
+              <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
+              <p>${p.explanation}</p>`;
+          });
         });
-
-
       } catch (err) {
-        console.error('💥 Exo‑Ranker runtime error:', err);
-        document.getElementById('chart').innerHTML =
-          `<p style="padding:2rem;color:#f66">${err.message}</p>`;
+        console.error(err);
+        document.getElementById('chart').innerHTML = '<p style="padding:2rem">Could not load JSON files.</p>';
       }
-
     })();
-
-
   </script>
 </body>
 
