@@ -315,8 +315,8 @@
     (async () => {
       try {
         const [rawRes, enrRes] = await Promise.all([
-          fetch('planet_data.json'),
-          fetch('planet_data_enriched.json')
+          fetch('./data/planet_data.json'),
+          fetch('./data/planet_data_enriched.json')
         ]);
         const raw = await rawRes.json();
         const enriched = await enrRes.json();
