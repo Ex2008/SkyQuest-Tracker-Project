@@ -229,9 +229,10 @@
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
         return {
-          x: pts.map(p => p[x]), y: pts.map(p => p[y]),
+          x: pts.map(p => p[x]),
+          y: pts.map(p => p[y]),
           text: pts.map(p => p.pl_name),
-          customdata: pts,
+          customdata: pts, // Each entry should be a planet object
           mode: 'markers', type: 'scatter',
           name: `Cluster ${c}`,
           marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
@@ -273,7 +274,7 @@
         y: ranked.map(p => p.pl_name).reverse(),
         orientation: 'h',
         text: ranked.map(p => (p.similarity * 100).toFixed(1) + '%'),
-        customdata: ranked,
+        customdata: ranked.map(p => p), // <--- fix: provide per-bar customdata
         marker: { color: '#66fcf1' }
       }], {
         title: 'Top 10 Earth‑like Planets (6‑feature similarity)',
@@ -283,6 +284,7 @@
         margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     }
+
 
     (async () => {
       try {
@@ -320,12 +322,13 @@
             .addEventListener('plotly_click', ev => {
               const p = ev.detail.points[0].customdata;
               document.getElementById('info').innerHTML = `
-                <h2>${p.pl_name}</h2>
-                <p><strong>Cluster:</strong> ${p.cluster} • <strong>Temp class:</strong> ${p.temp_class}</p>
-                <p>${p.explanation}</p>
-              `;
+        <h2>${p.pl_name || p.name}</h2>
+        <p><strong>Cluster:</strong> ${p.cluster ?? 'N/A'} • <strong>Temp class:</strong> ${p.temp_class ?? 'N/A'}</p>
+        <p>${p.explanation ? p.explanation : '<em>No explainer found.</em>'}</p>
+      `;
             });
         });
+
 
       } catch (err) {
         document.getElementById('chart').innerHTML =
