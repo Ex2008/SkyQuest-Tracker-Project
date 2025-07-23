@@ -307,6 +307,7 @@
         margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     }
+    populateDropdowns();
 
     /* ------------------------------------------------------------------
        3.  DATA LOADING + EARTH FALLBACK
@@ -346,7 +347,6 @@
         }
 
         // ─── 3.3 Render UI ────────────────────────────────────────────
-        populateDropdowns();
         plotChart(data);
         plotRankings(data, earthRef);
 
@@ -363,9 +363,11 @@
           });
         });
       } catch (err) {
-        console.error(err);
-        document.getElementById('chart').innerHTML = '<p style="padding:2rem">Could not load JSON files.</p>';
-      }
+      console.error(err);
+      // 2️⃣  Show selectors + friendly message even if data failed
+      document.getElementById('chart').innerHTML =
+        '<p style="padding:2rem">Could not load JSON files.</p>';
+    }
     })();
   </script>
 </body>
