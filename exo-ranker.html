@@ -243,13 +243,11 @@
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
-          customdata: pts,       // for click handling
-          // each hover box will show name + explanation, left‑aligned
           text: pts.map(p =>
             `<b>${p.pl_name}</b><br>` +
-            `${p.explanation.replace(/\n/g, '<br>')}`
+            p.explanation.replace(/\n/g, '<br>')
           ),
-          hoverinfo: 'text',
+          hovertemplate: '%{text}<extra></extra>',
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
@@ -264,14 +262,14 @@
         traces.push({
           x: [earth[x]],
           y: [earth[y]],
-          text: ['🌍 Earth'],
-          hoverinfo: 'text',
-          customdata: [earth],
+          text: ['🌍 Earth<br>' + earth.explanation.replace(/\n/g, '<br>')],
+          hovertemplate: '%{text}<extra></extra>',
           mode: 'markers+text',
-          type: 'scatter',
-          name: '🌍 Earth',
           textposition: 'top center',
-          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
+          type: 'scatter',
+          name: '🌍 Earth',
+          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } },
+          hoverlabel: { align: 'left' }
         });
       }
 
@@ -283,7 +281,7 @@
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
 
-        // show only the closest point’s box, not a full strip
+        // <<< ONE POINT AT A TIME, BOXED
         hovermode: 'closest',
         hoverlabel: {
           bgcolor: '#222',
