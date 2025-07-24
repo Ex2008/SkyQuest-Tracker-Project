@@ -239,16 +239,18 @@
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
-          text: pts.map(p => p.pl_name),
-          customdata: pts,
+          // build a single HTML hover‐text per point:
+          text: pts.map(p =>
+            `<b>${p.pl_name}</b><br>` +
+            `${p.explanation.replace(/\n/g, '<br>')}`
+          ),
+          hoverinfo: 'text',
+          customdata: pts,      // still there for click handlers
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
           marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 },
-          hovertemplate:
-            '<b>%{text}</b><br>' +
-            '%{customdata.explanation}' +
-            '<extra></extra>'
+          hoverlabel: { align: 'left' }
         };
       });
 
@@ -268,13 +270,25 @@
       }
 
       Plotly.newPlot('chart', traces, {
+        title: `${xLabel} vs ${yLabel}`,
+        xaxis: { title: xLabel },
+        yaxis: { title: yLabel },
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
+
+        hovermode: 'closest',         // ← show only the hovered point
+        hoverlabel: {
+          bgcolor: '#222',            // optional: darker background
+          bordercolor: '#444',        // optional: border
+          font: { size: 12 },         // optional: tweak font
+          align: 'left'               // left‑align multi‑line text
+        },
+
         legend: { orientation: 'h', x: 0.01, y: 1.3 },
-        xaxis: { title: featureLabels[x] },
-        yaxis: { title: featureLabels[y] },
         dragmode: 'pan'
-      }, { responsive: true });
+      }, {
+        responsive: true
+      });
     }
 
     function reassignMissingClusters(data) {
