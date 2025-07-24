@@ -230,6 +230,12 @@
     /* ------------------------------------------------------------------
        2.  VISUALISATION HELPERS
     ------------------------------------------------------------------ */
+    // simple word‑wrap: break lines at ~width chars on whitespace
+    function wrap(str, width = 40) {
+      const re = new RegExp(`(.{1,${width}})(\\s|$)`, 'g');
+      return str.replace(re, '$1<br>');
+    }
+
     function plotChart(data) {
       // 1) get current axes & labels
       const x = xSel.value, y = ySel.value;
@@ -243,16 +249,27 @@
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
+          //text: pts.map(p =>
+          //  `<b>${p.pl_name}</b><br>` +
+          //  p.explanation.replace(/\n/g, '<br>')
+          //),
+
+          // build your HTML hover text
           text: pts.map(p =>
             `<b>${p.pl_name}</b><br>` +
-            p.explanation.replace(/\n/g, '<br>')
+            wrap(p.explanation, 40)
           ),
           hovertemplate: '%{text}<extra></extra>',
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
-          marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 },
-          hoverlabel: { align: 'left' }
+          marker: { color, size: 7, opacity: 0.8 },
+          hoverlabel: {
+            bgcolor: color,
+            bordercolor: '#333',
+            font: { color: '#fff', size: 12 },
+            align: 'left'
+          }
         };
       });
 
@@ -262,14 +279,24 @@
         traces.push({
           x: [earth[x]],
           y: [earth[y]],
-          text: ['🌍 Earth<br>' + earth.explanation.replace(/\n/g, '<br>')],
+          text: [`<b>🌍 Earth</b><br>${wrap(earth.explanation, 40)}`],
           hovertemplate: '%{text}<extra></extra>',
           mode: 'markers+text',
-          textposition: 'top center',
           type: 'scatter',
           name: '🌍 Earth',
-          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } },
-          hoverlabel: { align: 'left' }
+          textposition: 'top center',
+          marker: {
+            color: '#FFD700',
+            size: 18,
+            symbol: 'star',
+            line: { color: '#000', width: 2 }
+          },
+          hoverlabel: {
+            bgcolor: '#FFD700',
+            bordercolor: '#333',
+            font: { color: '#000', size: 12 },
+            align: 'left'
+          }
         });
       }
 
@@ -280,16 +307,7 @@
         yaxis: { title: yLabel },
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
-
-        // <<< ONE POINT AT A TIME, BOXED
-        hovermode: 'closest',
-        hoverlabel: {
-          bgcolor: '#222',
-          bordercolor: '#444',
-          font: { size: 12 },
-          align: 'left'
-        },
-
+        hovermode: 'closest',           // only one box at a time
         legend: { orientation: 'h', x: 0.01, y: 1.3 },
         dragmode: 'pan'
       }, {
