@@ -246,15 +246,10 @@
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
+        const traceColor = palette[i % palette.length];
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
-          //text: pts.map(p =>
-          //  `<b>${p.pl_name}</b><br>` +
-          //  p.explanation.replace(/\n/g, '<br>')
-          //),
-
-          // build your HTML hover text
           text: pts.map(p =>
             `<b>${p.pl_name}</b><br>` +
             wrap(p.explanation, 40)
@@ -263,9 +258,9 @@
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
-          marker: { color, size: 7, opacity: 0.8 },
+          marker: { color: traceColor, size: 7, opacity: 0.8 },
           hoverlabel: {
-            bgcolor: color,
+            bgcolor: traceColor,
             bordercolor: '#333',
             font: { color: '#fff', size: 12 },
             align: 'left'
@@ -273,26 +268,32 @@
         };
       });
 
+
       // 3) add Earth star
       const earth = data.find(p => p.pl_name === 'Earth');
       if (earth) {
+        const starColor = '#FFD700';
         traces.push({
           x: [earth[x]],
           y: [earth[y]],
-          text: [`<b>🌍 Earth</b><br>${wrap(earth.explanation, 40)}`],
+          // bold name + wrapped explanation
+          text: [
+            `<b>🌍 ${earth.pl_name}</b><br>` +
+            wrap(earth.explanation, 40)
+          ],
           hovertemplate: '%{text}<extra></extra>',
           mode: 'markers+text',
           type: 'scatter',
-          name: '🌍 Earth',
+          name: '🌍 Earth',
           textposition: 'top center',
           marker: {
-            color: '#FFD700',
+            color: starColor,
             size: 18,
             symbol: 'star',
             line: { color: '#000', width: 2 }
           },
           hoverlabel: {
-            bgcolor: '#FFD700',
+            bgcolor: starColor,
             bordercolor: '#333',
             font: { color: '#000', size: 12 },
             align: 'left'
