@@ -252,7 +252,7 @@
           y: pts.map(p => p[y]),
           text: pts.map(p =>
             `<b>${p.pl_name}</b><br>` +
-            wrap(p.explanation, 40)
+            wrap(p.explanation, 80)
           ),
           hovertemplate: '%{text}<extra></extra>',
           mode: 'markers',
@@ -279,7 +279,7 @@
           // bold name + wrapped explanation
           text: [
             `<b>🌍 ${earth.pl_name}</b><br>` +
-            wrap(earth.explanation, 40)
+            wrap(earth.explanation, 80)
           ],
           hovertemplate: '%{text}<extra></extra>',
           mode: 'markers+text',
