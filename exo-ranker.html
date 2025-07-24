@@ -231,7 +231,7 @@
        2.  VISUALISATION HELPERS
     ------------------------------------------------------------------ */
     // simple word‑wrap: break lines at ~width chars on whitespace
-    function wrap(str, width = 40) {
+    function wrap(str, width = 80) {
       const re = new RegExp(`(.{1,${width}})(\\s|$)`, 'g');
       return str.replace(re, '$1<br>');
     }
@@ -347,6 +347,7 @@
 
 
     function plotRankings(data, earthRef) {
+      // 1) Rank by 6‑feature similarity (unchanged)
       const ranked = data
         .filter(p => p.pl_name !== 'Earth')
         .map(p => {
@@ -361,20 +362,32 @@
         .sort((a, b) => b.similarity - a.similarity)
         .slice(0, 10);
 
-      Plotly.newPlot('rankings', [{
+      // 2) Extract arrays for the plot
+      const yNames = ranked.map(p => p.pl_name).reverse();
+      const xVals = ranked.map(p => p.similarity).reverse();
+      const exps = ranked.map(p => wrap(p.explanation, 60)).reverse();
+
+      // 3) Build the bar trace with hovertext
+      const trace = {
         type: 'bar',
-        x: ranked.map(p => p.similarity.toFixed(3)).reverse(),
-        y: ranked.map(p => p.pl_name).reverse(),
+        x: xVals,
+        y: yNames,
         orientation: 'h',
-        text: ranked.map(p => (p.similarity * 100).toFixed(1) + '%'),
-        customdata: ranked,
-        marker: { color: '#66fcf1' }
-      }], {
+        marker: { color: '#66fcf1' },
+        customdata: exps,            // our wrapped explanations
+        hovertemplate:
+          '<b>%{y}</b><br>' +       // bold planet name
+          '%{customdata}' +         // wrapped explanation
+          '<extra></extra>',        // remove the secondary box
+      };
+
+      Plotly.newPlot('rankings', [trace], {
         title: 'Top 10 Earth‑like Planets (6‑feature similarity)',
         xaxis: { title: 'Similarity (1 = identical)', range: [0, 1] },
         yaxis: { automargin: true },
         template: 'plotly_dark',
-        margin: { l: 120, r: 20, t: 60, b: 40 }
+        margin: { l: 140, r: 20, t: 60, b: 40 },
+        hovermode: 'closest'
       });
     }
     populateDropdowns();

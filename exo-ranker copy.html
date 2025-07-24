@@ -230,51 +230,121 @@
     /* ------------------------------------------------------------------
        2.  VISUALISATION HELPERS
     ------------------------------------------------------------------ */
+    // simple word‑wrap: break lines at ~width chars on whitespace
+    function wrap(str, width = 80) {
+      const re = new RegExp(`(.{1,${width}})(\\s|$)`, 'g');
+      return str.replace(re, '$1<br>');
+    }
+
     function plotChart(data) {
+      // 1) get current axes & labels
       const x = xSel.value, y = ySel.value;
       const xLabel = featureLabels[x] || x;
       const yLabel = featureLabels[y] || y;
 
+      // 2) build one trace per cluster
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
+        const traceColor = palette[i % palette.length];
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
-          text: pts.map(p => p.pl_name),
-          customdata: pts,
+          text: pts.map(p =>
+            `<b>${p.pl_name}</b><br>` +
+            wrap(p.explanation, 80)
+          ),
+          hovertemplate: '%{text}<extra></extra>',
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
-          marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
+          marker: { color: traceColor, size: 7, opacity: 0.8 },
+          hoverlabel: {
+            bgcolor: traceColor,
+            bordercolor: '#333',
+            font: { color: '#fff', size: 12 },
+            align: 'left'
+          }
         };
       });
 
+
+      // 3) add Earth star
       const earth = data.find(p => p.pl_name === 'Earth');
       if (earth) {
+        const starColor = '#FFD700';
         traces.push({
           x: [earth[x]],
           y: [earth[y]],
-          text: ['🌍 Earth'],
-          customdata: [earth],
+          // bold name + wrapped explanation
+          text: [
+            `<b>🌍 ${earth.pl_name}</b><br>` +
+            wrap(earth.explanation, 80)
+          ],
+          hovertemplate: '%{text}<extra></extra>',
           mode: 'markers+text',
           type: 'scatter',
           name: '🌍 Earth',
           textposition: 'top center',
-          marker: { color: '#FFD700', size: 18, symbol: 'star', line: { color: '#000', width: 2 } }
+          marker: {
+            color: starColor,
+            size: 18,
+            symbol: 'star',
+            line: { color: '#000', width: 2 }
+          },
+          hoverlabel: {
+            bgcolor: starColor,
+            bordercolor: '#333',
+            font: { color: '#000', size: 12 },
+            align: 'left'
+          }
         });
       }
 
+      // 4) redraw
       Plotly.newPlot('chart', traces, {
         title: `${xLabel} vs ${yLabel}`,
         xaxis: { title: xLabel },
         yaxis: { title: yLabel },
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
+        hovermode: 'closest',           // only one box at a time
         legend: { orientation: 'h', x: 0.01, y: 1.3 },
         dragmode: 'pan'
-      }, { responsive: true });
+      }, {
+        responsive: true
+      });
     }
+
+
+    function reassignMissingClusters(data) {
+      // compute centroids of existing (0–3) clusters
+      const valid = [0, 1, 2, 3].map(c => {
+        const pts = data.filter(d => d.cluster === c);
+        return pts.length
+          ? keyFeatures.map(f => pts.reduce((sum, p) => sum + p[f], 0) / pts.length)
+          : null;
+      });
+
+      data.forEach(d => {
+        if (d.cluster === 'N/A') {
+          // find the closest centroid
+          let best = 0, bestDist = Infinity;
+          valid.forEach((centroid, c) => {
+            if (!centroid) return;
+            const dist = keyFeatures.reduce((sum, f, i) =>
+              sum + Math.pow(d[f] - centroid[i], 2)
+              , 0);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = c;
+            }
+          });
+          d.cluster = best;
+        }
+      });
+    }
+
 
     function plotRankings(data, earthRef) {
       const ranked = data
@@ -347,6 +417,7 @@
         }
 
         // ─── 3.3 Render UI ────────────────────────────────────────────
+        reassignMissingClusters(data);
         plotChart(data);
         plotRankings(data, earthRef);
 
@@ -363,11 +434,11 @@
           });
         });
       } catch (err) {
-      console.error(err);
-      // 2️⃣  Show selectors + friendly message even if data failed
-      document.getElementById('chart').innerHTML =
-        '<p style="padding:2rem">Could not load JSON files.</p>';
-    }
+        console.error(err);
+        // 2️⃣  Show selectors + friendly message even if data failed
+        document.getElementById('chart').innerHTML =
+          '<p style="padding:2rem">Could not load JSON files.</p>';
+      }
     })();
   </script>
 </body>
