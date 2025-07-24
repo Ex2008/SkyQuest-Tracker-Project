@@ -232,10 +232,8 @@
     ------------------------------------------------------------------ */
     function plotChart(data) {
       const x = xSel.value, y = ySel.value;
-      const xLabel = featureLabels[x] || x;
-      const yLabel = featureLabels[y] || y;
-
       const clusters = [...new Set(data.map(d => d.cluster))].sort();
+
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
         return {
@@ -246,7 +244,11 @@
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
-          marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 }
+          marker: { color: palette[i % palette.length], size: 7, opacity: 0.8 },
+          hovertemplate:
+            '<b>%{text}</b><br>' +
+            '%{customdata.explanation}' +
+            '<extra></extra>'
         };
       });
 
@@ -266,12 +268,11 @@
       }
 
       Plotly.newPlot('chart', traces, {
-        title: `${xLabel} vs ${yLabel}`,
-        xaxis: { title: xLabel },
-        yaxis: { title: yLabel },
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
         legend: { orientation: 'h', x: 0.01, y: 1.3 },
+        xaxis: { title: featureLabels[x] },
+        yaxis: { title: featureLabels[y] },
         dragmode: 'pan'
       }, { responsive: true });
     }
