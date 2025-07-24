@@ -171,7 +171,7 @@
 
     const featureLabels = {
       pl_rade: "Planet Radius (Rp)", pl_bmasse: "Planet Mass (Mp)", pl_eqt: "Equilibrium Temperature (Teq)",
-      st_teff: "Star Temperature (K)", st_rad: "Star Radius (Rs)", st_mass: "Star Mass (Ms)",
+      st_teff: "Star Temperature (Ts)", st_rad: "Star Radius (Rs)", st_mass: "Star Mass (Ms)",
       pl_orbper: "Orbital Period (days)", pl_orbpererr1: "Orbital Period Error (+)",
       pl_orbpererr2: "Orbital Period Error (–)", pl_orbperlim: "Orbital Period Limit Flag",
       pl_orbsmax: "Orbit Semi-Major Axis (AU)", pl_orbsmaxerr1: "Axis Error (+)",
@@ -184,7 +184,7 @@
       pl_bmasseerr1: "Mass Error (+)", pl_bmasseerr2: "Mass Error (–)", pl_bmasselim: "Mass Limit Flag",
       pl_bmassj: "Mass (Jupiter)", pl_bmassjerr1: "Mass (Jupiter) Error (+)",
       pl_bmassjerr2: "Mass (Jupiter) Error (–)", pl_bmassjlim: "Mass (Jupiter) Limit Flag",
-      pl_bmassprov: "Mass Provenance", pl_insol: "Stellar Insolation (S⊕)",
+      pl_bmassprov: "Mass Provenance", pl_insol: "Stellar Insolation (Ss)",
       pl_insolerr1: "Insolation Error (+)", pl_insolerr2: "Insolation Error (–)",
       pl_insollim: "Insolation Limit Flag", pl_eqterr1: "Equilibrium Temp Error (+)",
       pl_eqterr2: "Equilibrium Temp Error (–)", pl_eqtlim: "Equilibrium Temp Limit Flag",
@@ -276,6 +276,35 @@
       }, { responsive: true });
     }
 
+    function reassignMissingClusters(data) {
+      // compute centroids of existing (0–3) clusters
+      const valid = [0, 1, 2, 3].map(c => {
+        const pts = data.filter(d => d.cluster === c);
+        return pts.length
+          ? keyFeatures.map(f => pts.reduce((sum, p) => sum + p[f], 0) / pts.length)
+          : null;
+      });
+
+      data.forEach(d => {
+        if (d.cluster === 'N/A') {
+          // find the closest centroid
+          let best = 0, bestDist = Infinity;
+          valid.forEach((centroid, c) => {
+            if (!centroid) return;
+            const dist = keyFeatures.reduce((sum, f, i) =>
+              sum + Math.pow(d[f] - centroid[i], 2)
+              , 0);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = c;
+            }
+          });
+          d.cluster = best;
+        }
+      });
+    }
+
+
     function plotRankings(data, earthRef) {
       const ranked = data
         .filter(p => p.pl_name !== 'Earth')
@@ -347,6 +376,7 @@
         }
 
         // ─── 3.3 Render UI ────────────────────────────────────────────
+        reassignMissingClusters(data);
         plotChart(data);
         plotRankings(data, earthRef);
 
@@ -363,11 +393,11 @@
           });
         });
       } catch (err) {
-      console.error(err);
-      // 2️⃣  Show selectors + friendly message even if data failed
-      document.getElementById('chart').innerHTML =
-        '<p style="padding:2rem">Could not load JSON files.</p>';
-    }
+        console.error(err);
+        // 2️⃣  Show selectors + friendly message even if data failed
+        document.getElementById('chart').innerHTML =
+          '<p style="padding:2rem">Could not load JSON files.</p>';
+      }
     })();
   </script>
 </body>

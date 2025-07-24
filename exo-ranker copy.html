@@ -170,8 +170,8 @@
 
 
     const featureLabels = {
-      pl_rade: "Planet Radius (R⊕)", pl_bmasse: "Planet Mass (M⊕)", pl_eqt: "Equilibrium Temperature (K)",
-      st_teff: "Star Temperature (K)", st_rad: "Star Radius (R☉)", st_mass: "Star Mass (M☉)",
+      pl_rade: "Planet Radius (Rp)", pl_bmasse: "Planet Mass (Mp)", pl_eqt: "Equilibrium Temperature (Teq)",
+      st_teff: "Star Temperature (Ts)", st_rad: "Star Radius (Rs)", st_mass: "Star Mass (Ms)",
       pl_orbper: "Orbital Period (days)", pl_orbpererr1: "Orbital Period Error (+)",
       pl_orbpererr2: "Orbital Period Error (–)", pl_orbperlim: "Orbital Period Limit Flag",
       pl_orbsmax: "Orbit Semi-Major Axis (AU)", pl_orbsmaxerr1: "Axis Error (+)",
@@ -184,7 +184,7 @@
       pl_bmasseerr1: "Mass Error (+)", pl_bmasseerr2: "Mass Error (–)", pl_bmasselim: "Mass Limit Flag",
       pl_bmassj: "Mass (Jupiter)", pl_bmassjerr1: "Mass (Jupiter) Error (+)",
       pl_bmassjerr2: "Mass (Jupiter) Error (–)", pl_bmassjlim: "Mass (Jupiter) Limit Flag",
-      pl_bmassprov: "Mass Provenance", pl_insol: "Stellar Insolation (S⊕)",
+      pl_bmassprov: "Mass Provenance", pl_insol: "Stellar Insolation (Ss)",
       pl_insolerr1: "Insolation Error (+)", pl_insolerr2: "Insolation Error (–)",
       pl_insollim: "Insolation Limit Flag", pl_eqterr1: "Equilibrium Temp Error (+)",
       pl_eqterr2: "Equilibrium Temp Error (–)", pl_eqtlim: "Equilibrium Temp Limit Flag",
@@ -307,6 +307,7 @@
         margin: { l: 120, r: 20, t: 60, b: 40 }
       });
     }
+    populateDropdowns();
 
     /* ------------------------------------------------------------------
        3.  DATA LOADING + EARTH FALLBACK
@@ -314,8 +315,8 @@
     (async () => {
       try {
         const [rawRes, enrRes] = await Promise.all([
-          fetch('planet_data.json'),
-          fetch('planet_data_enriched.json')
+          fetch('./data/planet_data.json'),
+          fetch('./data/planet_data_enriched.json')
         ]);
         const raw = await rawRes.json();
         const enriched = await enrRes.json();
@@ -346,7 +347,6 @@
         }
 
         // ─── 3.3 Render UI ────────────────────────────────────────────
-        populateDropdowns();
         plotChart(data);
         plotRankings(data, earthRef);
 
@@ -363,9 +363,11 @@
           });
         });
       } catch (err) {
-        console.error(err);
-        document.getElementById('chart').innerHTML = '<p style="padding:2rem">Could not load JSON files.</p>';
-      }
+      console.error(err);
+      // 2️⃣  Show selectors + friendly message even if data failed
+      document.getElementById('chart').innerHTML =
+        '<p style="padding:2rem">Could not load JSON files.</p>';
+    }
     })();
   </script>
 </body>
