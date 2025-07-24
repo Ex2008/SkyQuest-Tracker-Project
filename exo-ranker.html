@@ -231,21 +231,25 @@
        2.  VISUALISATION HELPERS
     ------------------------------------------------------------------ */
     function plotChart(data) {
+      // 1) get current axes & labels
       const x = xSel.value, y = ySel.value;
-      const clusters = [...new Set(data.map(d => d.cluster))].sort();
+      const xLabel = featureLabels[x] || x;
+      const yLabel = featureLabels[y] || y;
 
+      // 2) build one trace per cluster
+      const clusters = [...new Set(data.map(d => d.cluster))].sort();
       const traces = clusters.map((c, i) => {
         const pts = data.filter(p => p.cluster === c && p.pl_name !== 'Earth');
         return {
           x: pts.map(p => p[x]),
           y: pts.map(p => p[y]),
-          // build a single HTML hover‐text per point:
+          customdata: pts,       // for click handling
+          // each hover box will show name + explanation, left‑aligned
           text: pts.map(p =>
             `<b>${p.pl_name}</b><br>` +
             `${p.explanation.replace(/\n/g, '<br>')}`
           ),
           hoverinfo: 'text',
-          customdata: pts,      // still there for click handlers
           mode: 'markers',
           type: 'scatter',
           name: `Cluster ${c}`,
@@ -254,12 +258,14 @@
         };
       });
 
+      // 3) add Earth star
       const earth = data.find(p => p.pl_name === 'Earth');
       if (earth) {
         traces.push({
           x: [earth[x]],
           y: [earth[y]],
           text: ['🌍 Earth'],
+          hoverinfo: 'text',
           customdata: [earth],
           mode: 'markers+text',
           type: 'scatter',
@@ -269,6 +275,7 @@
         });
       }
 
+      // 4) redraw
       Plotly.newPlot('chart', traces, {
         title: `${xLabel} vs ${yLabel}`,
         xaxis: { title: xLabel },
@@ -276,12 +283,13 @@
         template: 'plotly_dark',
         margin: { l: 60, r: 20, t: 60, b: 60 },
 
-        hovermode: 'closest',         // ← show only the hovered point
+        // show only the closest point’s box, not a full strip
+        hovermode: 'closest',
         hoverlabel: {
-          bgcolor: '#222',            // optional: darker background
-          bordercolor: '#444',        // optional: border
-          font: { size: 12 },         // optional: tweak font
-          align: 'left'               // left‑align multi‑line text
+          bgcolor: '#222',
+          bordercolor: '#444',
+          font: { size: 12 },
+          align: 'left'
         },
 
         legend: { orientation: 'h', x: 0.01, y: 1.3 },
@@ -290,6 +298,7 @@
         responsive: true
       });
     }
+
 
     function reassignMissingClusters(data) {
       // compute centroids of existing (0–3) clusters
